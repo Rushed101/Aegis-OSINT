@@ -2,142 +2,70 @@ import { Redis } from "@upstash/redis";
 import fs from "fs";
 import path from "path";
 
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN
-});
+const redis = Redis.fromEnv();
 
+export default async function handler(req, res) {
 
-function formatDate(date) {
-
-    return date
-        .toISOString()
-        .slice(0, 10);
-
-}
-
-
-function getLast7Days() {
-
-    const days = [];
-
-    const now =
-        new Date();
-
-    for (
-        let i = 6;
-        i >= 0;
-        i--
-    ) {
-
-        const date =
-            new Date(now);
-
-        date.setUTCDate(
-            date.getUTCDate() - i
-        );
-
-        days.push(
-            formatDate(date)
-        );
-
-    }
-
-    return days;
-
-}
-
-
-function countDatabaseRecords() {
+    res.setHeader("Cache-Control", "no-store");
 
     try {
 
-        const file =
-            path.join(
-                process.cwd(),
-                "db.txt"
+        // -----------------------------------------
+        // DATABASE RECORDS
+        // -----------------------------------------
+
+        let totalRecords = 0;
+
+        try {
+
+            const filePath =
+                path.join(process.cwd(), "db.txt");
+
+            if (fs.existsSync(filePath)) {
+
+                const content =
+                    fs.readFileSync(
+                        filePath,
+                        "utf8"
+                    );
+
+                totalRecords =
+                    content
+                        .split(/\r?\n/)
+                        .filter(
+                            line =>
+                                line.trim() !== ""
+                        )
+                        .length;
+            }
+
+        } catch (e) {
+
+            console.log(
+                "db.txt error:",
+                e.message
             );
 
-        if (
-            !fs.existsSync(file)
-        ) {
-            return 0;
         }
 
-        const content =
-            fs.readFileSync(
-                file,
-                "utf8"
-            );
 
-        if (!content.trim()) {
-            return 0;
-        }
-
-        return content
-            .split(/\r?\n/)
-            .filter(
-                line =>
-                    line.trim().length > 0
-            )
-            .length;
-
-    } catch (error) {
-
-        console.error(
-            "Database count error:",
-            error
-        );
-
-        return 0;
-
-    }
-
-}
-
-
-export default async function handler(
-    req,
-    res
-) {
-
-    if (req.method !== "GET") {
-
-        return res.status(405).json({
-
-            success: false,
-
-            error:
-                "Method not allowed"
-
-        });
-
-    }
-
-    try {
-
-        const days =
-            getLast7Days();
-
-        /*
-         * ------------------------------------------------
-         * ALL TIME UNIQUE USERS
-         * ------------------------------------------------
-         */
+        // -----------------------------------------
+        // TOTAL USERS
+        // -----------------------------------------
 
         const totalUsers =
-            await redis.scard(
-                "aegis:stats:unique"
+            Number(
+                await redis.scard(
+                    "aegis:stats:unique"
+                ) || 0
             );
 
 
-        /*
-         * ------------------------------------------------
-         * TOTAL PAGE VIEWS
-         * ------------------------------------------------
-         */
+        // -----------------------------------------
+        // TOTAL VIEWS
+        // -----------------------------------------
 
-        const totalPageViews =
+        const totalViews =
             Number(
                 await redis.get(
                     "aegis:stats:pageviews"
@@ -145,138 +73,109 @@ export default async function handler(
             );
 
 
-        /*
-         * ------------------------------------------------
-         * DAILY DATA
-         * ------------------------------------------------
-         */
+        // -----------------------------------------
+        // LAST 7 DAYS
+        // -----------------------------------------
 
-        const daily =
-            await Promise.all(
+        const daily = [];
 
-                days.map(
-                    async day => {
-
-                        const views =
-                            Number(
-                                await redis.get(
-                                    `aegis:stats:views:${day}`
-                                ) || 0
-                            );
-
-                        const visitors =
-                            await redis.scard(
-                                `aegis:stats:visitors:${day}`
-                            );
-
-                        return {
-
-                            date: day,
-
-                            views:
-                                views,
-
-                            visitors:
-                                Number(
-                                    visitors || 0
-                                )
-
-                        };
-
-                    }
-                )
-
-            );
-
-
-        /*
-         * ------------------------------------------------
-         * LAST 7 DAYS
-         *
-         * Unique users are calculated by combining
-         * the daily visitor sets.
-         * ------------------------------------------------
-         */
-
-        const weeklyVisitors =
-            new Set();
+        let weeklyVisitors = new Set();
 
         for (
-            const day of days
+            let i = 6;
+            i >= 0;
+            i--
         ) {
 
-            const visitors =
-                await redis.smembers(
-                    `aegis:stats:visitors:${day}`
+            const date =
+                new Date();
+
+            date.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+            date.setDate(
+                date.getDate() - i
+            );
+
+            const year =
+                date.getFullYear();
+
+            const month =
+                String(
+                    date.getMonth() + 1
+                ).padStart(2, "0");
+
+            const day =
+                String(
+                    date.getDate()
+                ).padStart(2, "0");
+
+            const dateKey =
+                `${year}-${month}-${day}`;
+
+
+            const views =
+                Number(
+                    await redis.get(
+                        `aegis:stats:views:${dateKey}`
+                    ) || 0
                 );
+
+
+            let visitors = [];
+
+            try {
+
+                visitors =
+                    await redis.smembers(
+                        `aegis:stats:visitors:${dateKey}`
+                    );
+
+            } catch (e) {
+
+                visitors = [];
+
+            }
+
 
             if (
                 Array.isArray(visitors)
             ) {
 
-                for (
-                    const visitor
-                    of visitors
-                ) {
-
-                    weeklyVisitors.add(
-                        visitor
-                    );
-
-                }
+                visitors.forEach(
+                    visitor => {
+                        weeklyVisitors.add(
+                            visitor
+                        );
+                    }
+                );
 
             }
+
+
+            daily.push({
+
+                date: dateKey,
+
+                views: views,
+
+                visitors:
+                    Array.isArray(visitors)
+                        ? visitors.length
+                        : 0
+
+            });
 
         }
 
 
-        /*
-         * ------------------------------------------------
-         * WEEKLY PAGE VIEWS
-         * ------------------------------------------------
-         */
-
-        const weeklyViews =
-            daily.reduce(
-                (
-                    total,
-                    item
-                ) =>
-                    total +
-                    item.views,
-                0
-            );
-
-
-        /*
-         * ------------------------------------------------
-         * DATABASE RECORDS
-         * ------------------------------------------------
-         */
-
-        const totalRecords =
-            countDatabaseRecords();
-
-
-        /*
-         * ------------------------------------------------
-         * NEW THIS WEEK
-         * ------------------------------------------------
-         *
-         * This is unique visitors during the
-         * last 7 days.
-         * ------------------------------------------------
-         */
-
-        const newThisWeek =
-            weeklyVisitors.size;
-
-
-        /*
-         * ------------------------------------------------
-         * SEND RESULT
-         * ------------------------------------------------
-         */
+        // -----------------------------------------
+        // RESPONSE
+        // -----------------------------------------
 
         return res.status(200).json({
 
@@ -285,24 +184,23 @@ export default async function handler(
             data: {
 
                 trustedUsers:
-                    Number(
-                        totalUsers || 0
-                    ),
+                    totalUsers,
 
                 totalRecords:
                     totalRecords,
 
                 newThisWeek:
-                    newThisWeek,
+                    weeklyVisitors.size,
 
                 totalPageViews:
-                    totalPageViews,
-
-                weeklyVisitors:
-                    newThisWeek,
+                    totalViews,
 
                 weeklyViews:
-                    weeklyViews,
+                    daily.reduce(
+                        (sum, item) =>
+                            sum + item.views,
+                        0
+                    ),
 
                 daily:
                     daily,
@@ -317,7 +215,7 @@ export default async function handler(
     } catch (error) {
 
         console.error(
-            "Stats error:",
+            "STATS API ERROR:",
             error
         );
 
@@ -326,7 +224,8 @@ export default async function handler(
             success: false,
 
             error:
-                "Could not load statistics"
+                error.message ||
+                "Statistics API failed"
 
         });
 
