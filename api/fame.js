@@ -41,9 +41,10 @@ export default function handler(req, res) {
 
         for (const line of lines) {
 
-            // Header ignorieren
+            // Header überspringen
             if (
-                line.toLowerCase()
+                line
+                    .toLowerCase()
                     .startsWith("full name,")
             ) {
                 continue;
@@ -51,32 +52,12 @@ export default function handler(req, res) {
 
             const parts = line.split(",");
 
-            if (parts.length < 4) {
+            if (parts.length < 5) {
                 continue;
             }
 
-            /*
-             * Format:
-             *
-             * 0 = full name
-             * 1 = email
-             * 2...n = address
-             * n+1 = phone/status
-             * n+2 = IP
-             *
-             * Beispiel:
-             *
-             * Kaden Mont
-             * kadennn577@gmail.com
-             * 1114 W 53rd St
-             * Minneapolis
-             * MN 55419
-             * not found
-             * 75.98.153.193
-             */
-
             const fullName =
-                parts[0].trim();
+                parts[0]?.trim() || "";
 
             if (
                 !fullName
@@ -90,29 +71,38 @@ export default function handler(req, res) {
                 parts[1]?.trim() || "";
 
             /*
-             * Die IP ist immer das letzte Feld.
+             * IP = vorletztes Feld
+             * History = letztes Feld
              */
-            const ip =
+            const history =
                 parts[parts.length - 1]
-                    .trim();
+                    ?.trim() || "";
 
-            /*
-             * Das Feld vor der IP ist
-             * phone/status.
-             */
-            const phone =
+            const ip =
                 parts[parts.length - 2]
                     ?.trim() || "";
 
             /*
+             * Phone kann leer sein.
+             *
+             * Wir nehmen das Feld direkt
+             * vor der IP.
+             */
+            const phoneIndex =
+                parts.length - 3;
+
+            const phone =
+                parts[phoneIndex]?.trim() || "";
+
+            /*
              * Alles zwischen Email und
-             * phone/status ist die Adresse.
+             * Phone ist die Adresse.
              */
             const address =
                 parts
                     .slice(
                         2,
-                        parts.length - 2
+                        phoneIndex
                     )
                     .join(", ")
                     .trim();
@@ -123,7 +113,7 @@ export default function handler(req, res) {
                 address,
                 phone,
                 ip,
-                history: ""
+                history
             });
 
             if (results.length >= 100) {
