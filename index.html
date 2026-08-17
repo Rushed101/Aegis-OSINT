@@ -15,10 +15,8 @@
 
 :root {
     --bg: #030305;
-    --panel: rgba(11, 8, 14, .78);
-    --panel2: rgba(18, 11, 21, .85);
+    --panel: rgba(11, 8, 14, .82);
     --border: rgba(255, 75, 177, .14);
-    --border-hover: rgba(255, 75, 177, .38);
 
     --pink: #ff3fa9;
     --pink-light: #ff79c6;
@@ -26,13 +24,10 @@
 
     --text: #f7f4f8;
     --muted: #8d8791;
+
     --success: #55e69a;
     --danger: #ff5874;
 }
-
-/* =========================
-   BASE
-========================= */
 
 html {
     scroll-behavior: smooth;
@@ -72,10 +67,12 @@ body {
 #stars {
     position: fixed;
     inset: 0;
+
     width: 100%;
     height: 100%;
 
     pointer-events: none;
+
     z-index: 0;
 }
 
@@ -108,8 +105,8 @@ body {
     background:
         linear-gradient(
             180deg,
-            rgba(8, 6, 10, .96),
-            rgba(4, 4, 7, .94)
+            rgba(8, 6, 10, .97),
+            rgba(4, 4, 7, .95)
         );
 
     border-right: 1px solid var(--border);
@@ -161,6 +158,7 @@ body {
 .logo-name {
     font-size: 17px;
     font-weight: 750;
+
     letter-spacing: -.3px;
 }
 
@@ -181,6 +179,7 @@ body {
     font-weight: 800;
 
     letter-spacing: 1.7px;
+
     text-transform: uppercase;
 }
 
@@ -220,6 +219,7 @@ body {
 
 .nav button:hover {
     background: rgba(255,255,255,.035);
+
     color: #ddd8df;
 
     transform: translateX(2px);
@@ -283,6 +283,7 @@ body {
     padding: 12px;
 
     border: 1px solid var(--border);
+
     border-radius: 10px;
 
     background: rgba(255,255,255,.018);
@@ -295,6 +296,7 @@ body {
     gap: 8px;
 
     font-size: 10px;
+
     color: var(--muted);
 }
 
@@ -330,6 +332,7 @@ body {
 
 .topbar {
     display: flex;
+
     justify-content: space-between;
     align-items: flex-start;
 
@@ -420,7 +423,8 @@ body {
     right: -60px;
     top: -60px;
 
-    background: rgba(255,63,169,.06);
+    background:
+        rgba(255,63,169,.06);
 
     border-radius: 50%;
 
@@ -472,6 +476,7 @@ body {
 
 .panel-header {
     display: flex;
+
     justify-content: space-between;
     align-items: center;
 
@@ -530,10 +535,12 @@ input::placeholder {
 }
 
 input:focus {
-    border-color: rgba(255,63,169,.45);
+    border-color:
+        rgba(255,63,169,.45);
 
     box-shadow:
-        0 0 0 3px rgba(255,63,169,.06);
+        0 0 0 3px
+        rgba(255,63,169,.06);
 }
 
 .search-btn {
@@ -561,7 +568,8 @@ input:focus {
     cursor: pointer;
 
     box-shadow:
-        0 7px 25px rgba(255,63,169,.13);
+        0 7px 25px
+        rgba(255,63,169,.13);
 
     transition:
         transform .2s,
@@ -570,6 +578,7 @@ input:focus {
 
 .search-btn:hover {
     transform: translateY(-1px);
+
     filter: brightness(1.1);
 }
 
@@ -583,6 +592,7 @@ input:focus {
 
 .result-header {
     display: flex;
+
     justify-content: space-between;
 
     margin-bottom: 9px;
@@ -603,7 +613,8 @@ input:focus {
 
     border-radius: 8px;
 
-    background: rgba(5,5,8,.65);
+    background:
+        rgba(5,5,8,.65);
 }
 
 .result-card.found {
@@ -671,7 +682,8 @@ input:focus {
     padding: 32px;
 
     border:
-        1px dashed rgba(255,255,255,.08);
+        1px dashed
+        rgba(255,255,255,.08);
 
     border-radius: 8px;
 
@@ -681,10 +693,6 @@ input:focus {
 
     font-size: 11px;
 }
-
-/* =========================
-   HIDDEN
-========================= */
 
 .hidden {
     display: none;
@@ -698,11 +706,14 @@ input:focus {
 
     .sidebar {
         width: 68px;
-        padding: 20px 10px;
+
+        padding:
+            20px 10px;
     }
 
     .logo {
         justify-content: center;
+
         padding-left: 0;
         padding-right: 0;
     }
@@ -756,399 +767,400 @@ input:focus {
 </style>
 </head>
 
-
 <body>
 
 <canvas id="stars"></canvas>
 
 <div class="app">
 
-    <!-- SIDEBAR -->
+<!-- SIDEBAR -->
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <div class="logo">
+    <div class="logo">
 
-            <div class="logo-icon">
-                A
-            </div>
-
-            <div class="logo-name">
-                Aegis <span>OSINT</span>
-            </div>
-
+        <div class="logo-icon">
+            A
         </div>
 
-
-        <div class="nav-title">
-            Intelligence
+        <div class="logo-name">
+            Aegis <span>OSINT</span>
         </div>
 
-
-        <nav class="nav">
-
-            <button
-                class="active"
-                onclick="showPage('databreach', this)"
-            >
-                <div class="nav-icon">◈</div>
-                <span>Databreach Search</span>
-            </button>
+    </div>
 
 
-            <button
-                onclick="showPage('ip', this)"
-            >
-                <div class="nav-icon">◉</div>
-                <span>IP Information</span>
-            </button>
+    <div class="nav-title">
+        Intelligence
+    </div>
 
 
-            <button
-                onclick="showPage('email', this)"
-            >
-                <div class="nav-icon">@</div>
-                <span>Email Lookup</span>
-            </button>
+    <nav class="nav">
 
-
-            <button
-                onclick="showPage('phone', this)"
-            >
-                <div class="nav-icon">#</div>
-                <span>Phone Lookup</span>
-            </button>
-
-        </nav>
-
-
-        <div class="sidebar-footer">
-
-            <div class="footer-status">
-
-                <div class="status-dot"></div>
-
-                Aegis systems operational
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- MAIN -->
-
-    <main class="main">
-
-        <div class="topbar">
-
-            <div class="title">
-
-                <h1 id="pageTitle">
-                    Databreach Search
-                </h1>
-
-                <p id="pageDescription">
-                    Search your authorized dataset for an exact match.
-                </p>
-
-            </div>
-
-
-            <div class="system-status">
-
-                <div class="status-dot"></div>
-
-                SYSTEM ONLINE
-
-            </div>
-
-        </div>
-
-
-        <!-- STATS -->
-
-        <div class="dashboard">
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    DATABASE
-                </div>
-
-                <div class="stat-value">
-                    db.txt
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    SEARCH MODE
-                </div>
-
-                <div class="stat-value">
-                    Exact
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    SYSTEM
-                </div>
-
-                <div class="stat-value">
-                    Online
-                </div>
-
-            </div>
-
-
-            <div class="stat">
-
-                <div class="stat-label">
-                    RESULTS
-                </div>
-
-                <div
-                    class="stat-value"
-                    id="resultCount"
-                >
-                    0
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- DATABREACH -->
-
-        <section
-            id="databreach"
-            class="search-panel page"
+        <button
+            class="active"
+            onclick="showPage('databreach', this)"
         >
-
-            <div class="panel-header">
-
-                <h2>
-                    Databreach Search
-                </h2>
-
-                <span>
-                    Exact Match
-                </span>
-
-            </div>
+            <div class="nav-icon">◈</div>
+            <span>Databreach Search</span>
+        </button>
 
 
-            <div class="input-row">
-
-                <input
-                    id="databaseQuery"
-                    type="text"
-                    autocomplete="off"
-                    placeholder="Search name, email, phone, address..."
-                >
-
-                <button
-                    class="search-btn"
-                    onclick="databaseSearch()"
-                >
-                    Search
-                </button>
-
-            </div>
-
-
-            <div class="results">
-
-                <div class="result-header">
-
-                    <span>
-                        SEARCH RESULTS
-                    </span>
-
-                    <span id="searchStatus">
-                        WAITING
-                    </span>
-
-                </div>
-
-
-                <div id="databaseResults">
-
-                    <div class="empty">
-                        Enter a value to start a search.
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- IP -->
-
-        <section
-            id="ip"
-            class="search-panel page hidden"
+        <button
+            onclick="showPage('ip', this)"
         >
+            <div class="nav-icon">◉</div>
+            <span>IP Information</span>
+        </button>
 
-            <div class="panel-header">
 
-                <h2>
-                    IP Information
-                </h2>
+        <button
+            onclick="showPage('email', this)"
+        >
+            <div class="nav-icon">@</div>
+            <span>Email Lookup</span>
+        </button>
 
-                <span>
-                    IP Intelligence
-                </span>
 
+        <button
+            onclick="showPage('phone', this)"
+        >
+            <div class="nav-icon">#</div>
+            <span>Phone Lookup</span>
+        </button>
+
+    </nav>
+
+
+    <div class="sidebar-footer">
+
+        <div class="footer-status">
+
+            <div class="status-dot"></div>
+
+            Aegis systems operational
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- MAIN -->
+
+<main class="main">
+
+    <div class="topbar">
+
+        <div class="title">
+
+            <h1 id="pageTitle">
+                Databreach Search
+            </h1>
+
+            <p id="pageDescription">
+                Search your authorized dataset for an exact match.
+            </p>
+
+        </div>
+
+
+        <div class="system-status">
+
+            <div class="status-dot"></div>
+
+            SYSTEM ONLINE
+
+        </div>
+
+    </div>
+
+
+    <!-- STATS -->
+
+    <div class="dashboard">
+
+        <div class="stat">
+
+            <div class="stat-label">
+                DATABASE
             </div>
 
-
-            <div class="input-row">
-
-                <input
-                    id="ipInput"
-                    placeholder="Enter an IP address..."
-                >
-
-                <button
-                    class="search-btn"
-                    onclick="ipSearch()"
-                >
-                    Lookup
-                </button>
-
+            <div class="stat-value">
+                db.txt
             </div>
 
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                SEARCH MODE
+            </div>
+
+            <div class="stat-value">
+                Exact
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                SYSTEM
+            </div>
+
+            <div class="stat-value">
+                Online
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-label">
+                RESULTS
+            </div>
 
             <div
-                class="results"
-                id="ipResults"
+                class="stat-value"
+                id="resultCount"
             >
-
-                <div class="empty">
-                    Enter an IP address.
-                </div>
-
+                0
             </div>
 
-        </section>
+        </div>
+
+    </div>
 
 
-        <!-- EMAIL -->
+    <!-- DATABREACH -->
 
-        <section
-            id="email"
-            class="search-panel page hidden"
-        >
+    <section
+        id="databreach"
+        class="search-panel page"
+    >
 
-            <div class="panel-header">
+        <div class="panel-header">
 
-                <h2>
-                    Email Lookup
-                </h2>
+            <h2>
+                Databreach Search
+            </h2>
+
+            <span>
+                Exact Match
+            </span>
+
+        </div>
+
+
+        <div class="input-row">
+
+            <input
+                id="databaseQuery"
+                type="text"
+                autocomplete="off"
+                placeholder="Search name, email, phone, address..."
+            >
+
+            <button
+                class="search-btn"
+                onclick="databaseSearch()"
+            >
+                Search
+            </button>
+
+        </div>
+
+
+        <div class="results">
+
+            <div class="result-header">
 
                 <span>
-                    Email Intelligence
+                    SEARCH RESULTS
+                </span>
+
+                <span id="searchStatus">
+                    WAITING
                 </span>
 
             </div>
 
 
-            <div class="input-row">
-
-                <input
-                    id="emailInput"
-                    type="email"
-                    placeholder="Enter an email address..."
-                >
-
-                <button
-                    class="search-btn"
-                    onclick="emailSearch()"
-                >
-                    Lookup
-                </button>
-
-            </div>
-
-
-            <div
-                class="results"
-                id="emailResults"
-            >
+            <div id="databaseResults">
 
                 <div class="empty">
-                    Enter an email address.
+                    Enter a value to start a search.
                 </div>
 
             </div>
 
-        </section>
+        </div>
+
+    </section>
 
 
-        <!-- PHONE -->
+    <!-- IP -->
 
-        <section
-            id="phone"
-            class="search-panel page hidden"
+    <section
+        id="ip"
+        class="search-panel page hidden"
+    >
+
+        <div class="panel-header">
+
+            <h2>
+                IP Information
+            </h2>
+
+            <span>
+                IPINFO
+            </span>
+
+        </div>
+
+
+        <div class="input-row">
+
+            <input
+                id="ipInput"
+                type="text"
+                placeholder="Enter an IP address..."
+            >
+
+            <button
+                class="search-btn"
+                onclick="ipSearch()"
+            >
+                Lookup
+            </button>
+
+        </div>
+
+
+        <div
+            class="results"
+            id="ipResults"
         >
 
-            <div class="panel-header">
-
-                <h2>
-                    Phone Lookup
-                </h2>
-
-                <span>
-                    Phone Intelligence
-                </span>
-
+            <div class="empty">
+                Enter an IP address.
             </div>
 
+        </div>
 
-            <div class="input-row">
-
-                <input
-                    id="phoneInput"
-                    placeholder="Enter a phone number..."
-                >
-
-                <button
-                    class="search-btn"
-                    onclick="phoneSearch()"
-                >
-                    Lookup
-                </button>
-
-            </div>
+    </section>
 
 
-            <div
-                class="results"
-                id="phoneResults"
+    <!-- EMAIL -->
+
+    <section
+        id="email"
+        class="search-panel page hidden"
+    >
+
+        <div class="panel-header">
+
+            <h2>
+                Email Lookup
+            </h2>
+
+            <span>
+                EMAIL
+            </span>
+
+        </div>
+
+
+        <div class="input-row">
+
+            <input
+                id="emailInput"
+                type="email"
+                placeholder="Enter an email address..."
             >
 
-                <div class="empty">
-                    Enter a phone number.
-                </div>
+            <button
+                class="search-btn"
+                onclick="emailSearch()"
+            >
+                Lookup
+            </button>
 
+        </div>
+
+
+        <div
+            class="results"
+            id="emailResults"
+        >
+
+            <div class="empty">
+                Enter an email address.
             </div>
 
-        </section>
+        </div>
 
-    </main>
+    </section>
+
+
+    <!-- PHONE -->
+
+    <section
+        id="phone"
+        class="search-panel page hidden"
+    >
+
+        <div class="panel-header">
+
+            <h2>
+                Phone Lookup
+            </h2>
+
+            <span>
+                PHONE
+            </span>
+
+        </div>
+
+
+        <div class="input-row">
+
+            <input
+                id="phoneInput"
+                type="text"
+                placeholder="Enter a phone number..."
+            >
+
+            <button
+                class="search-btn"
+                onclick="phoneSearch()"
+            >
+                Lookup
+            </button>
+
+        </div>
+
+
+        <div
+            class="results"
+            id="phoneResults"
+        >
+
+            <div class="empty">
+                Enter a phone number.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
 
 </div>
 
@@ -1159,18 +1171,26 @@ input:focus {
    PINK FLYING STARS
 ============================================================ */
 
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("stars");
+
+const ctx =
+    canvas.getContext("2d");
 
 let stars = [];
 
+
 function resizeCanvas() {
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
 
     createStars();
 }
+
 
 function createStars() {
 
@@ -1180,17 +1200,28 @@ function createStars() {
         Math.min(
             180,
             Math.floor(
-                (canvas.width * canvas.height) / 9500
+                (
+                    canvas.width *
+                    canvas.height
+                ) / 9500
             )
         );
 
-    for (let i = 0; i < amount; i++) {
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
 
         stars.push({
 
-            x: Math.random() * canvas.width,
+            x:
+                Math.random() *
+                canvas.width,
 
-            y: Math.random() * canvas.height,
+            y:
+                Math.random() *
+                canvas.height,
 
             size:
                 Math.random() * 1.5 + .2,
@@ -1208,6 +1239,7 @@ function createStars() {
     }
 }
 
+
 function animateStars() {
 
     ctx.clearRect(
@@ -1217,15 +1249,20 @@ function animateStars() {
         canvas.height
     );
 
+
     for (const star of stars) {
 
         star.x += star.speed;
 
-        star.y += star.speed * .16;
+        star.y +=
+            star.speed * .16;
+
 
         if (
-            star.x > canvas.width + 30 ||
-            star.y > canvas.height + 30
+            star.x >
+                canvas.width + 30 ||
+            star.y >
+                canvas.height + 30
         ) {
 
             star.x = -20;
@@ -1233,7 +1270,6 @@ function animateStars() {
             star.y =
                 Math.random() *
                 canvas.height;
-
         }
 
 
@@ -1245,22 +1281,31 @@ function animateStars() {
                 star.y
             );
 
+
         gradient.addColorStop(
             0,
             "rgba(255,63,169,0)"
         );
 
+
         gradient.addColorStop(
             1,
-            `rgba(255,100,190,${star.alpha})`
+            `rgba(
+                255,
+                100,
+                190,
+                ${star.alpha}
+            )`
         );
 
 
         ctx.beginPath();
 
-        ctx.strokeStyle = gradient;
+        ctx.strokeStyle =
+            gradient;
 
-        ctx.lineWidth = star.size;
+        ctx.lineWidth =
+            star.size;
 
         ctx.moveTo(
             star.x - star.length,
@@ -1278,7 +1323,12 @@ function animateStars() {
         ctx.beginPath();
 
         ctx.fillStyle =
-            `rgba(255,120,205,${star.alpha})`;
+            `rgba(
+                255,
+                120,
+                205,
+                ${star.alpha}
+            )`;
 
         ctx.arc(
             star.x,
@@ -1291,8 +1341,12 @@ function animateStars() {
         ctx.fill();
     }
 
-    requestAnimationFrame(animateStars);
+
+    requestAnimationFrame(
+        animateStars
+    );
 }
+
 
 window.addEventListener(
     "resize",
@@ -1307,32 +1361,43 @@ animateStars();
    NAVIGATION
 ============================================================ */
 
-function showPage(page, button) {
+function showPage(
+    page,
+    button
+) {
 
     document
         .querySelectorAll(".page")
         .forEach(element => {
 
-            element.classList.add("hidden");
+            element.classList.add(
+                "hidden"
+            );
 
         });
 
 
     document
         .getElementById(page)
-        .classList.remove("hidden");
+        .classList.remove(
+            "hidden"
+        );
 
 
     document
         .querySelectorAll(".nav button")
         .forEach(element => {
 
-            element.classList.remove("active");
+            element.classList.remove(
+                "active"
+            );
 
         });
 
 
-    button.classList.add("active");
+    button.classList.add(
+        "active"
+    );
 
 
     const pages = {
@@ -1360,12 +1425,16 @@ function showPage(page, button) {
     };
 
 
-    document.getElementById("pageTitle")
-        .textContent = pages[page][0];
+    document
+        .getElementById("pageTitle")
+        .textContent =
+        pages[page][0];
 
 
-    document.getElementById("pageDescription")
-        .textContent = pages[page][1];
+    document
+        .getElementById("pageDescription")
+        .textContent =
+        pages[page][1];
 }
 
 
@@ -1377,7 +1446,9 @@ async function databaseSearch() {
 
     const query =
         document
-            .getElementById("databaseQuery")
+            .getElementById(
+                "databaseQuery"
+            )
             .value
             .trim();
 
@@ -1406,12 +1477,13 @@ async function databaseSearch() {
     }
 
 
-    status.textContent = "SEARCHING";
+    status.textContent =
+        "SEARCHING";
 
 
     results.innerHTML = `
         <div class="empty">
-            Searching authorized database...
+            Searching database...
         </div>
     `;
 
@@ -1425,16 +1497,20 @@ async function databaseSearch() {
             );
 
 
-        if (!response.ok) {
-
-            throw new Error(
-                "API request failed"
-            );
-        }
-
-
         const data =
             await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Database search failed"
+            );
+        }
 
 
         if (
@@ -1443,11 +1519,14 @@ async function databaseSearch() {
         ) {
 
             document
-                .getElementById("resultCount")
+                .getElementById(
+                    "resultCount"
+                )
                 .textContent = "0";
 
 
-            status.textContent = "COMPLETED";
+            status.textContent =
+                "COMPLETED";
 
 
             results.innerHTML = `
@@ -1477,19 +1556,25 @@ No exact match was found.
 
 
         document
-            .getElementById("resultCount")
+            .getElementById(
+                "resultCount"
+            )
             .textContent =
             data.results.length;
 
 
-        status.textContent = "COMPLETED";
+        status.textContent =
+            "COMPLETED";
 
 
         results.innerHTML =
             data.results
-                .map((item, index) => `
+                .map(
+                    (item, index) => `
 
-                    <div class="result-card found">
+                    <div
+                        class="result-card found"
+                    >
 
                         <div class="result-title">
 
@@ -1507,13 +1592,15 @@ ${escapeHTML(item)}
 
                     </div>
 
-                `)
+                `
+                )
                 .join("");
 
 
     } catch (error) {
 
-        status.textContent = "ERROR";
+        status.textContent =
+            "ERROR";
 
 
         results.innerHTML = `
@@ -1521,11 +1608,11 @@ ${escapeHTML(item)}
             <div class="result-card">
 
                 <div class="result-title">
-                    Backend unavailable
+                    Database Error
                 </div>
 
                 <div class="result-data">
-The /api/search endpoint is not configured yet.
+${escapeHTML(error.message)}
                 </div>
 
             </div>
@@ -1536,94 +1623,461 @@ The /api/search endpoint is not configured yet.
 
 
 /* ============================================================
-   SECURITY
+   IPINFO LOOKUP
 ============================================================ */
 
-function escapeHTML(value) {
+async function ipSearch() {
 
-    return String(value)
+    const ip =
+        document
+            .getElementById(
+                "ipInput"
+            )
+            .value
+            .trim();
 
-        .replaceAll("&", "&amp;")
-
-        .replaceAll("<", "&lt;")
-
-        .replaceAll(">", "&gt;")
-
-        .replaceAll('"', "&quot;")
-
-        .replaceAll("'", "&#039;");
-}
-
-
-/* ============================================================
-   PLACEHOLDER LOOKUPS
-============================================================ */
-
-function ipSearch() {
 
     const output =
         document.getElementById(
             "ipResults"
         );
 
+
+    if (!ip) {
+
+        output.innerHTML = `
+            <div class="empty">
+                Enter an IP address.
+            </div>
+        `;
+
+        return;
+    }
+
+
     output.innerHTML = `
-
         <div class="empty">
-            IP lookup backend not configured.
+            Looking up ${escapeHTML(ip)}...
         </div>
-
     `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/ip?ip=" +
+                encodeURIComponent(ip)
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "IP lookup failed"
+            );
+        }
+
+
+        const data =
+            result.data;
+
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    IP Information
+
+                    <span class="badge found">
+                        FOUND
+                    </span>
+
+                </div>
+
+
+                <div class="result-data">
+
+IP:
+${escapeHTML(data.ip || "Unknown")}
+
+Hostname:
+${escapeHTML(data.hostname || "Unknown")}
+
+City:
+${escapeHTML(data.city || "Unknown")}
+
+Region:
+${escapeHTML(data.region || "Unknown")}
+
+Country:
+${escapeHTML(data.country || "Unknown")}
+
+Location:
+${escapeHTML(data.loc || "Unknown")}
+
+Organization:
+${escapeHTML(data.org || "Unknown")}
+
+Postal:
+${escapeHTML(data.postal || "Unknown")}
+
+Timezone:
+${escapeHTML(data.timezone || "Unknown")}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+    } catch (error) {
+
+        output.innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    IP Lookup Failed
+                </div>
+
+                <div class="result-data">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+
+        `;
+    }
 }
 
 
-function emailSearch() {
+/* ============================================================
+   EMAIL
+============================================================ */
+
+async function emailSearch() {
+
+    const email =
+        document
+            .getElementById(
+                "emailInput"
+            )
+            .value
+            .trim();
+
 
     const output =
         document.getElementById(
             "emailResults"
         );
 
+
+    if (!email) {
+
+        output.innerHTML = `
+            <div class="empty">
+                Enter an email address.
+            </div>
+        `;
+
+        return;
+    }
+
+
     output.innerHTML = `
-
         <div class="empty">
-            Email lookup backend not configured.
+            Looking up email...
         </div>
-
     `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/email?email=" +
+                encodeURIComponent(email)
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Email lookup failed"
+            );
+        }
+
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Email
+
+                    <span class="badge found">
+                        VALID
+                    </span>
+
+                </div>
+
+                <div class="result-data">
+Email:
+${escapeHTML(data.email || email)}
+
+Status:
+${escapeHTML(data.message || "Verified")}
+                </div>
+
+            </div>
+
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Email Lookup Failed
+                </div>
+
+                <div class="result-data">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+
+        `;
+    }
 }
 
 
-function phoneSearch() {
+/* ============================================================
+   PHONE
+============================================================ */
+
+async function phoneSearch() {
+
+    const phone =
+        document
+            .getElementById(
+                "phoneInput"
+            )
+            .value
+            .trim();
+
 
     const output =
         document.getElementById(
             "phoneResults"
         );
 
+
+    if (!phone) {
+
+        output.innerHTML = `
+            <div class="empty">
+                Enter a phone number.
+            </div>
+        `;
+
+        return;
+    }
+
+
     output.innerHTML = `
-
         <div class="empty">
-            Phone lookup backend not configured.
+            Looking up phone...
         </div>
-
     `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/phone?phone=" +
+                encodeURIComponent(phone)
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                data.error ||
+                "Phone lookup failed"
+            );
+        }
+
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Phone
+
+                    <span class="badge found">
+                        VALID
+                    </span>
+
+                </div>
+
+                <div class="result-data">
+Phone:
+${escapeHTML(data.phone || phone)}
+
+Status:
+${escapeHTML(data.message || "Verified")}
+                </div>
+
+            </div>
+
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Phone Lookup Failed
+                </div>
+
+                <div class="result-data">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+
+        `;
+    }
 }
 
 
 /* ============================================================
-   ENTER TO SEARCH
+   HTML ESCAPING
+============================================================ */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+}
+
+
+/* ============================================================
+   ENTER KEY
 ============================================================ */
 
 document
-    .getElementById("databaseQuery")
+    .getElementById(
+        "databaseQuery"
+    )
     .addEventListener(
         "keydown",
         event => {
 
             if (event.key === "Enter") {
-
                 databaseSearch();
+            }
 
+        }
+    );
+
+
+document
+    .getElementById(
+        "ipInput"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+                ipSearch();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "emailInput"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+                emailSearch();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "phoneInput"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+                phoneSearch();
             }
 
         }
