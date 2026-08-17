@@ -24,80 +24,107 @@ export default function handler(req, res) {
             });
         }
 
-        const file = fs.readFileSync(
+        const content = fs.readFileSync(
             filePath,
             "utf8"
         );
 
-        const lines = file
+        const lines = content
             .replace(/^\uFEFF/, "")
             .split(/\r?\n/)
             .map(line => line.trim())
             .filter(Boolean);
 
-        // Header überspringen
-        const data = lines.slice(1);
-
         const search = query.toLowerCase();
 
         const results = [];
 
-        for (const line of data) {
+        for (const line of lines) {
 
-            // Das erste Komma trennt den Namen vom Rest.
-            // Dadurch sind Kommas in der Adresse kein Problem.
-            const firstComma = line.indexOf(",");
-
-            if (firstComma === -1) {
+            // Header ignorieren
+            if (
+                line.toLowerCase()
+                    .startsWith("full name,")
+            ) {
                 continue;
             }
 
+            const parts = line.split(",");
+
+            if (parts.length < 4) {
+                continue;
+            }
+
+            /*
+             * Format:
+             *
+             * 0 = full name
+             * 1 = email
+             * 2...n = address
+             * n+1 = phone/status
+             * n+2 = IP
+             *
+             * Beispiel:
+             *
+             * Kaden Mont
+             * kadennn577@gmail.com
+             * 1114 W 53rd St
+             * Minneapolis
+             * MN 55419
+             * not found
+             * 75.98.153.193
+             */
+
             const fullName =
-                line
-                    .substring(0, firstComma)
-                    .trim();
+                parts[0].trim();
 
             if (
-                fullName
+                !fullName
                     .toLowerCase()
                     .includes(search)
             ) {
-
-                const rest =
-                    line.substring(
-                        firstComma + 1
-                    );
-
-                /*
-                 * Erwartetes Format:
-                 *
-                 * name,
-                 * email,
-                 * address,
-                 * phone,
-                 * ip,
-                 * history
-                 *
-                 * Achtung:
-                 * Wenn Address selbst Kommas enthält,
-                 * kann ein echtes CSV-Parsing nötig sein.
-                 */
-
-                const fields =
-                    rest.split(",");
-
-                results.push({
-                    fullName: fullName,
-                    email: fields[0]?.trim() || "",
-                    address: fields[1]?.trim() || "",
-                    phone: fields[2]?.trim() || "",
-                    ip: fields[3]?.trim() || "",
-                    history: fields
-                        .slice(4)
-                        .join(",")
-                        .trim()
-                });
+                continue;
             }
+
+            const email =
+                parts[1]?.trim() || "";
+
+            /*
+             * Die IP ist immer das letzte Feld.
+             */
+            const ip =
+                parts[parts.length - 1]
+                    .trim();
+
+            /*
+             * Das Feld vor der IP ist
+             * phone/status.
+             */
+            const phone =
+                parts[parts.length - 2]
+                    ?.trim() || "";
+
+            /*
+             * Alles zwischen Email und
+             * phone/status ist die Adresse.
+             */
+            const address =
+                parts
+                    .slice(
+                        2,
+                        parts.length - 2
+                    )
+                    .join(", ")
+                    .trim();
+
+            results.push({
+                fullName,
+                email,
+                address,
+                phone,
+                ip,
+                history: ""
+            });
 
             if (results.length >= 100) {
                 break;
@@ -106,15 +133,15 @@ export default function handler(req, res) {
 
         return res.status(200).json({
             success: true,
-            query: query,
+            query,
             count: results.length,
-            results: results
+            results
         });
 
     } catch (error) {
 
         console.error(
-            "Fame search error:",
+            "Fame Database Error:",
             error
         );
 
