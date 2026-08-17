@@ -15,7 +15,7 @@
 
 :root {
     --bg: #020204;
-    --panel: rgba(10, 10, 14, .82);
+    --panel: rgba(10,10,14,.84);
     --border: rgba(255,255,255,.065);
 
     --pink: #ff3ca6;
@@ -24,6 +24,7 @@
 
     --text: #f4f1f5;
     --muted: #77717b;
+
     --green: #57e6a0;
 }
 
@@ -61,10 +62,6 @@ body {
     overflow-x: hidden;
 }
 
-/* =========================================================
-   BACKGROUND
-========================================================= */
-
 #space {
     position: fixed;
     inset: 0;
@@ -73,7 +70,6 @@ body {
     height: 100%;
 
     z-index: 0;
-
     pointer-events: none;
 }
 
@@ -82,7 +78,6 @@ body {
     inset: 0;
 
     z-index: 1;
-
     pointer-events: none;
 
     opacity: .025;
@@ -90,10 +85,6 @@ body {
     background-image:
         url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
 }
-
-/* =========================================================
-   APP
-========================================================= */
 
 .app {
     position: relative;
@@ -127,8 +118,7 @@ body {
     border-right:
         1px solid var(--border);
 
-    backdrop-filter:
-        blur(24px);
+    backdrop-filter: blur(24px);
 
     z-index: 50;
 }
@@ -163,7 +153,6 @@ body {
         );
 
     font-size: 15px;
-
     font-weight: 900;
 
     box-shadow:
@@ -173,9 +162,7 @@ body {
 
 .logo-text {
     font-size: 16px;
-
     font-weight: 750;
-
     letter-spacing: -.4px;
 }
 
@@ -190,19 +177,15 @@ body {
     color: #4f4a52;
 
     font-size: 8px;
-
     font-weight: 800;
 
     letter-spacing: 1.7px;
-
     text-transform: uppercase;
 }
 
 .nav {
     display: flex;
-
     flex-direction: column;
-
     gap: 3px;
 }
 
@@ -212,7 +195,6 @@ body {
     width: 100%;
 
     display: flex;
-
     align-items: center;
 
     gap: 12px;
@@ -221,7 +203,6 @@ body {
         11px 12px;
 
     border: 0;
-
     border-radius: 8px;
 
     background: transparent;
@@ -234,8 +215,7 @@ body {
 
     font-size: 11px;
 
-    transition:
-        .2s ease;
+    transition: .2s ease;
 }
 
 .nav-item:hover {
@@ -296,7 +276,7 @@ body {
 }
 
 /* =========================================================
-   SIDEBAR PROFILE
+   PROFILE
 ========================================================= */
 
 .sidebar-bottom {
@@ -343,13 +323,11 @@ body {
     color: var(--pink);
 
     font-size: 11px;
-
     font-weight: 800;
 }
 
 .profile-name {
     font-size: 10px;
-
     font-weight: 600;
 }
 
@@ -394,15 +372,10 @@ body {
         28px 36px 50px;
 }
 
-/* =========================================================
-   TOP BAR
-========================================================= */
-
 .topbar {
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
     margin-bottom: 26px;
@@ -428,7 +401,6 @@ body {
 
 .title h1 {
     font-size: 24px;
-
     letter-spacing: -.8px;
 }
 
@@ -442,9 +414,7 @@ body {
 
 .top-actions {
     display: flex;
-
     align-items: center;
-
     gap: 8px;
 }
 
@@ -485,7 +455,6 @@ body {
     gap: 12px;
 
     width: 100%;
-
     max-width: 1100px;
 
     margin-bottom: 18px;
@@ -505,8 +474,7 @@ body {
         0 25px 80px
         rgba(0,0,0,.3);
 
-    backdrop-filter:
-        blur(20px);
+    backdrop-filter: blur(20px);
 }
 
 .command-icon {
@@ -536,7 +504,6 @@ body {
     height: 42px;
 
     border: 0;
-
     outline: 0;
 
     background: transparent;
@@ -566,14 +533,13 @@ body {
 
     color: #57515b;
 
-    font-family:
-        monospace;
+    font-family: monospace;
 
     font-size: 8px;
 }
 
 /* =========================================================
-   WORKSPACE
+   PANEL
 ========================================================= */
 
 .workspace {
@@ -607,10 +573,6 @@ body {
     backdrop-filter:
         blur(20px);
 }
-
-/* =========================================================
-   PANEL HEADER
-========================================================= */
 
 .panel-head {
     display: flex;
@@ -707,7 +669,6 @@ body {
         0 10px;
 
     border: 0;
-
     outline: none;
 
     background: transparent;
@@ -741,7 +702,6 @@ body {
     color: white;
 
     font-size: 9px;
-
     font-weight: 750;
 
     cursor: pointer;
@@ -750,8 +710,7 @@ body {
         0 8px 25px
         rgba(255,55,170,.12);
 
-    transition:
-        .2s ease;
+    transition: .2s ease;
 }
 
 .search-btn:hover {
@@ -869,10 +828,9 @@ body {
 
     justify-content: space-between;
 
-    margin-bottom: 7px;
+    margin-bottom: 10px;
 
     font-size: 10px;
-
     font-weight: 650;
 }
 
@@ -917,6 +875,68 @@ body {
 }
 
 /* =========================================================
+   FAME FIELD GRID
+========================================================= */
+
+.fame-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 7px;
+
+    margin-top: 5px;
+}
+
+.fame-field {
+    padding: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.045);
+
+    border-radius: 7px;
+
+    background:
+        rgba(255,255,255,.012);
+}
+
+.fame-field.full {
+    grid-column:
+        1 / -1;
+}
+
+.fame-label {
+    margin-bottom: 5px;
+
+    color: #4e4952;
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+
+    text-transform: uppercase;
+}
+
+.fame-value {
+    color: #a29ca5;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    word-break: break-word;
+}
+
+/* =========================================================
    AEGIS BASE
 ========================================================= */
 
@@ -924,10 +944,10 @@ body {
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
-    padding: 12px 14px;
+    padding:
+        12px 14px;
 
     margin-bottom: 10px;
 
@@ -1018,10 +1038,7 @@ body {
         1px solid
         rgba(255,255,255,.04);
 
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
+    font-family: monospace;
 
     font-size: 9px;
 }
@@ -1037,10 +1054,7 @@ body {
 
     word-break: break-word;
 
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        monospace;
+    font-family: monospace;
 
     font-size: 9px;
 }
@@ -1104,7 +1118,6 @@ body {
 
 .page-btn:disabled {
     opacity: .3;
-
     cursor: not-allowed;
 }
 
@@ -1166,6 +1179,14 @@ body {
         padding:
             22px 16px;
     }
+
+    .fame-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .fame-field.full {
+        grid-column: auto;
+    }
 }
 
 @media(max-width: 550px) {
@@ -1194,7 +1215,6 @@ body {
         gap: 8px;
     }
 }
-
 </style>
 </head>
 
@@ -1235,10 +1255,7 @@ body {
             onclick="switchPage('databreach', this)"
         >
             <div class="nav-icon">◈</div>
-
-            <span>
-                Databreach Search
-            </span>
+            <span>Databreach Search</span>
         </button>
 
         <button
@@ -1246,10 +1263,15 @@ body {
             onclick="switchPage('base', this)"
         >
             <div class="nav-icon">▤</div>
+            <span>Aegis Base</span>
+        </button>
 
-            <span>
-                Aegis Base
-            </span>
+        <button
+            class="nav-item"
+            onclick="switchPage('fame', this)"
+        >
+            <div class="nav-icon">★</div>
+            <span>Fame Database</span>
         </button>
 
         <button
@@ -1257,10 +1279,7 @@ body {
             onclick="switchPage('ip', this)"
         >
             <div class="nav-icon">◉</div>
-
-            <span>
-                IP Information
-            </span>
+            <span>IP Information</span>
         </button>
 
         <button
@@ -1268,10 +1287,7 @@ body {
             onclick="switchPage('email', this)"
         >
             <div class="nav-icon">@</div>
-
-            <span>
-                Email Lookup
-            </span>
+            <span>Email Lookup</span>
         </button>
 
         <button
@@ -1279,10 +1295,7 @@ body {
             onclick="switchPage('phone', this)"
         >
             <div class="nav-icon">#</div>
-
-            <span>
-                Phone Lookup
-            </span>
+            <span>Phone Lookup</span>
         </button>
 
     </nav>
@@ -1330,15 +1343,9 @@ body {
 
             <div class="breadcrumb">
 
-                <span>
-                    AEGIS
-                </span>
-
+                <span>AEGIS</span>
                 /
-
-                <span id="crumb">
-                    DATABASE
-                </span>
+                <span id="crumb">DATABASE</span>
 
             </div>
 
@@ -1372,7 +1379,7 @@ body {
 
 
     <!-- =================================================
-         QUICK SEARCH
+         GLOBAL SEARCH
     ================================================= -->
 
     <div class="command">
@@ -1395,468 +1402,531 @@ body {
     </div>
 
 
-    <!-- =================================================
-         WORKSPACE
-    ================================================= -->
-
     <div class="workspace">
 
         <section class="main-panel">
 
 
-            <!-- =================================================
-                 DATABREACH
-            ================================================= -->
+<!-- =====================================================
+     DATABREACH
+===================================================== -->
 
-            <div
-                id="page-databreach"
-                class="page active-page"
-            >
+<div
+    id="page-databreach"
+    class="page active-page"
+>
 
-                <div class="panel-head">
+    <div class="panel-head">
 
-                    <div class="panel-head-left">
+        <div class="panel-head-left">
 
-                        <div class="panel-symbol">
-                            ◈
-                        </div>
+            <div class="panel-symbol">
+                ◈
+            </div>
 
-                        <div>
+            <div>
+                <h2>Databreach Search</h2>
 
-                            <h2>
-                                Databreach Search
-                            </h2>
+                <p>
+                    Search your authorized database
+                </p>
+            </div>
 
-                            <p>
-                                Search your authorized database
-                            </p>
+        </div>
 
-                        </div>
+        <div class="panel-tag">
+            SEARCH
+        </div>
 
-                    </div>
+    </div>
 
-                    <div class="panel-tag">
-                        SEARCH
-                    </div>
+    <div class="search-row">
 
-                </div>
+        <input
+            id="databaseQuery"
+            type="text"
+            placeholder="Name, email, phone or address..."
+            autocomplete="off"
+        >
 
-                <div class="search-row">
+        <button
+            class="search-btn"
+            onclick="databaseSearch()"
+        >
+            SEARCH
+        </button>
 
-                    <input
-                        id="databaseQuery"
-                        type="text"
-                        placeholder="Name, email, phone or address..."
-                        autocomplete="off"
-                    >
+    </div>
 
-                    <button
-                        class="search-btn"
-                        onclick="databaseSearch()"
-                    >
-                        SEARCH
-                    </button>
+    <div class="results-head">
 
-                </div>
+        <span>RESULTS</span>
 
-                <div class="results-head">
+        <span id="searchStatus">
+            READY
+        </span>
 
-                    <span>
-                        RESULTS
-                    </span>
+    </div>
 
-                    <span id="searchStatus">
-                        READY
-                    </span>
+    <div
+        class="results"
+        id="databaseResults"
+    >
 
-                </div>
+        <div class="empty">
 
-                <div
-                    class="results"
-                    id="databaseResults"
-                >
+            <div class="empty-icon">
+                ◈
+            </div>
 
-                    <div class="empty">
+            Enter a value to begin searching.
 
-                        <div class="empty-icon">
-                            ◈
-                        </div>
+        </div>
 
-                        Enter a value to begin searching.
+    </div>
 
-                    </div>
+</div>
 
-                </div>
+
+<!-- =====================================================
+     AEGIS BASE
+===================================================== -->
+
+<div
+    id="page-base"
+    class="page"
+>
+
+    <div class="panel-head">
+
+        <div class="panel-head-left">
+
+            <div class="panel-symbol">
+                ▤
+            </div>
+
+            <div>
+
+                <h2>Aegis Base</h2>
+
+                <p>
+                    Browse your authorized database
+                </p>
 
             </div>
 
+        </div>
 
-            <!-- =================================================
-                 AEGIS BASE
-            ================================================= -->
+        <div class="panel-tag">
+            DB.TXT
+        </div>
 
-            <div
-                id="page-base"
-                class="page"
-            >
+    </div>
 
-                <div class="panel-head">
+    <div class="base-info">
 
-                    <div class="panel-head-left">
+        <div>
 
-                        <div class="panel-symbol">
-                            ▤
-                        </div>
+            <strong>db.txt</strong>
 
-                        <div>
+            <span>
+                50,000 lines
+            </span>
 
-                            <h2>
-                                Aegis Base
-                            </h2>
+        </div>
 
-                            <p>
-                                Authorized database browser
-                            </p>
+        <div>
 
-                        </div>
+            <strong id="basePageInfo">
+                Page 1
+            </strong>
 
-                    </div>
+            <span>
+                100 entries
+            </span>
 
-                    <div class="panel-tag">
-                        DB.TXT
-                    </div>
+        </div>
 
-                </div>
+    </div>
 
+    <div
+        id="baseResults"
+        class="base-results"
+    >
 
-                <div class="base-info">
+        <div class="empty">
+            Loading database...
+        </div>
 
-                    <div>
+    </div>
 
-                        <strong>
-                            db.txt
-                        </strong>
+    <div class="base-pagination">
 
-                        <span>
-                            50,000 lines
-                        </span>
+        <button
+            class="page-btn"
+            onclick="basePrevious()"
+            id="basePrev"
+            disabled
+        >
+            ← Previous
+        </button>
 
-                    </div>
+        <span id="basePageNumber">
+            1 / 500
+        </span>
 
-                    <div>
+        <button
+            class="page-btn"
+            onclick="baseNext()"
+            id="baseNext"
+        >
+            Next →
+        </button>
 
-                        <strong id="basePageInfo">
-                            Page 1
-                        </strong>
+    </div>
 
-                        <span>
-                            100 entries
-                        </span>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="baseResults"
-                    class="base-results"
-                >
-
-                    <div class="empty">
-                        Click Aegis Base to load the database.
-                    </div>
-
-                </div>
+</div>
 
 
-                <div class="base-pagination">
+<!-- =====================================================
+     FAME DATABASE
+===================================================== -->
 
-                    <button
-                        class="page-btn"
-                        onclick="basePrevious()"
-                        id="basePrev"
-                        disabled
-                    >
-                        ← Previous
-                    </button>
+<div
+    id="page-fame"
+    class="page"
+>
 
-                    <span id="basePageNumber">
-                        1 / 500
-                    </span>
+    <div class="panel-head">
 
-                    <button
-                        class="page-btn"
-                        onclick="baseNext()"
-                        id="baseNext"
-                    >
-                        Next →
-                    </button>
+        <div class="panel-head-left">
 
-                </div>
+            <div class="panel-symbol">
+                ★
+            </div>
+
+            <div>
+
+                <h2>Fame Database</h2>
+
+                <p>
+                    Search the authorized Fame database
+                </p>
 
             </div>
 
+        </div>
 
-            <!-- =================================================
-                 IP
-            ================================================= -->
+        <div class="panel-tag">
+            FAME.TXT
+        </div>
 
-            <div
-                id="page-ip"
-                class="page"
-            >
+    </div>
 
-                <div class="panel-head">
+    <div class="search-row">
 
-                    <div class="panel-head-left">
+        <input
+            id="fameInput"
+            type="text"
+            placeholder="Enter full name..."
+            autocomplete="off"
+        >
 
-                        <div class="panel-symbol">
-                            ◉
-                        </div>
+        <button
+            class="search-btn"
+            onclick="fameSearch()"
+        >
+            SEARCH
+        </button>
 
-                        <div>
+    </div>
 
-                            <h2>
-                                IP Information
-                            </h2>
+    <div class="results-head">
 
-                            <p>
-                                Public IP intelligence
-                            </p>
+        <span>
+            FAME DATABASE RESULTS
+        </span>
 
-                        </div>
+        <span id="fameStatus">
+            READY
+        </span>
 
-                    </div>
+    </div>
 
-                    <div class="panel-tag">
-                        LOOKUP
-                    </div>
+    <div
+        class="results"
+        id="fameResults"
+    >
 
-                </div>
+        <div class="empty">
 
-                <div class="search-row">
+            <div class="empty-icon">
+                ★
+            </div>
 
-                    <input
-                        id="ipInput"
-                        type="text"
-                        placeholder="8.8.8.8"
-                        autocomplete="off"
-                    >
+            Enter a name to search Fame Database.
 
-                    <button
-                        class="search-btn"
-                        onclick="ipSearch()"
-                    >
-                        LOOKUP
-                    </button>
+        </div>
 
-                </div>
+    </div>
 
-                <div class="results-head">
+</div>
 
-                    <span>
-                        IP INFORMATION
-                    </span>
 
-                    <span>
-                        READY
-                    </span>
+<!-- =====================================================
+     IP
+===================================================== -->
 
-                </div>
+<div
+    id="page-ip"
+    class="page"
+>
 
-                <div
-                    class="results"
-                    id="ipResults"
-                >
+    <div class="panel-head">
 
-                    <div class="empty">
+        <div class="panel-head-left">
 
-                        <div class="empty-icon">
-                            ◉
-                        </div>
+            <div class="panel-symbol">
+                ◉
+            </div>
 
-                        Enter an IP address.
+            <div>
 
-                    </div>
+                <h2>IP Information</h2>
 
-                </div>
+                <p>
+                    Public IP intelligence
+                </p>
 
             </div>
 
+        </div>
 
-            <!-- =================================================
-                 EMAIL
-            ================================================= -->
+        <div class="panel-tag">
+            LOOKUP
+        </div>
 
-            <div
-                id="page-email"
-                class="page"
-            >
+    </div>
 
-                <div class="panel-head">
+    <div class="search-row">
 
-                    <div class="panel-head-left">
+        <input
+            id="ipInput"
+            type="text"
+            placeholder="8.8.8.8"
+            autocomplete="off"
+        >
 
-                        <div class="panel-symbol">
-                            @
-                        </div>
+        <button
+            class="search-btn"
+            onclick="ipSearch()"
+        >
+            LOOKUP
+        </button>
 
-                        <div>
+    </div>
 
-                            <h2>
-                                Email Lookup
-                            </h2>
+    <div class="results-head">
 
-                            <p>
-                                Analyze an email address
-                            </p>
+        <span>
+            IP INFORMATION
+        </span>
 
-                        </div>
+        <span>
+            READY
+        </span>
 
-                    </div>
+    </div>
 
-                    <div class="panel-tag">
-                        LOOKUP
-                    </div>
+    <div
+        class="results"
+        id="ipResults"
+    >
 
-                </div>
+        <div class="empty">
 
-                <div class="search-row">
+            <div class="empty-icon">
+                ◉
+            </div>
 
-                    <input
-                        id="emailInput"
-                        type="email"
-                        placeholder="example@domain.com"
-                        autocomplete="off"
-                    >
+            Enter an IP address.
 
-                    <button
-                        class="search-btn"
-                        onclick="emailSearch()"
-                    >
-                        LOOKUP
-                    </button>
+        </div>
 
-                </div>
+    </div>
 
-                <div class="results-head">
+</div>
 
-                    <span>
-                        EMAIL INFORMATION
-                    </span>
 
-                    <span>
-                        READY
-                    </span>
+<!-- =====================================================
+     EMAIL
+===================================================== -->
 
-                </div>
+<div
+    id="page-email"
+    class="page"
+>
 
-                <div
-                    class="results"
-                    id="emailResults"
-                >
+    <div class="panel-head">
 
-                    <div class="empty">
+        <div class="panel-head-left">
 
-                        <div class="empty-icon">
-                            @
-                        </div>
+            <div class="panel-symbol">
+                @
+            </div>
 
-                        Enter an email address.
+            <div>
 
-                    </div>
+                <h2>Email Lookup</h2>
 
-                </div>
+                <p>
+                    Analyze an email address
+                </p>
 
             </div>
 
+        </div>
 
-            <!-- =================================================
-                 PHONE
-            ================================================= -->
+        <div class="panel-tag">
+            LOOKUP
+        </div>
 
-            <div
-                id="page-phone"
-                class="page"
-            >
+    </div>
 
-                <div class="panel-head">
+    <div class="search-row">
 
-                    <div class="panel-head-left">
+        <input
+            id="emailInput"
+            type="email"
+            placeholder="example@domain.com"
+            autocomplete="off"
+        >
 
-                        <div class="panel-symbol">
-                            #
-                        </div>
+        <button
+            class="search-btn"
+            onclick="emailSearch()"
+        >
+            LOOKUP
+        </button>
 
-                        <div>
+    </div>
 
-                            <h2>
-                                Phone Lookup
-                            </h2>
+    <div class="results-head">
 
-                            <p>
-                                Analyze a phone number
-                            </p>
+        <span>
+            EMAIL INFORMATION
+        </span>
 
-                        </div>
+        <span>
+            READY
+        </span>
 
-                    </div>
+    </div>
 
-                    <div class="panel-tag">
-                        LOOKUP
-                    </div>
+    <div
+        class="results"
+        id="emailResults"
+    >
 
-                </div>
+        <div class="empty">
 
-                <div class="search-row">
+            <div class="empty-icon">
+                @
+            </div>
 
-                    <input
-                        id="phoneInput"
-                        type="text"
-                        placeholder="+49 152 5023156"
-                        autocomplete="off"
-                    >
+            Enter an email address.
 
-                    <button
-                        class="search-btn"
-                        onclick="phoneSearch()"
-                    >
-                        LOOKUP
-                    </button>
+        </div>
 
-                </div>
+    </div>
 
-                <div class="results-head">
+</div>
 
-                    <span>
-                        PHONE INFORMATION
-                    </span>
 
-                    <span>
-                        READY
-                    </span>
+<!-- =====================================================
+     PHONE
+===================================================== -->
 
-                </div>
+<div
+    id="page-phone"
+    class="page"
+>
 
-                <div
-                    class="results"
-                    id="phoneResults"
-                >
+    <div class="panel-head">
 
-                    <div class="empty">
+        <div class="panel-head-left">
 
-                        <div class="empty-icon">
-                            #
-                        </div>
+            <div class="panel-symbol">
+                #
+            </div>
 
-                        Enter a phone number.
+            <div>
 
-                    </div>
+                <h2>Phone Lookup</h2>
 
-                </div>
+                <p>
+                    Analyze a phone number
+                </p>
 
             </div>
+
+        </div>
+
+        <div class="panel-tag">
+            LOOKUP
+        </div>
+
+    </div>
+
+    <div class="search-row">
+
+        <input
+            id="phoneInput"
+            type="text"
+            placeholder="+49 152 5023156"
+            autocomplete="off"
+        >
+
+        <button
+            class="search-btn"
+            onclick="phoneSearch()"
+        >
+            LOOKUP
+        </button>
+
+    </div>
+
+    <div class="results-head">
+
+        <span>
+            PHONE INFORMATION
+        </span>
+
+        <span>
+            READY
+        </span>
+
+    </div>
+
+    <div
+        class="results"
+        id="phoneResults"
+    >
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                #
+            </div>
+
+            Enter a phone number.
+
+        </div>
+
+    </div>
+
+</div>
+
 
         </section>
 
@@ -1893,7 +1963,7 @@ function resize() {
 
     const amount =
         Math.min(
-            100,
+            110,
             Math.floor(
                 canvas.width *
                 canvas.height /
@@ -1919,23 +1989,19 @@ function resize() {
 
             speed:
                 Math.random() *
-                .45 +
-                .08,
+                .45 + .08,
 
             size:
                 Math.random() *
-                1 +
-                .2,
+                1 + .2,
 
             alpha:
                 Math.random() *
-                .6 +
-                .15,
+                .6 + .15,
 
             trail:
                 Math.random() *
-                15 +
-                4
+                15 + 4
 
         });
 
@@ -1956,8 +2022,7 @@ function animate() {
         const star of stars
     ) {
 
-        star.x +=
-            star.speed;
+        star.x += star.speed;
 
         star.y +=
             star.speed * .08;
@@ -1990,12 +2055,7 @@ function animate() {
 
         gradient.addColorStop(
             1,
-            `rgba(
-                255,
-                90,
-                185,
-                ${star.alpha}
-            )`
+            `rgba(255,90,185,${star.alpha})`
         );
 
         ctx.beginPath();
@@ -2021,12 +2081,7 @@ function animate() {
         ctx.beginPath();
 
         ctx.fillStyle =
-            `rgba(
-                255,
-                120,
-                205,
-                ${star.alpha}
-            )`;
+            `rgba(255,120,205,${star.alpha})`;
 
         ctx.arc(
             star.x,
@@ -2037,6 +2092,7 @@ function animate() {
         );
 
         ctx.fill();
+
     }
 
     requestAnimationFrame(
@@ -2073,6 +2129,13 @@ const pageInfo = {
         crumb: "AEGIS BASE"
     },
 
+    fame: {
+        title: "Fame Database",
+        description:
+            "Search the authorized Fame database.",
+        crumb: "FAME DATABASE"
+    },
+
     ip: {
         title: "IP Information",
         description:
@@ -2098,7 +2161,7 @@ const pageInfo = {
 
 
 /* =========================================================
-   SWITCH PAGE
+   PAGE SWITCH
 ========================================================= */
 
 function switchPage(
@@ -2110,11 +2173,9 @@ function switchPage(
         .querySelectorAll(".page")
         .forEach(
             element => {
-
                 element.classList.remove(
                     "active-page"
                 );
-
             }
         );
 
@@ -2124,31 +2185,25 @@ function switchPage(
         );
 
     if (target) {
-
         target.classList.add(
             "active-page"
         );
-
     }
 
     document
         .querySelectorAll(".nav-item")
         .forEach(
             element => {
-
                 element.classList.remove(
                     "active"
                 );
-
             }
         );
 
     if (button) {
-
         button.classList.add(
             "active"
         );
-
     }
 
     document.getElementById(
@@ -2166,13 +2221,9 @@ function switchPage(
     ).textContent =
         pageInfo[page].crumb;
 
-
     if (page === "base") {
-
         loadBasePage();
-
     }
-
 }
 
 
@@ -2181,16 +2232,13 @@ function switchPage(
 ========================================================= */
 
 document
-    .getElementById(
-        "globalSearch"
-    )
+    .getElementById("globalSearch")
     .addEventListener(
         "keydown",
         event => {
 
             if (
-                event.key !==
-                "Enter"
+                event.key !== "Enter"
             ) {
                 return;
             }
@@ -2202,51 +2250,24 @@ document
                 return;
             }
 
-            switchPageByName(
-                "databreach"
+            const buttons =
+                document.querySelectorAll(
+                    ".nav-item"
+                );
+
+            switchPage(
+                "databreach",
+                buttons[0]
             );
 
             document.getElementById(
                 "databaseQuery"
-            ).value =
-                value;
+            ).value = value;
 
             databaseSearch();
 
         }
     );
-
-
-function switchPageByName(
-    page
-) {
-
-    const buttons =
-        document.querySelectorAll(
-            ".nav-item"
-        );
-
-    const pages = [
-        "databreach",
-        "base",
-        "ip",
-        "email",
-        "phone"
-    ];
-
-    const index =
-        pages.indexOf(page);
-
-    if (index !== -1) {
-
-        switchPage(
-            page,
-            buttons[index]
-        );
-
-    }
-
-}
 
 
 /* =========================================================
@@ -2257,9 +2278,7 @@ async function databaseSearch() {
 
     const query =
         document
-            .getElementById(
-                "databaseQuery"
-            )
+            .getElementById("databaseQuery")
             .value
             .trim();
 
@@ -2309,27 +2328,21 @@ async function databaseSearch() {
             !response.ok ||
             !data.success
         ) {
-
             throw new Error(
                 data.error ||
                 "Database search failed"
             );
-
         }
 
         status.textContent =
             "COMPLETE";
 
         const results =
-            Array.isArray(
-                data.results
-            )
+            Array.isArray(data.results)
                 ? data.results
                 : [];
 
-        if (
-            results.length === 0
-        ) {
+        if (!results.length) {
 
             output.innerHTML = `
                 <div class="result-card safe">
@@ -2345,7 +2358,7 @@ async function databaseSearch() {
                     </div>
 
                     <div class="result-content">
-No exact match was found in the authorized database.
+No exact match was found.
                     </div>
 
                 </div>
@@ -2355,23 +2368,22 @@ No exact match was found in the authorized database.
         }
 
         output.innerHTML =
-            results
-                .map(
-                    (result, index) => `
+            results.map(
+                (result, index) => `
 
-                    <div class="result-card found">
+                <div class="result-card found">
 
-                        <div class="result-title">
+                    <div class="result-title">
 
-                            Result #${index + 1}
+                        Result #${index + 1}
 
-                            <span class="badge pink">
-                                MATCH
-                            </span>
+                        <span class="badge pink">
+                            MATCH
+                        </span>
 
-                        </div>
+                    </div>
 
-                        <div class="result-content">
+                    <div class="result-content">
 ${escapeHTML(
     typeof result === "string"
         ? result
@@ -2381,12 +2393,11 @@ ${escapeHTML(
             2
         )
 )}
-                        </div>
-
                     </div>
-                `
-                )
-                .join("");
+
+                </div>
+            `
+            ).join("");
 
     } catch (error) {
 
@@ -2408,7 +2419,242 @@ ${escapeHTML(error.message)}
         `;
 
     }
+}
 
+
+/* =========================================================
+   FAME SEARCH
+========================================================= */
+
+async function fameSearch() {
+
+    const query =
+        document
+            .getElementById("fameInput")
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "fameResults"
+        );
+
+    const status =
+        document.getElementById(
+            "fameStatus"
+        );
+
+    if (!query) {
+
+        output.innerHTML = `
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ★
+                </div>
+
+                Enter a name to search.
+
+            </div>
+        `;
+
+        return;
+    }
+
+    status.textContent =
+        "SEARCHING";
+
+    output.innerHTML = `
+        <div class="empty">
+            Searching Fame Database...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/fame?q=" +
+                encodeURIComponent(query)
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+            throw new Error(
+                data.error ||
+                "Fame database search failed"
+            );
+        }
+
+        status.textContent =
+            "COMPLETE";
+
+        const results =
+            Array.isArray(data.results)
+                ? data.results
+                : [];
+
+        if (!results.length) {
+
+            output.innerHTML = `
+                <div class="result-card safe">
+
+                    <div class="result-title">
+
+                        No Match
+
+                        <span class="badge green">
+                            NOT FOUND
+                        </span>
+
+                    </div>
+
+                    <div class="result-content">
+No matching name was found in Fame.txt.
+                    </div>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        output.innerHTML =
+            results.map(
+                (person, index) => `
+
+                <div class="result-card found">
+
+                    <div class="result-title">
+
+                        ${escapeHTML(
+                            person.fullName ||
+                            "Unknown"
+                        )}
+
+                        <span class="badge pink">
+                            MATCH
+                        </span>
+
+                    </div>
+
+                    <div class="fame-grid">
+
+                        <div class="fame-field">
+
+                            <div class="fame-label">
+                                Full Name
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.fullName || "-"
+)}
+                            </div>
+
+                        </div>
+
+                        <div class="fame-field">
+
+                            <div class="fame-label">
+                                Email
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.email || "-"
+)}
+                            </div>
+
+                        </div>
+
+                        <div class="fame-field">
+
+                            <div class="fame-label">
+                                Address
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.address || "-"
+)}
+                            </div>
+
+                        </div>
+
+                        <div class="fame-field">
+
+                            <div class="fame-label">
+                                Phone
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.phone || "-"
+)}
+                            </div>
+
+                        </div>
+
+                        <div class="fame-field">
+
+                            <div class="fame-label">
+                                IP
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.ip || "-"
+)}
+                            </div>
+
+                        </div>
+
+                        <div class="fame-field full">
+
+                            <div class="fame-label">
+                                History
+                            </div>
+
+                            <div class="fame-value">
+${escapeHTML(
+    person.history || "-"
+)}
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            `
+            ).join("");
+
+    } catch (error) {
+
+        status.textContent =
+            "ERROR";
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Search Error
+                </div>
+
+                <div class="result-content">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+        `;
+
+    }
 }
 
 
@@ -2419,7 +2665,6 @@ ${escapeHTML(error.message)}
 let basePage = 1;
 
 const BASE_PER_PAGE = 100;
-
 const BASE_TOTAL = 50000;
 
 const BASE_TOTAL_PAGES =
@@ -2461,24 +2706,18 @@ async function loadBasePage() {
             !response.ok ||
             !data.success
         ) {
-
             throw new Error(
                 data.error ||
                 "Could not load database"
             );
-
         }
 
         const lines =
-            Array.isArray(
-                data.lines
-            )
+            Array.isArray(data.lines)
                 ? data.lines
                 : [];
 
-        if (
-            lines.length === 0
-        ) {
+        if (!lines.length) {
 
             output.innerHTML = `
                 <div class="empty">
@@ -2524,7 +2763,6 @@ async function loadBasePage() {
         `;
 
     }
-
 }
 
 
@@ -2551,8 +2789,7 @@ function updateBasePagination() {
     document.getElementById(
         "baseNext"
     ).disabled =
-        basePage >=
-        BASE_TOTAL_PAGES;
+        basePage >= BASE_TOTAL_PAGES;
 
 }
 
@@ -2587,16 +2824,14 @@ function baseNext() {
 
 
 /* =========================================================
-   IP SEARCH
+   IP
 ========================================================= */
 
 async function ipSearch() {
 
     const ip =
         document
-            .getElementById(
-                "ipInput"
-            )
+            .getElementById("ipInput")
             .value
             .trim();
 
@@ -2638,12 +2873,10 @@ async function ipSearch() {
             !response.ok ||
             !result.success
         ) {
-
             throw new Error(
                 result.error ||
                 "IP lookup failed"
             );
-
         }
 
         const data =
@@ -2666,58 +2899,31 @@ async function ipSearch() {
                 <div class="result-content">
 
 IP:
-${escapeHTML(
-    data.ip ||
-    "Unknown"
-)}
+${escapeHTML(data.ip || "Unknown")}
 
 Hostname:
-${escapeHTML(
-    data.hostname ||
-    "Unknown"
-)}
+${escapeHTML(data.hostname || "Unknown")}
 
 City:
-${escapeHTML(
-    data.city ||
-    "Unknown"
-)}
+${escapeHTML(data.city || "Unknown")}
 
 Region:
-${escapeHTML(
-    data.region ||
-    "Unknown"
-)}
+${escapeHTML(data.region || "Unknown")}
 
 Country:
-${escapeHTML(
-    data.country ||
-    "Unknown"
-)}
+${escapeHTML(data.country || "Unknown")}
 
 Location:
-${escapeHTML(
-    data.loc ||
-    "Unknown"
-)}
+${escapeHTML(data.loc || "Unknown")}
 
 Organization:
-${escapeHTML(
-    data.org ||
-    "Unknown"
-)}
+${escapeHTML(data.org || "Unknown")}
 
 Postal:
-${escapeHTML(
-    data.postal ||
-    "Unknown"
-)}
+${escapeHTML(data.postal || "Unknown")}
 
 Timezone:
-${escapeHTML(
-    data.timezone ||
-    "Unknown"
-)}
+${escapeHTML(data.timezone || "Unknown")}
 
                 </div>
 
@@ -2734,30 +2940,25 @@ ${escapeHTML(
                 </div>
 
                 <div class="result-content">
-${escapeHTML(
-    error.message
-)}
+${escapeHTML(error.message)}
                 </div>
 
             </div>
         `;
 
     }
-
 }
 
 
 /* =========================================================
-   EMAIL SEARCH
+   EMAIL
 ========================================================= */
 
 async function emailSearch() {
 
     const email =
         document
-            .getElementById(
-                "emailInput"
-            )
+            .getElementById("emailInput")
             .value
             .trim();
 
@@ -2799,12 +3000,10 @@ async function emailSearch() {
             !response.ok ||
             !result.success
         ) {
-
             throw new Error(
                 result.error ||
                 "Email lookup failed"
             );
-
         }
 
         const data =
@@ -2819,12 +3018,7 @@ async function emailSearch() {
                     Email Intelligence
 
                     <span class="badge pink">
-${escapeHTML(
-    String(
-        data.status ||
-        "UNKNOWN"
-    ).toUpperCase()
-)}
+                        RESULT
                     </span>
 
                 </div>
@@ -2832,22 +3026,13 @@ ${escapeHTML(
                 <div class="result-content">
 
 Email:
-${escapeHTML(
-    data.email ||
-    email
-)}
+${escapeHTML(data.email || email)}
 
 Status:
-${escapeHTML(
-    data.status ||
-    "Unknown"
-)}
+${escapeHTML(data.status || "Unknown")}
 
 Score:
-${escapeHTML(
-    data.score ??
-    "Unknown"
-)}
+${escapeHTML(data.score ?? "Unknown")}
 
 Disposable:
 ${
@@ -2900,30 +3085,25 @@ ${
                 </div>
 
                 <div class="result-content">
-${escapeHTML(
-    error.message
-)}
+${escapeHTML(error.message)}
                 </div>
 
             </div>
         `;
 
     }
-
 }
 
 
 /* =========================================================
-   PHONE SEARCH
+   PHONE
 ========================================================= */
 
 async function phoneSearch() {
 
     const phone =
         document
-            .getElementById(
-                "phoneInput"
-            )
+            .getElementById("phoneInput")
             .value
             .trim();
 
@@ -2962,12 +3142,10 @@ async function phoneSearch() {
             await response.json();
 
         if (!response.ok) {
-
             throw new Error(
                 result.error ||
                 "Phone lookup failed"
             );
-
         }
 
         output.innerHTML = `
@@ -2988,8 +3166,7 @@ async function phoneSearch() {
 
 Phone:
 ${escapeHTML(
-    result.phone ||
-    phone
+    result.phone || phone
 )}
 
 Status:
@@ -3013,16 +3190,13 @@ ${escapeHTML(
                 </div>
 
                 <div class="result-content">
-${escapeHTML(
-    error.message
-)}
+${escapeHTML(error.message)}
                 </div>
 
             </div>
         `;
 
     }
-
 }
 
 
@@ -3031,85 +3205,61 @@ ${escapeHTML(
 ========================================================= */
 
 document
-    .getElementById(
-        "databaseQuery"
-    )
+    .getElementById("databaseQuery")
     .addEventListener(
         "keydown",
         e => {
-
-            if (
-                e.key ===
-                "Enter"
-            ) {
-
+            if (e.key === "Enter") {
                 databaseSearch();
-
             }
-
         }
     );
 
 
 document
-    .getElementById(
-        "ipInput"
-    )
+    .getElementById("fameInput")
     .addEventListener(
         "keydown",
         e => {
+            if (e.key === "Enter") {
+                fameSearch();
+            }
+        }
+    );
 
-            if (
-                e.key ===
-                "Enter"
-            ) {
 
+document
+    .getElementById("ipInput")
+    .addEventListener(
+        "keydown",
+        e => {
+            if (e.key === "Enter") {
                 ipSearch();
-
             }
-
         }
     );
 
 
 document
-    .getElementById(
-        "emailInput"
-    )
+    .getElementById("emailInput")
     .addEventListener(
         "keydown",
         e => {
-
-            if (
-                e.key ===
-                "Enter"
-            ) {
-
+            if (e.key === "Enter") {
                 emailSearch();
-
             }
-
         }
     );
 
 
 document
-    .getElementById(
-        "phoneInput"
-    )
+    .getElementById("phoneInput")
     .addEventListener(
         "keydown",
         e => {
-
-            if (
-                e.key ===
-                "Enter"
-            ) {
-
+            if (e.key === "Enter") {
                 phoneSearch();
-
             }
-
         }
     );
 
