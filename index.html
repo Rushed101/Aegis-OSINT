@@ -1,429 +1,928 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>NightTrace OSINT</title>
+<title>Aegis OSINT</title>
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        :root {
-            --bg: #07090d;
-            --panel: #0d1118;
-            --panel2: #111720;
-            --border: #1c2530;
-            --text: #edf2f7;
-            --muted: #7f8b99;
-            --accent: #5b8cff;
-            --accent2: #7c5cff;
-            --danger: #ff5c6c;
-            --success: #4ade80;
-        }
+:root {
+    --bg: #030305;
+    --panel: rgba(11, 8, 14, .78);
+    --panel2: rgba(18, 11, 21, .85);
+    --border: rgba(255, 75, 177, .14);
+    --border-hover: rgba(255, 75, 177, .38);
 
-        body {
-            min-height: 100vh;
-            background:
-                radial-gradient(circle at 20% 0%, rgba(91,140,255,.10), transparent 30%),
-                radial-gradient(circle at 90% 20%, rgba(124,92,255,.08), transparent 30%),
-                var(--bg);
-            color: var(--text);
-            font-family: Inter, Arial, sans-serif;
-        }
+    --pink: #ff3fa9;
+    --pink-light: #ff79c6;
+    --purple: #9d4edd;
 
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
+    --text: #f7f4f8;
+    --muted: #8d8791;
+    --success: #55e69a;
+    --danger: #ff5874;
+}
 
-        /* SIDEBAR */
+/* =========================
+   BASE
+========================= */
 
-        .sidebar {
-            width: 245px;
-            border-right: 1px solid var(--border);
-            background: rgba(8,11,16,.92);
-            padding: 22px 15px;
-            position: fixed;
-            inset: 0 auto 0 0;
-        }
+html {
+    scroll-behavior: smooth;
+}
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            padding: 5px 10px 30px;
-            font-size: 18px;
-            font-weight: 700;
-        }
+body {
+    min-height: 100vh;
+    overflow-x: hidden;
 
-        .logo-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 9px;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-            color: white;
-            font-weight: 800;
-        }
+    background:
+        radial-gradient(
+            circle at 50% -10%,
+            rgba(255, 45, 165, .12),
+            transparent 35%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(130, 40, 170, .08),
+            transparent 30%
+        ),
+        var(--bg);
 
-        .nav-title {
-            color: #4e5966;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            padding: 0 10px 10px;
-            text-transform: uppercase;
-        }
+    color: var(--text);
 
-        .nav button {
-            width: 100%;
-            border: 0;
-            background: transparent;
-            color: var(--muted);
-            padding: 12px 13px;
-            border-radius: 9px;
-            margin-bottom: 4px;
-            text-align: left;
-            cursor: pointer;
-            font-size: 13px;
-            transition: .18s;
-        }
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
 
-        .nav button:hover,
-        .nav button.active {
-            color: white;
-            background: #131a24;
-        }
+/* =========================
+   STAR BACKGROUND
+========================= */
 
-        .nav button.active {
-            box-shadow: inset 2px 0 0 var(--accent);
-        }
+#stars {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
 
-        /* MAIN */
+    pointer-events: none;
+    z-index: 0;
+}
 
-        .main {
-            margin-left: 245px;
-            width: calc(100% - 245px);
-            padding: 38px;
-        }
+/* =========================
+   APP
+========================= */
 
-        .topbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 35px;
-        }
+.app {
+    position: relative;
+    z-index: 2;
 
-        .title h1 {
-            font-size: 25px;
-            margin-bottom: 6px;
-        }
+    min-height: 100vh;
+}
 
-        .title p {
-            color: var(--muted);
-            font-size: 13px;
-        }
+/* =========================
+   SIDEBAR
+========================= */
 
-        .status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid var(--border);
-            background: var(--panel);
-            border-radius: 20px;
-            padding: 8px 13px;
-            font-size: 12px;
-            color: var(--muted);
-        }
+.sidebar {
+    position: fixed;
 
-        .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 10px rgba(74,222,128,.7);
-        }
+    top: 0;
+    left: 0;
+    bottom: 0;
 
-        /* CARDS */
+    width: 250px;
 
-        .dashboard {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 14px;
-            margin-bottom: 25px;
-        }
+    padding: 24px 16px;
 
-        .stat {
-            background: rgba(13,17,24,.8);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 18px;
-        }
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8, 6, 10, .96),
+            rgba(4, 4, 7, .94)
+        );
 
-        .stat-label {
-            color: var(--muted);
-            font-size: 11px;
-            margin-bottom: 9px;
-        }
+    border-right: 1px solid var(--border);
 
-        .stat-value {
-            font-size: 21px;
-            font-weight: 700;
-        }
+    backdrop-filter: blur(20px);
 
-        /* SEARCH */
+    z-index: 20;
+}
 
-        .search-panel {
-            background: rgba(13,17,24,.85);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 24px;
-            max-width: 950px;
-        }
+/* =========================
+   LOGO
+========================= */
 
-        .panel-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 22px;
-        }
+.logo {
+    display: flex;
+    align-items: center;
 
-        .panel-header h2 {
-            font-size: 16px;
-        }
+    gap: 12px;
 
-        .panel-header span {
-            color: var(--muted);
-            font-size: 11px;
-        }
+    padding: 4px 10px 32px;
+}
 
-        .input-row {
-            display: flex;
-            gap: 10px;
-        }
+.logo-icon {
+    width: 38px;
+    height: 38px;
 
-        input {
-            flex: 1;
-            height: 46px;
-            background: #080c11;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            outline: none;
-            padding: 0 14px;
-            color: white;
-            font-size: 13px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        input:focus {
-            border-color: #315aaf;
-            box-shadow: 0 0 0 3px rgba(91,140,255,.08);
-        }
+    border-radius: 10px;
 
-        .search-btn {
-            height: 46px;
-            border: 0;
-            border-radius: 8px;
-            padding: 0 22px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            background: linear-gradient(135deg, var(--accent), var(--accent2));
-        }
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink),
+            var(--purple)
+        );
 
-        .search-btn:hover {
-            filter: brightness(1.1);
-        }
+    color: white;
 
-        /* RESULTS */
+    font-size: 15px;
+    font-weight: 900;
 
-        .results {
-            margin-top: 22px;
-        }
+    box-shadow:
+        0 0 25px rgba(255, 63, 169, .25);
+}
 
-        .result-header {
-            display: flex;
-            justify-content: space-between;
-            color: var(--muted);
-            font-size: 11px;
-            margin-bottom: 10px;
-        }
+.logo-name {
+    font-size: 17px;
+    font-weight: 750;
+    letter-spacing: -.3px;
+}
 
-        .result-card {
-            background: #090d13;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 8px;
-        }
+.logo-name span {
+    color: var(--pink);
+}
 
-        .result-card.found {
-            border-left: 3px solid var(--danger);
-        }
+/* =========================
+   NAV
+========================= */
 
-        .result-card.not-found {
-            border-left: 3px solid var(--success);
-        }
+.nav-title {
+    padding: 0 11px 10px;
 
-        .result-title {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 7px;
-        }
+    color: #57515b;
 
-        .result-data {
-            white-space: pre-wrap;
-            color: #aab4c0;
-            font-family: monospace;
-            font-size: 12px;
-            line-height: 1.7;
-        }
+    font-size: 9px;
+    font-weight: 800;
 
-        .badge {
-            display: inline-block;
-            font-size: 9px;
-            padding: 4px 7px;
-            border-radius: 5px;
-            margin-left: 6px;
-        }
+    letter-spacing: 1.7px;
+    text-transform: uppercase;
+}
 
-        .badge.found {
-            background: rgba(255,92,108,.12);
-            color: #ff7784;
-        }
+.nav button {
+    position: relative;
 
-        .badge.safe {
-            background: rgba(74,222,128,.10);
-            color: var(--success);
-        }
+    width: 100%;
 
-        .empty {
-            padding: 35px;
-            text-align: center;
-            color: var(--muted);
-            border: 1px dashed var(--border);
-            border-radius: 9px;
-            font-size: 13px;
-        }
+    display: flex;
+    align-items: center;
 
-        .hidden {
-            display: none;
-        }
+    gap: 12px;
 
-        /* MOBILE */
+    padding: 12px 13px;
 
-        @media(max-width: 800px) {
-            .sidebar {
-                width: 70px;
-            }
+    margin-bottom: 5px;
 
-            .logo span,
-            .nav-title,
-            .nav button span {
-                display: none;
-            }
+    border: 0;
+    border-radius: 9px;
 
-            .main {
-                margin-left: 70px;
-                width: calc(100% - 70px);
-                padding: 20px;
-            }
+    background: transparent;
 
-            .dashboard {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+    color: #85808a;
 
-        @media(max-width: 500px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
+    text-align: left;
 
-            .input-row {
-                flex-direction: column;
-            }
-        }
-    </style>
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 500;
+
+    transition:
+        background .2s,
+        color .2s,
+        transform .2s;
+}
+
+.nav button:hover {
+    background: rgba(255,255,255,.035);
+    color: #ddd8df;
+
+    transform: translateX(2px);
+}
+
+.nav button.active {
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 63, 169, .12),
+            rgba(255, 63, 169, .025)
+        );
+
+    color: white;
+}
+
+.nav button.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+    top: 9px;
+    bottom: 9px;
+
+    width: 2px;
+
+    border-radius: 10px;
+
+    background: var(--pink);
+
+    box-shadow:
+        0 0 12px var(--pink);
+}
+
+.nav-icon {
+    width: 17px;
+
+    text-align: center;
+
+    color: #77717c;
+
+    font-size: 14px;
+}
+
+.nav button.active .nav-icon {
+    color: var(--pink);
+}
+
+/* =========================
+   SIDEBAR FOOTER
+========================= */
+
+.sidebar-footer {
+    position: absolute;
+
+    left: 16px;
+    right: 16px;
+    bottom: 20px;
+
+    padding: 12px;
+
+    border: 1px solid var(--border);
+    border-radius: 10px;
+
+    background: rgba(255,255,255,.018);
+}
+
+.footer-status {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 10px;
+    color: var(--muted);
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--success);
+
+    box-shadow:
+        0 0 10px rgba(85,230,154,.8);
+}
+
+/* =========================
+   MAIN
+========================= */
+
+.main {
+    position: relative;
+
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    padding: 38px 42px;
+}
+
+/* =========================
+   TOPBAR
+========================= */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 30px;
+}
+
+.title h1 {
+    font-size: 25px;
+
+    letter-spacing: -.7px;
+
+    margin-bottom: 7px;
+}
+
+.title p {
+    color: var(--muted);
+
+    font-size: 12px;
+}
+
+.system-status {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 8px 12px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 20px;
+
+    background: rgba(10,8,13,.7);
+
+    color: #85808a;
+
+    font-size: 10px;
+
+    backdrop-filter: blur(10px);
+}
+
+/* =========================
+   STATS
+========================= */
+
+.dashboard {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 12px;
+
+    max-width: 1050px;
+
+    margin-bottom: 18px;
+}
+
+.stat {
+    position: relative;
+
+    overflow: hidden;
+
+    padding: 17px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18,12,21,.82),
+            rgba(8,7,11,.82)
+        );
+
+    backdrop-filter: blur(15px);
+}
+
+.stat::after {
+    content: "";
+
+    position: absolute;
+
+    width: 100px;
+    height: 100px;
+
+    right: -60px;
+    top: -60px;
+
+    background: rgba(255,63,169,.06);
+
+    border-radius: 50%;
+
+    filter: blur(20px);
+}
+
+.stat-label {
+    color: #68626c;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+
+    margin-bottom: 9px;
+}
+
+.stat-value {
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+/* =========================
+   SEARCH PANEL
+========================= */
+
+.search-panel {
+    width: 100%;
+    max-width: 1050px;
+
+    padding: 23px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(15,10,18,.88),
+            rgba(7,6,10,.88)
+        );
+
+    box-shadow:
+        0 20px 70px rgba(0,0,0,.28);
+
+    backdrop-filter: blur(20px);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 18px;
+}
+
+.panel-header h2 {
+    font-size: 14px;
+}
+
+.panel-header span {
+    color: #68626c;
+
+    font-size: 9px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 1px;
+}
+
+/* =========================
+   INPUT
+========================= */
+
+.input-row {
+    display: flex;
+
+    gap: 9px;
+}
+
+input {
+    width: 100%;
+    height: 45px;
+
+    border: 1px solid #211a25;
+
+    outline: none;
+
+    border-radius: 8px;
+
+    background: #07060a;
+
+    color: white;
+
+    padding: 0 13px;
+
+    font-size: 12px;
+
+    transition:
+        border .2s,
+        box-shadow .2s;
+}
+
+input::placeholder {
+    color: #4e4952;
+}
+
+input:focus {
+    border-color: rgba(255,63,169,.45);
+
+    box-shadow:
+        0 0 0 3px rgba(255,63,169,.06);
+}
+
+.search-btn {
+    height: 45px;
+
+    padding: 0 22px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #ff3fa9,
+            #c33cff
+        );
+
+    color: white;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 25px rgba(255,63,169,.13);
+
+    transition:
+        transform .2s,
+        filter .2s;
+}
+
+.search-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.1);
+}
+
+/* =========================
+   RESULTS
+========================= */
+
+.results {
+    margin-top: 20px;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 9px;
+
+    color: #625c66;
+
+    font-size: 9px;
+
+    letter-spacing: 1px;
+}
+
+.result-card {
+    padding: 14px;
+
+    margin-bottom: 7px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    background: rgba(5,5,8,.65);
+}
+
+.result-card.found {
+    border-left:
+        2px solid var(--pink);
+}
+
+.result-card.not-found {
+    border-left:
+        2px solid var(--success);
+}
+
+.result-title {
+    margin-bottom: 7px;
+
+    font-size: 11px;
+
+    font-weight: 650;
+}
+
+.result-data {
+    white-space: pre-wrap;
+
+    color: #96909a;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 10px;
+
+    line-height: 1.7;
+}
+
+.badge {
+    display: inline-block;
+
+    margin-left: 6px;
+
+    padding: 3px 6px;
+
+    border-radius: 4px;
+
+    font-size: 7px;
+
+    letter-spacing: .5px;
+}
+
+.badge.found {
+    color: var(--pink-light);
+
+    background:
+        rgba(255,63,169,.08);
+}
+
+.badge.safe {
+    color: var(--success);
+
+    background:
+        rgba(85,230,154,.07);
+}
+
+.empty {
+    padding: 32px;
+
+    border:
+        1px dashed rgba(255,255,255,.08);
+
+    border-radius: 8px;
+
+    text-align: center;
+
+    color: #625c66;
+
+    font-size: 11px;
+}
+
+/* =========================
+   HIDDEN
+========================= */
+
+.hidden {
+    display: none;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width: 850px) {
+
+    .sidebar {
+        width: 68px;
+        padding: 20px 10px;
+    }
+
+    .logo {
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .logo-name,
+    .nav-title,
+    .nav button span,
+    .sidebar-footer {
+        display: none;
+    }
+
+    .nav button {
+        justify-content: center;
+    }
+
+    .main {
+        margin-left: 68px;
+
+        padding:
+            25px 18px;
+    }
+
+    .dashboard {
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 550px) {
+
+    .topbar {
+        gap: 15px;
+    }
+
+    .system-status {
+        display: none;
+    }
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .input-row {
+        flex-direction: column;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+}
+</style>
 </head>
+
 
 <body>
 
+<canvas id="stars"></canvas>
+
 <div class="app">
+
+    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
         <div class="logo">
-            <div class="logo-icon">N</div>
-            <span>NightTrace</span>
+
+            <div class="logo-icon">
+                A
+            </div>
+
+            <div class="logo-name">
+                Aegis <span>OSINT</span>
+            </div>
+
         </div>
 
-        <div class="nav-title">Lookups</div>
 
-        <div class="nav">
+        <div class="nav-title">
+            Intelligence
+        </div>
 
-            <button class="active" onclick="showPage('databreach', this)">
-                ◈ <span>Databreach Search</span>
+
+        <nav class="nav">
+
+            <button
+                class="active"
+                onclick="showPage('databreach', this)"
+            >
+                <div class="nav-icon">◈</div>
+                <span>Databreach Search</span>
             </button>
 
-            <button onclick="showPage('ip', this)">
-                ◉ <span>IP Information</span>
+
+            <button
+                onclick="showPage('ip', this)"
+            >
+                <div class="nav-icon">◉</div>
+                <span>IP Information</span>
             </button>
 
-            <button onclick="showPage('email', this)">
-                @ <span>Email Lookup</span>
+
+            <button
+                onclick="showPage('email', this)"
+            >
+                <div class="nav-icon">@</div>
+                <span>Email Lookup</span>
             </button>
 
-            <button onclick="showPage('phone', this)">
-                # <span>Phone Lookup</span>
+
+            <button
+                onclick="showPage('phone', this)"
+            >
+                <div class="nav-icon">#</div>
+                <span>Phone Lookup</span>
             </button>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="footer-status">
+
+                <div class="status-dot"></div>
+
+                Aegis systems operational
+
+            </div>
 
         </div>
 
     </aside>
+
+
+    <!-- MAIN -->
 
     <main class="main">
 
         <div class="topbar">
 
             <div class="title">
-                <h1 id="pageTitle">Databreach Search</h1>
+
+                <h1 id="pageTitle">
+                    Databreach Search
+                </h1>
+
                 <p id="pageDescription">
                     Search your authorized dataset for an exact match.
                 </p>
+
             </div>
 
-            <div class="status">
-                <span class="dot"></span>
-                System Online
+
+            <div class="system-status">
+
+                <div class="status-dot"></div>
+
+                SYSTEM ONLINE
+
             </div>
 
         </div>
 
 
+        <!-- STATS -->
+
         <div class="dashboard">
 
             <div class="stat">
-                <div class="stat-label">DATABASE</div>
-                <div class="stat-value">db.txt</div>
+
+                <div class="stat-label">
+                    DATABASE
+                </div>
+
+                <div class="stat-value">
+                    db.txt
+                </div>
+
             </div>
 
-            <div class="stat">
-                <div class="stat-label">SEARCH MODE</div>
-                <div class="stat-value">Exact</div>
-            </div>
 
             <div class="stat">
-                <div class="stat-label">API STATUS</div>
-                <div class="stat-value">Online</div>
+
+                <div class="stat-label">
+                    SEARCH MODE
+                </div>
+
+                <div class="stat-value">
+                    Exact
+                </div>
+
             </div>
 
+
             <div class="stat">
-                <div class="stat-label">RESULTS</div>
-                <div class="stat-value" id="resultCount">0</div>
+
+                <div class="stat-label">
+                    SYSTEM
+                </div>
+
+                <div class="stat-value">
+                    Online
+                </div>
+
+            </div>
+
+
+            <div class="stat">
+
+                <div class="stat-label">
+                    RESULTS
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="resultCount"
+                >
+                    0
+                </div>
+
             </div>
 
         </div>
@@ -431,39 +930,64 @@
 
         <!-- DATABREACH -->
 
-        <section id="databreach" class="search-panel page">
+        <section
+            id="databreach"
+            class="search-panel page"
+        >
 
             <div class="panel-header">
-                <h2>Databreach Search</h2>
-                <span>Exact match</span>
+
+                <h2>
+                    Databreach Search
+                </h2>
+
+                <span>
+                    Exact Match
+                </span>
+
             </div>
+
 
             <div class="input-row">
 
                 <input
                     id="databaseQuery"
                     type="text"
-                    placeholder="Name, email, phone, address..."
                     autocomplete="off"
+                    placeholder="Search name, email, phone, address..."
                 >
 
-                <button class="search-btn" onclick="databaseSearch()">
+                <button
+                    class="search-btn"
+                    onclick="databaseSearch()"
+                >
                     Search
                 </button>
 
             </div>
 
+
             <div class="results">
 
                 <div class="result-header">
-                    <span>SEARCH RESULTS</span>
-                    <span id="searchStatus">Waiting</span>
+
+                    <span>
+                        SEARCH RESULTS
+                    </span>
+
+                    <span id="searchStatus">
+                        WAITING
+                    </span>
+
                 </div>
 
+
                 <div id="databaseResults">
+
                     <div class="empty">
                         Enter a value to start a search.
                     </div>
+
                 </div>
 
             </div>
@@ -471,85 +995,155 @@
         </section>
 
 
-        <!-- OTHER PAGES -->
+        <!-- IP -->
 
-        <section id="ip" class="search-panel page hidden">
+        <section
+            id="ip"
+            class="search-panel page hidden"
+        >
 
             <div class="panel-header">
-                <h2>IP Information</h2>
-                <span>IP intelligence</span>
+
+                <h2>
+                    IP Information
+                </h2>
+
+                <span>
+                    IP Intelligence
+                </span>
+
             </div>
+
 
             <div class="input-row">
+
                 <input
                     id="ipInput"
-                    placeholder="Example: 8.8.8.8"
+                    placeholder="Enter an IP address..."
                 >
 
-                <button class="search-btn" onclick="ipSearch()">
+                <button
+                    class="search-btn"
+                    onclick="ipSearch()"
+                >
                     Lookup
                 </button>
+
             </div>
 
-            <div class="results" id="ipResults">
+
+            <div
+                class="results"
+                id="ipResults"
+            >
+
                 <div class="empty">
                     Enter an IP address.
                 </div>
+
             </div>
 
         </section>
 
 
-        <section id="email" class="search-panel page hidden">
+        <!-- EMAIL -->
+
+        <section
+            id="email"
+            class="search-panel page hidden"
+        >
 
             <div class="panel-header">
-                <h2>Email Lookup</h2>
-                <span>Email intelligence</span>
+
+                <h2>
+                    Email Lookup
+                </h2>
+
+                <span>
+                    Email Intelligence
+                </span>
+
             </div>
 
+
             <div class="input-row">
+
                 <input
                     id="emailInput"
                     type="email"
-                    placeholder="example@email.com"
+                    placeholder="Enter an email address..."
                 >
 
-                <button class="search-btn" onclick="emailSearch()">
+                <button
+                    class="search-btn"
+                    onclick="emailSearch()"
+                >
                     Lookup
                 </button>
+
             </div>
 
-            <div class="results" id="emailResults">
+
+            <div
+                class="results"
+                id="emailResults"
+            >
+
                 <div class="empty">
                     Enter an email address.
                 </div>
+
             </div>
 
         </section>
 
 
-        <section id="phone" class="search-panel page hidden">
+        <!-- PHONE -->
+
+        <section
+            id="phone"
+            class="search-panel page hidden"
+        >
 
             <div class="panel-header">
-                <h2>Phone Lookup</h2>
-                <span>Phone intelligence</span>
+
+                <h2>
+                    Phone Lookup
+                </h2>
+
+                <span>
+                    Phone Intelligence
+                </span>
+
             </div>
+
 
             <div class="input-row">
+
                 <input
                     id="phoneInput"
-                    placeholder="+49..."
+                    placeholder="Enter a phone number..."
                 >
 
-                <button class="search-btn" onclick="phoneSearch()">
+                <button
+                    class="search-btn"
+                    onclick="phoneSearch()"
+                >
                     Lookup
                 </button>
+
             </div>
 
-            <div class="results" id="phoneResults">
+
+            <div
+                class="results"
+                id="phoneResults"
+            >
+
                 <div class="empty">
                     Enter a phone number.
                 </div>
+
             </div>
 
         </section>
@@ -561,241 +1155,479 @@
 
 <script>
 
-    function showPage(page, button) {
+/* ============================================================
+   PINK FLYING STARS
+============================================================ */
 
-        document.querySelectorAll(".page").forEach(el => {
-            el.classList.add("hidden");
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+
+let stars = [];
+
+function resizeCanvas() {
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    createStars();
+}
+
+function createStars() {
+
+    stars = [];
+
+    const amount =
+        Math.min(
+            180,
+            Math.floor(
+                (canvas.width * canvas.height) / 9500
+            )
+        );
+
+    for (let i = 0; i < amount; i++) {
+
+        stars.push({
+
+            x: Math.random() * canvas.width,
+
+            y: Math.random() * canvas.height,
+
+            size:
+                Math.random() * 1.5 + .2,
+
+            speed:
+                Math.random() * .75 + .15,
+
+            alpha:
+                Math.random() * .65 + .2,
+
+            length:
+                Math.random() * 20 + 4
+
         });
-
-        document.getElementById(page).classList.remove("hidden");
-
-        document.querySelectorAll(".nav button").forEach(el => {
-            el.classList.remove("active");
-        });
-
-        button.classList.add("active");
-
-        const titles = {
-            databreach: [
-                "Databreach Search",
-                "Search your authorized dataset for an exact match."
-            ],
-            ip: [
-                "IP Information",
-                "Inspect publicly available IP information."
-            ],
-            email: [
-                "Email Lookup",
-                "Inspect an email address using your authorized sources."
-            ],
-            phone: [
-                "Phone Lookup",
-                "Inspect a phone number using your authorized sources."
-            ]
-        };
-
-        document.getElementById("pageTitle").textContent =
-            titles[page][0];
-
-        document.getElementById("pageDescription").textContent =
-            titles[page][1];
     }
+}
 
+function animateStars() {
 
-    async function databaseSearch() {
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
 
-        const query =
-            document.getElementById("databaseQuery").value.trim();
+    for (const star of stars) {
 
-        const results =
-            document.getElementById("databaseResults");
+        star.x += star.speed;
 
-        const status =
-            document.getElementById("searchStatus");
+        star.y += star.speed * .16;
 
-        if (!query) {
-            results.innerHTML = `
-                <div class="empty">
-                    Please enter a search value.
-                </div>
-            `;
-            return;
+        if (
+            star.x > canvas.width + 30 ||
+            star.y > canvas.height + 30
+        ) {
+
+            star.x = -20;
+
+            star.y =
+                Math.random() *
+                canvas.height;
+
         }
 
-        status.textContent = "Searching...";
 
-        results.innerHTML = `
-            <div class="empty">
-                Searching authorized database...
-            </div>
-        `;
-
-        try {
-
-            /*
-             * IMPORTANT:
-             *
-             * Vercel frontend cannot safely read db.txt directly.
-             *
-             * Your Vercel backend should expose:
-             *
-             * GET /api/search?q=VALUE
-             *
-             * The API reads db.txt on the server and returns
-             * only the matching records.
-             */
-
-            const response = await fetch(
-                "/api/search?q=" + encodeURIComponent(query)
+        const gradient =
+            ctx.createLinearGradient(
+                star.x - star.length,
+                star.y,
+                star.x,
+                star.y
             );
 
-            if (!response.ok) {
-                throw new Error("API error");
-            }
+        gradient.addColorStop(
+            0,
+            "rgba(255,63,169,0)"
+        );
 
-            const data = await response.json();
-
-            if (!data.results || data.results.length === 0) {
-
-                results.innerHTML = `
-                    <div class="result-card not-found">
-                        <div class="result-title">
-                            No Match
-                            <span class="badge safe">NOT FOUND</span>
-                        </div>
-
-                        <div class="result-data">
-No exact match was found.
-                        </div>
-                    </div>
-                `;
-
-                document.getElementById("resultCount")
-                    .textContent = "0";
-
-                status.textContent = "Completed";
-
-                return;
-            }
+        gradient.addColorStop(
+            1,
+            `rgba(255,100,190,${star.alpha})`
+        );
 
 
-            document.getElementById("resultCount")
-                .textContent = data.results.length;
+        ctx.beginPath();
 
-            status.textContent = "Completed";
+        ctx.strokeStyle = gradient;
 
-            results.innerHTML = data.results.map((item, index) => `
+        ctx.lineWidth = star.size;
 
-                <div class="result-card found">
+        ctx.moveTo(
+            star.x - star.length,
+            star.y
+        );
 
-                    <div class="result-title">
-                        Result #${index + 1}
-                        <span class="badge found">MATCH</span>
-                    </div>
+        ctx.lineTo(
+            star.x,
+            star.y
+        );
 
-                    <div class="result-data">${escapeHTML(item)}</div>
+        ctx.stroke();
 
-                </div>
 
-            `).join("");
+        ctx.beginPath();
 
-        } catch (error) {
+        ctx.fillStyle =
+            `rgba(255,120,205,${star.alpha})`;
 
-            status.textContent = "Error";
+        ctx.arc(
+            star.x,
+            star.y,
+            star.size * .7,
+            0,
+            Math.PI * 2
+        );
 
-            results.innerHTML = `
-                <div class="result-card">
-                    <div class="result-title">
-                        Backend unavailable
-                    </div>
-
-                    <div class="result-data">
-The /api/search endpoint is not configured yet.
-                    </div>
-                </div>
-            `;
-        }
+        ctx.fill();
     }
 
+    requestAnimationFrame(animateStars);
+}
 
-    function escapeHTML(value) {
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
 
-        return String(value)
-            .replaceAll("&", "&amp;")
-            .replaceAll("<", "&lt;")
-            .replaceAll(">", "&gt;")
-            .replaceAll('"', "&quot;")
-            .replaceAll("'", "&#039;");
-    }
-
-
-    async function ipSearch() {
-
-        const ip =
-            document.getElementById("ipInput").value.trim();
-
-        const output =
-            document.getElementById("ipResults");
-
-        if (!ip) return;
-
-        output.innerHTML = `
-            <div class="empty">
-                IP lookup backend not configured.
-            </div>
-        `;
-
-        /*
-         * Connect this to your own authorized IP intelligence API.
-         */
-    }
+resizeCanvas();
+animateStars();
 
 
-    async function emailSearch() {
+/* ============================================================
+   NAVIGATION
+============================================================ */
 
-        const email =
-            document.getElementById("emailInput").value.trim();
+function showPage(page, button) {
 
-        const output =
-            document.getElementById("emailResults");
+    document
+        .querySelectorAll(".page")
+        .forEach(element => {
 
-        if (!email) return;
+            element.classList.add("hidden");
 
-        output.innerHTML = `
-            <div class="empty">
-                Email lookup backend not configured.
-            </div>
-        `;
-    }
-
-
-    async function phoneSearch() {
-
-        const phone =
-            document.getElementById("phoneInput").value.trim();
-
-        const output =
-            document.getElementById("phoneResults");
-
-        if (!phone) return;
-
-        output.innerHTML = `
-            <div class="empty">
-                Phone lookup backend not configured.
-            </div>
-        `;
-    }
+        });
 
 
     document
-        .getElementById("databaseQuery")
-        .addEventListener("keydown", function(event) {
+        .getElementById(page)
+        .classList.remove("hidden");
 
-            if (event.key === "Enter") {
-                databaseSearch();
-            }
+
+    document
+        .querySelectorAll(".nav button")
+        .forEach(element => {
+
+            element.classList.remove("active");
 
         });
+
+
+    button.classList.add("active");
+
+
+    const pages = {
+
+        databreach: [
+            "Databreach Search",
+            "Search your authorized dataset for an exact match."
+        ],
+
+        ip: [
+            "IP Information",
+            "Inspect publicly available IP information."
+        ],
+
+        email: [
+            "Email Lookup",
+            "Inspect an email address using authorized sources."
+        ],
+
+        phone: [
+            "Phone Lookup",
+            "Inspect a phone number using authorized sources."
+        ]
+
+    };
+
+
+    document.getElementById("pageTitle")
+        .textContent = pages[page][0];
+
+
+    document.getElementById("pageDescription")
+        .textContent = pages[page][1];
+}
+
+
+/* ============================================================
+   DATABASE SEARCH
+============================================================ */
+
+async function databaseSearch() {
+
+    const query =
+        document
+            .getElementById("databaseQuery")
+            .value
+            .trim();
+
+
+    const results =
+        document.getElementById(
+            "databaseResults"
+        );
+
+
+    const status =
+        document.getElementById(
+            "searchStatus"
+        );
+
+
+    if (!query) {
+
+        results.innerHTML = `
+            <div class="empty">
+                Please enter a search value.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    status.textContent = "SEARCHING";
+
+
+    results.innerHTML = `
+        <div class="empty">
+            Searching authorized database...
+        </div>
+    `;
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/search?q=" +
+                encodeURIComponent(query)
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "API request failed"
+            );
+        }
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !data.results ||
+            data.results.length === 0
+        ) {
+
+            document
+                .getElementById("resultCount")
+                .textContent = "0";
+
+
+            status.textContent = "COMPLETED";
+
+
+            results.innerHTML = `
+
+                <div class="result-card not-found">
+
+                    <div class="result-title">
+
+                        No Match
+
+                        <span class="badge safe">
+                            NOT FOUND
+                        </span>
+
+                    </div>
+
+                    <div class="result-data">
+No exact match was found.
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        document
+            .getElementById("resultCount")
+            .textContent =
+            data.results.length;
+
+
+        status.textContent = "COMPLETED";
+
+
+        results.innerHTML =
+            data.results
+                .map((item, index) => `
+
+                    <div class="result-card found">
+
+                        <div class="result-title">
+
+                            Result #${index + 1}
+
+                            <span class="badge found">
+                                MATCH
+                            </span>
+
+                        </div>
+
+                        <div class="result-data">
+${escapeHTML(item)}
+                        </div>
+
+                    </div>
+
+                `)
+                .join("");
+
+
+    } catch (error) {
+
+        status.textContent = "ERROR";
+
+
+        results.innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    Backend unavailable
+                </div>
+
+                <div class="result-data">
+The /api/search endpoint is not configured yet.
+                </div>
+
+            </div>
+
+        `;
+    }
+}
+
+
+/* ============================================================
+   SECURITY
+============================================================ */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+}
+
+
+/* ============================================================
+   PLACEHOLDER LOOKUPS
+============================================================ */
+
+function ipSearch() {
+
+    const output =
+        document.getElementById(
+            "ipResults"
+        );
+
+    output.innerHTML = `
+
+        <div class="empty">
+            IP lookup backend not configured.
+        </div>
+
+    `;
+}
+
+
+function emailSearch() {
+
+    const output =
+        document.getElementById(
+            "emailResults"
+        );
+
+    output.innerHTML = `
+
+        <div class="empty">
+            Email lookup backend not configured.
+        </div>
+
+    `;
+}
+
+
+function phoneSearch() {
+
+    const output =
+        document.getElementById(
+            "phoneResults"
+        );
+
+    output.innerHTML = `
+
+        <div class="empty">
+            Phone lookup backend not configured.
+        </div>
+
+    `;
+}
+
+
+/* ============================================================
+   ENTER TO SEARCH
+============================================================ */
+
+document
+    .getElementById("databaseQuery")
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Enter") {
+
+                databaseSearch();
+
+            }
+
+        }
+    );
 
 </script>
 
