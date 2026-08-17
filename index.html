@@ -7,6 +7,7 @@
 <title>Aegis OSINT</title>
 
 <style>
+
 * {
     margin: 0;
     padding: 0;
@@ -14,19 +15,24 @@
 }
 
 :root {
-    --bg: #030305;
-    --panel: rgba(11, 8, 14, .82);
-    --border: rgba(255, 75, 177, .14);
+    --bg: #020204;
+    --bg2: #050507;
+    --panel: rgba(10, 10, 14, .72);
+    --panel2: rgba(14, 13, 18, .9);
 
-    --pink: #ff3fa9;
-    --pink-light: #ff79c6;
-    --purple: #9d4edd;
+    --border: rgba(255,255,255,.065);
+    --border-pink: rgba(255, 55, 170, .18);
 
-    --text: #f7f4f8;
-    --muted: #8d8791;
+    --pink: #ff3ca6;
+    --pink2: #ff72c2;
+    --purple: #a34cff;
 
-    --success: #55e69a;
-    --danger: #ff5874;
+    --text: #f4f1f5;
+    --muted: #77717b;
+    --muted2: #4e4a52;
+
+    --green: #57e6a0;
+    --red: #ff5875;
 }
 
 html {
@@ -35,18 +41,17 @@ html {
 
 body {
     min-height: 100vh;
-    overflow-x: hidden;
 
     background:
         radial-gradient(
-            circle at 50% -10%,
-            rgba(255, 45, 165, .12),
-            transparent 35%
+            circle at 50% -20%,
+            rgba(255, 40, 160, .10),
+            transparent 38%
         ),
         radial-gradient(
             circle at 100% 100%,
-            rgba(130, 40, 170, .08),
-            transparent 30%
+            rgba(130, 40, 255, .07),
+            transparent 35%
         ),
         var(--bg);
 
@@ -54,86 +59,111 @@ body {
 
     font-family:
         Inter,
+        ui-sans-serif,
+        system-ui,
         -apple-system,
         BlinkMacSystemFont,
         "Segoe UI",
         sans-serif;
+
+    overflow-x: hidden;
 }
 
-/* =========================
-   STAR BACKGROUND
-========================= */
 
-#stars {
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+#space {
     position: fixed;
+
     inset: 0;
 
     width: 100%;
     height: 100%;
 
-    pointer-events: none;
-
     z-index: 0;
+
+    pointer-events: none;
 }
 
-/* =========================
-   APP
-========================= */
+.noise {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    opacity: .025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+
+/* =========================================================
+   LAYOUT
+========================================================= */
 
 .app {
     position: relative;
+
     z-index: 2;
 
     min-height: 100vh;
 }
 
-/* =========================
+
+/* =========================================================
    SIDEBAR
-========================= */
+========================================================= */
 
 .sidebar {
     position: fixed;
 
     top: 0;
-    left: 0;
     bottom: 0;
+    left: 0;
 
     width: 250px;
 
-    padding: 24px 16px;
+    padding: 22px 14px;
 
     background:
         linear-gradient(
             180deg,
-            rgba(8, 6, 10, .97),
-            rgba(4, 4, 7, .95)
+            rgba(5,5,8,.94),
+            rgba(2,2,4,.94)
         );
 
-    border-right: 1px solid var(--border);
+    border-right:
+        1px solid var(--border);
 
-    backdrop-filter: blur(20px);
+    backdrop-filter:
+        blur(24px);
 
-    z-index: 20;
+    z-index: 50;
 }
-
-/* =========================
-   LOGO
-========================= */
 
 .logo {
     display: flex;
+
     align-items: center;
 
-    gap: 12px;
+    gap: 11px;
 
-    padding: 4px 10px 32px;
+    padding:
+        5px 10px 30px;
 }
 
-.logo-icon {
-    width: 38px;
-    height: 38px;
+.logo-mark {
+    width: 37px;
+    height: 37px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -146,36 +176,36 @@ body {
             var(--purple)
         );
 
-    color: white;
-
     font-size: 15px;
+
     font-weight: 900;
 
     box-shadow:
-        0 0 25px rgba(255, 63, 169, .25);
+        0 0 30px
+        rgba(255, 50, 170, .25);
 }
 
-.logo-name {
-    font-size: 17px;
+.logo-text {
+    font-size: 16px;
+
     font-weight: 750;
 
-    letter-spacing: -.3px;
+    letter-spacing: -.4px;
 }
 
-.logo-name span {
+.logo-text span {
     color: var(--pink);
 }
 
-/* =========================
-   NAV
-========================= */
+.section-title {
+    padding:
+        0 12px 9px;
 
-.nav-title {
-    padding: 0 11px 10px;
+    color:
+        #4f4a52;
 
-    color: #57515b;
+    font-size: 8px;
 
-    font-size: 9px;
     font-weight: 800;
 
     letter-spacing: 1.7px;
@@ -183,76 +213,87 @@ body {
     text-transform: uppercase;
 }
 
-.nav button {
+.nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.nav-item {
     position: relative;
 
     width: 100%;
 
     display: flex;
+
     align-items: center;
 
     gap: 12px;
 
-    padding: 12px 13px;
-
-    margin-bottom: 5px;
+    padding:
+        11px 12px;
 
     border: 0;
-    border-radius: 9px;
+
+    border-radius: 8px;
 
     background: transparent;
 
-    color: #85808a;
+    color: #77717b;
 
     text-align: left;
 
     cursor: pointer;
 
-    font-size: 12px;
-    font-weight: 500;
+    font-size: 11px;
 
     transition:
-        background .2s,
-        color .2s,
-        transform .2s;
+        .2s ease;
 }
 
-.nav button:hover {
-    background: rgba(255,255,255,.035);
+.nav-item:hover {
+    color: #ddd9df;
 
-    color: #ddd8df;
+    background:
+        rgba(255,255,255,.025);
 
-    transform: translateX(2px);
+    transform:
+        translateX(2px);
 }
 
-.nav button.active {
+.nav-item.active {
+    color: #fff;
+
     background:
         linear-gradient(
             90deg,
-            rgba(255, 63, 169, .12),
-            rgba(255, 63, 169, .025)
+            rgba(255,55,170,.12),
+            rgba(255,55,170,.025)
         );
-
-    color: white;
 }
 
-.nav button.active::before {
+.nav-item.active::before {
     content: "";
 
     position: absolute;
 
     left: 0;
-    top: 9px;
-    bottom: 9px;
+
+    top: 8px;
+    bottom: 8px;
 
     width: 2px;
 
-    border-radius: 10px;
+    border-radius: 4px;
 
-    background: var(--pink);
+    background:
+        var(--pink);
 
     box-shadow:
-        0 0 12px var(--pink);
+        0 0 12px
+        var(--pink);
 }
 
 .nav-icon {
@@ -260,537 +301,1017 @@ body {
 
     text-align: center;
 
-    color: #77717c;
+    font-size: 13px;
 
-    font-size: 14px;
+    color: #57515b;
 }
 
-.nav button.active .nav-icon {
+.nav-item.active .nav-icon {
     color: var(--pink);
 }
 
-/* =========================
-   SIDEBAR FOOTER
-========================= */
 
-.sidebar-footer {
+/* =========================================================
+   SIDEBAR BOTTOM
+========================================================= */
+
+.sidebar-bottom {
     position: absolute;
 
-    left: 16px;
-    right: 16px;
-    bottom: 20px;
+    left: 14px;
+    right: 14px;
 
-    padding: 12px;
+    bottom: 18px;
+}
 
-    border: 1px solid var(--border);
+.profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px;
+
+    border:
+        1px solid var(--border);
 
     border-radius: 10px;
 
-    background: rgba(255,255,255,.018);
+    background:
+        rgba(255,255,255,.018);
 }
 
-.footer-status {
+.avatar {
+    width: 30px;
+    height: 30px;
+
     display: flex;
+
     align-items: center;
+    justify-content: center;
 
-    gap: 8px;
+    border-radius: 8px;
 
+    background:
+        rgba(255,55,170,.1);
+
+    color: var(--pink);
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.profile-name {
     font-size: 10px;
 
-    color: var(--muted);
+    font-weight: 600;
 }
 
-.status-dot {
-    width: 6px;
-    height: 6px;
+.profile-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 3px;
+
+    color: #625c66;
+
+    font-size: 8px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
 
     border-radius: 50%;
 
-    background: var(--success);
+    background:
+        var(--green);
 
     box-shadow:
-        0 0 10px rgba(85,230,154,.8);
+        0 0 9px
+        rgba(87,230,160,.8);
 }
 
-/* =========================
+
+/* =========================================================
    MAIN
-========================= */
+========================================================= */
 
 .main {
-    position: relative;
-
     margin-left: 250px;
 
     min-height: 100vh;
 
-    padding: 38px 42px;
+    padding:
+        28px 36px 50px;
 }
 
-/* =========================
-   TOPBAR
-========================= */
+
+/* =========================================================
+   TOP BAR
+========================================================= */
 
 .topbar {
     display: flex;
 
     justify-content: space-between;
-    align-items: flex-start;
 
-    margin-bottom: 30px;
+    align-items: center;
+
+    margin-bottom: 26px;
 }
 
-.title h1 {
-    font-size: 25px;
-
-    letter-spacing: -.7px;
-
-    margin-bottom: 7px;
-}
-
-.title p {
-    color: var(--muted);
-
-    font-size: 12px;
-}
-
-.system-status {
+.breadcrumb {
     display: flex;
+
     align-items: center;
 
     gap: 8px;
 
-    padding: 8px 12px;
+    margin-bottom: 8px;
 
-    border: 1px solid var(--border);
+    color: #55505a;
+
+    font-size: 9px;
+}
+
+.breadcrumb span:last-child {
+    color: var(--pink);
+}
+
+.title h1 {
+    font-size: 24px;
+
+    letter-spacing: -.8px;
+}
+
+.title p {
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.top-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid var(--border);
 
     border-radius: 20px;
 
-    background: rgba(10,8,13,.7);
+    background:
+        rgba(8,8,11,.7);
 
-    color: #85808a;
+    color: #6f6973;
 
-    font-size: 10px;
+    font-size: 8px;
 
-    backdrop-filter: blur(10px);
+    letter-spacing: .7px;
 }
 
-/* =========================
-   STATS
-========================= */
 
-.dashboard {
+/* =========================================================
+   HERO COMMAND BAR
+========================================================= */
+
+.command {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    max-width: 1100px;
+
+    margin-bottom: 18px;
+
+    padding: 4px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 12px;
+
+    background:
+        rgba(9,8,12,.82);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.3);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.command-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 2px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,55,170,.07);
+
+    color: var(--pink);
+
+    font-size: 13px;
+}
+
+.command input {
+    flex: 1;
+
+    height: 42px;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 11px;
+}
+
+.command input::placeholder {
+    color: #514c54;
+}
+
+.command-key {
+    margin-right: 8px;
+
+    padding:
+        5px 7px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 5px;
+
+    color: #57515b;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+}
+
+
+/* =========================================================
+   STAT CARDS
+========================================================= */
+
+.stats {
     display: grid;
 
     grid-template-columns:
         repeat(4, minmax(0, 1fr));
 
-    gap: 12px;
+    gap: 10px;
 
-    max-width: 1050px;
+    max-width: 1100px;
 
     margin-bottom: 18px;
 }
 
-.stat {
+.stat-card {
     position: relative;
 
     overflow: hidden;
 
-    padding: 17px;
+    min-height: 92px;
 
-    border: 1px solid var(--border);
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--border);
 
     border-radius: 11px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(18,12,21,.82),
-            rgba(8,7,11,.82)
+            rgba(13,12,17,.85),
+            rgba(6,6,9,.85)
         );
 
-    backdrop-filter: blur(15px);
+    backdrop-filter:
+        blur(15px);
 }
 
-.stat::after {
+.stat-card::before {
     content: "";
 
     position: absolute;
 
-    width: 100px;
-    height: 100px;
+    width: 90px;
+    height: 90px;
 
-    right: -60px;
-    top: -60px;
-
-    background:
-        rgba(255,63,169,.06);
+    right: -50px;
+    bottom: -50px;
 
     border-radius: 50%;
 
-    filter: blur(20px);
+    background:
+        rgba(255,55,170,.08);
+
+    filter:
+        blur(20px);
 }
 
-.stat-label {
-    color: #68626c;
+.stat-top {
+    display: flex;
 
-    font-size: 9px;
+    justify-content: space-between;
+
+    color: #55505a;
+
+    font-size: 8px;
 
     letter-spacing: 1px;
+}
 
-    margin-bottom: 9px;
+.stat-icon {
+    color: var(--pink);
+
+    font-size: 11px;
 }
 
 .stat-value {
-    font-size: 17px;
+    margin-top: 12px;
+
+    font-size: 18px;
 
     font-weight: 700;
 }
 
-/* =========================
-   SEARCH PANEL
-========================= */
+.stat-sub {
+    margin-top: 3px;
 
-.search-panel {
-    width: 100%;
-    max-width: 1050px;
+    color: #55505a;
 
-    padding: 23px;
+    font-size: 8px;
+}
 
-    border: 1px solid var(--border);
+
+/* =========================================================
+   WORKSPACE
+========================================================= */
+
+.workspace {
+    max-width: 1100px;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        260px;
+
+    gap: 14px;
+}
+
+.panel {
+    border:
+        1px solid
+        var(--border);
 
     border-radius: 13px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(15,10,18,.88),
-            rgba(7,6,10,.88)
+            rgba(13,12,17,.87),
+            rgba(6,6,9,.87)
         );
 
     box-shadow:
-        0 20px 70px rgba(0,0,0,.28);
+        0 20px 70px
+        rgba(0,0,0,.24);
 
-    backdrop-filter: blur(20px);
+    backdrop-filter:
+        blur(20px);
 }
 
-.panel-header {
+.main-panel {
+    min-height: 470px;
+
+    padding: 21px;
+}
+
+.side-panel {
+    padding: 17px;
+}
+
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.panel-head {
     display: flex;
 
     justify-content: space-between;
+
     align-items: center;
 
-    margin-bottom: 18px;
+    margin-bottom: 20px;
 }
 
-.panel-header h2 {
-    font-size: 14px;
-}
-
-.panel-header span {
-    color: #68626c;
-
-    font-size: 9px;
-
-    text-transform: uppercase;
-
-    letter-spacing: 1px;
-}
-
-/* =========================
-   INPUT
-========================= */
-
-.input-row {
+.panel-head-left {
     display: flex;
 
-    gap: 9px;
+    align-items: center;
+
+    gap: 10px;
 }
 
-input {
-    width: 100%;
-    height: 45px;
+.panel-symbol {
+    width: 30px;
+    height: 30px;
 
-    border: 1px solid #211a25;
+    display: flex;
 
-    outline: none;
+    align-items: center;
+    justify-content: center;
 
     border-radius: 8px;
 
-    background: #07060a;
+    background:
+        rgba(255,55,170,.07);
 
-    color: white;
+    color: var(--pink);
 
-    padding: 0 13px;
+    font-size: 11px;
+}
 
+.panel-head h2 {
     font-size: 12px;
-
-    transition:
-        border .2s,
-        box-shadow .2s;
 }
 
-input::placeholder {
-    color: #4e4952;
+.panel-head p {
+    margin-top: 3px;
+
+    color: #55505a;
+
+    font-size: 8px;
 }
 
-input:focus {
-    border-color:
-        rgba(255,63,169,.45);
+.panel-tag {
+    padding:
+        5px 7px;
 
-    box-shadow:
-        0 0 0 3px
-        rgba(255,63,169,.06);
+    border-radius: 5px;
+
+    color: var(--pink2);
+
+    background:
+        rgba(255,55,170,.06);
+
+    font-size: 7px;
+
+    letter-spacing: .8px;
 }
 
-.search-btn {
-    height: 45px;
 
-    padding: 0 22px;
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-row {
+    display: flex;
+
+    gap: 7px;
+
+    padding: 4px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(0,0,0,.22);
+}
+
+.search-row input {
+    flex: 1;
+
+    height: 39px;
+
+    padding:
+        0 10px;
 
     border: 0;
 
-    border-radius: 8px;
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 10px;
+}
+
+.search-row input::placeholder {
+    color: #504b53;
+}
+
+.search-btn {
+    height: 39px;
+
+    padding:
+        0 18px;
+
+    border: 0;
+
+    border-radius: 7px;
 
     background:
         linear-gradient(
             135deg,
-            #ff3fa9,
-            #c33cff
+            var(--pink),
+            var(--purple)
         );
 
     color: white;
 
-    font-size: 11px;
+    font-size: 9px;
 
-    font-weight: 700;
+    font-weight: 750;
 
     cursor: pointer;
 
     box-shadow:
-        0 7px 25px
-        rgba(255,63,169,.13);
+        0 8px 25px
+        rgba(255,55,170,.12);
 
     transition:
-        transform .2s,
-        filter .2s;
+        .2s ease;
 }
 
 .search-btn:hover {
-    transform: translateY(-1px);
+    transform:
+        translateY(-1px);
 
-    filter: brightness(1.1);
+    filter:
+        brightness(1.08);
 }
 
-/* =========================
+
+/* =========================================================
    RESULTS
-========================= */
+========================================================= */
 
-.results {
-    margin-top: 20px;
-}
-
-.result-header {
+.results-head {
     display: flex;
 
     justify-content: space-between;
 
-    margin-bottom: 9px;
+    margin:
+        22px 2px 9px;
 
-    color: #625c66;
+    color: #55505a;
 
-    font-size: 9px;
+    font-size: 7px;
 
     letter-spacing: 1px;
 }
 
+.results {
+    min-height: 260px;
+}
+
+.empty {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 230px;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.07);
+
+    border-radius: 9px;
+
+    color: #514c55;
+
+    font-size: 9px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    margin-bottom: 9px;
+
+    color:
+        rgba(255,55,170,.35);
+
+    font-size: 20px;
+}
+
 .result-card {
-    padding: 14px;
+    position: relative;
 
     margin-bottom: 7px;
 
-    border: 1px solid var(--border);
+    padding: 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
 
     border-radius: 8px;
 
     background:
-        rgba(5,5,8,.65);
+        rgba(0,0,0,.18);
+
+    animation:
+        resultIn .3s ease;
+}
+
+@keyframes resultIn {
+
+    from {
+        opacity: 0;
+        transform:
+            translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+            translateY(0);
+    }
+
 }
 
 .result-card.found {
     border-left:
-        2px solid var(--pink);
+        2px solid
+        var(--pink);
 }
 
-.result-card.not-found {
+.result-card.safe {
     border-left:
-        2px solid var(--success);
+        2px solid
+        var(--green);
 }
 
 .result-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
     margin-bottom: 7px;
 
-    font-size: 11px;
+    font-size: 10px;
 
     font-weight: 650;
 }
 
-.result-data {
-    white-space: pre-wrap;
-
-    color: #96909a;
+.result-content {
+    color: #8c8690;
 
     font-family:
         "SFMono-Regular",
         Consolas,
         monospace;
 
-    font-size: 10px;
+    font-size: 9px;
 
-    line-height: 1.7;
+    line-height: 1.8;
+
+    white-space: pre-wrap;
 }
 
 .badge {
-    display: inline-block;
-
-    margin-left: 6px;
-
-    padding: 3px 6px;
+    padding:
+        3px 6px;
 
     border-radius: 4px;
 
-    font-size: 7px;
+    font-size: 6px;
 
-    letter-spacing: .5px;
+    letter-spacing: .7px;
 }
 
-.badge.found {
-    color: var(--pink-light);
+.badge.pink {
+    color: var(--pink2);
 
     background:
-        rgba(255,63,169,.08);
+        rgba(255,55,170,.07);
 }
 
-.badge.safe {
-    color: var(--success);
+.badge.green {
+    color: var(--green);
 
     background:
-        rgba(85,230,154,.07);
+        rgba(87,230,160,.06);
 }
 
-.empty {
-    padding: 32px;
+
+/* =========================================================
+   SIDE INFORMATION
+========================================================= */
+
+.side-title {
+    margin-bottom: 14px;
+
+    color: #5a555e;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.2px;
+}
+
+.module {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    padding: 9px;
+
+    margin-bottom: 5px;
 
     border:
-        1px dashed
-        rgba(255,255,255,.08);
+        1px solid
+        rgba(255,255,255,.035);
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    text-align: center;
-
-    color: #625c66;
-
-    font-size: 11px;
+    background:
+        rgba(255,255,255,.012);
 }
 
-.hidden {
+.module-icon {
+    width: 27px;
+    height: 27px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 7px;
+
+    background:
+        rgba(255,55,170,.05);
+
+    color: var(--pink);
+
+    font-size: 9px;
+}
+
+.module-name {
+    font-size: 9px;
+
+    font-weight: 600;
+}
+
+.module-status {
+    margin-top: 2px;
+
+    color: #4f4a53;
+
+    font-size: 7px;
+}
+
+.divider {
+    height: 1px;
+
+    margin:
+        17px 0;
+
+    background:
+        rgba(255,255,255,.05);
+}
+
+.quick {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 5px;
+}
+
+.quick button {
+    height: 32px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.05);
+
+    border-radius: 6px;
+
+    background:
+        rgba(255,255,255,.015);
+
+    color: #716b74;
+
+    cursor: pointer;
+
+    font-size: 7px;
+
+    transition: .2s;
+}
+
+.quick button:hover {
+    color: white;
+
+    border-color:
+        var(--border-pink);
+
+    background:
+        rgba(255,55,170,.04);
+}
+
+
+/* =========================================================
+   PAGE STATES
+========================================================= */
+
+.page {
     display: none;
 }
 
-/* =========================
-   MOBILE
-========================= */
+.page.active-page {
+    display: block;
+}
 
-@media(max-width: 850px) {
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 1000px) {
+
+    .workspace {
+        grid-template-columns:
+            1fr;
+    }
+
+    .side-panel {
+        display: none;
+    }
+
+}
+
+@media(max-width: 800px) {
 
     .sidebar {
-        width: 68px;
-
-        padding:
-            20px 10px;
+        width: 66px;
     }
 
     .logo {
         justify-content: center;
-
         padding-left: 0;
         padding-right: 0;
     }
 
-    .logo-name,
-    .nav-title,
-    .nav button span,
-    .sidebar-footer {
+    .logo-text,
+    .section-title,
+    .nav-item span,
+    .sidebar-bottom {
         display: none;
     }
 
-    .nav button {
+    .nav-item {
         justify-content: center;
     }
 
     .main {
-        margin-left: 68px;
+        margin-left: 66px;
 
         padding:
-            25px 18px;
+            22px 16px;
     }
 
-    .dashboard {
+    .stats {
         grid-template-columns:
-            repeat(2, 1fr);
+            1fr 1fr;
     }
+
 }
 
 @media(max-width: 550px) {
 
-    .topbar {
-        gap: 15px;
+    .stats {
+        grid-template-columns:
+            1fr;
     }
 
-    .system-status {
+    .top-actions {
         display: none;
     }
 
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-
-    .input-row {
+    .search-row {
         flex-direction: column;
     }
 
     .search-btn {
         width: 100%;
     }
+
+    .command-key {
+        display: none;
+    }
+
 }
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+.hidden {
+    display: none !important;
+}
+
 </style>
 </head>
 
+
 <body>
 
-<canvas id="stars"></canvas>
+<canvas id="space"></canvas>
+
+<div class="noise"></div>
+
 
 <div class="app">
 
-<!-- SIDEBAR -->
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
 
 <aside class="sidebar">
 
     <div class="logo">
 
-        <div class="logo-icon">
+        <div class="logo-mark">
             A
         </div>
 
-        <div class="logo-name">
+        <div class="logo-text">
             Aegis <span>OSINT</span>
         </div>
 
     </div>
 
 
-    <div class="nav-title">
+    <div class="section-title">
         Intelligence
     </div>
 
@@ -798,47 +1319,94 @@ input:focus {
     <nav class="nav">
 
         <button
-            class="active"
-            onclick="showPage('databreach', this)"
+            class="nav-item active"
+            onclick="switchPage('databreach', this)"
         >
-            <div class="nav-icon">◈</div>
-            <span>Databreach Search</span>
+
+            <div class="nav-icon">
+                ◈
+            </div>
+
+            <span>
+                Databreach Search
+            </span>
+
         </button>
 
 
         <button
-            onclick="showPage('ip', this)"
+            class="nav-item"
+            onclick="switchPage('ip', this)"
         >
-            <div class="nav-icon">◉</div>
-            <span>IP Information</span>
+
+            <div class="nav-icon">
+                ◉
+            </div>
+
+            <span>
+                IP Information
+            </span>
+
         </button>
 
 
         <button
-            onclick="showPage('email', this)"
+            class="nav-item"
+            onclick="switchPage('email', this)"
         >
-            <div class="nav-icon">@</div>
-            <span>Email Lookup</span>
+
+            <div class="nav-icon">
+                @
+            </div>
+
+            <span>
+                Email Lookup
+            </span>
+
         </button>
 
 
         <button
-            onclick="showPage('phone', this)"
+            class="nav-item"
+            onclick="switchPage('phone', this)"
         >
-            <div class="nav-icon">#</div>
-            <span>Phone Lookup</span>
+
+            <div class="nav-icon">
+                #
+            </div>
+
+            <span>
+                Phone Lookup
+            </span>
+
         </button>
 
     </nav>
 
 
-    <div class="sidebar-footer">
+    <div class="sidebar-bottom">
 
-        <div class="footer-status">
+        <div class="profile">
 
-            <div class="status-dot"></div>
+            <div class="avatar">
+                A
+            </div>
 
-            Aegis systems operational
+            <div>
+
+                <div class="profile-name">
+                    Aegis Operator
+                </div>
+
+                <div class="profile-status">
+
+                    <div class="dot"></div>
+
+                    Systems online
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -847,31 +1415,81 @@ input:focus {
 </aside>
 
 
-<!-- MAIN -->
+<!-- =====================================================
+     MAIN
+===================================================== -->
 
 <main class="main">
 
-    <div class="topbar">
 
-        <div class="title">
+    <!-- TOPBAR -->
 
-            <h1 id="pageTitle">
-                Databreach Search
-            </h1>
+    <header class="topbar">
 
-            <p id="pageDescription">
-                Search your authorized dataset for an exact match.
-            </p>
+        <div>
+
+            <div class="breadcrumb">
+
+                <span>
+                    AEGIS
+                </span>
+
+                /
+
+                <span id="crumb">
+                    DATABASE
+                </span>
+
+            </div>
+
+
+            <div class="title">
+
+                <h1 id="pageTitle">
+                    Databreach Search
+                </h1>
+
+                <p id="pageDescription">
+                    Search your authorized intelligence sources.
+                </p>
+
+            </div>
 
         </div>
 
 
-        <div class="system-status">
+        <div class="top-actions">
 
-            <div class="status-dot"></div>
+            <div class="status">
 
-            SYSTEM ONLINE
+                <div class="dot"></div>
 
+                SYSTEM OPERATIONAL
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- COMMAND BAR -->
+
+    <div class="command">
+
+        <div class="command-icon">
+            ⌕
+        </div>
+
+        <input
+            id="globalSearch"
+            type="text"
+            placeholder="Quick search..."
+            autocomplete="off"
+        >
+
+        <div class="command-key">
+            ENTER
         </div>
 
     </div>
@@ -879,51 +1497,95 @@ input:focus {
 
     <!-- STATS -->
 
-    <div class="dashboard">
+    <div class="stats">
 
-        <div class="stat">
+        <div class="stat-card">
 
-            <div class="stat-label">
-                DATABASE
+            <div class="stat-top">
+
+                <span>
+                    DATABASE
+                </span>
+
+                <span class="stat-icon">
+                    ◈
+                </span>
+
             </div>
 
             <div class="stat-value">
                 db.txt
             </div>
 
+            <div class="stat-sub">
+                Local authorized source
+            </div>
+
         </div>
 
 
-        <div class="stat">
+        <div class="stat-card">
 
-            <div class="stat-label">
-                SEARCH MODE
+            <div class="stat-top">
+
+                <span>
+                    IP INTELLIGENCE
+                </span>
+
+                <span class="stat-icon">
+                    ◉
+                </span>
+
             </div>
 
             <div class="stat-value">
-                Exact
+                IPinfo
+            </div>
+
+            <div class="stat-sub">
+                External intelligence
             </div>
 
         </div>
 
 
-        <div class="stat">
+        <div class="stat-card">
 
-            <div class="stat-label">
-                SYSTEM
+            <div class="stat-top">
+
+                <span>
+                    EMAIL
+                </span>
+
+                <span class="stat-icon">
+                    @
+                </span>
+
             </div>
 
             <div class="stat-value">
-                Online
+                Hunter
+            </div>
+
+            <div class="stat-sub">
+                Email verification
             </div>
 
         </div>
 
 
-        <div class="stat">
+        <div class="stat-card">
 
-            <div class="stat-label">
-                RESULTS
+            <div class="stat-top">
+
+                <span>
+                    RESULTS
+                </span>
+
+                <span class="stat-icon">
+                    +
+                </span>
+
             </div>
 
             <div
@@ -933,232 +1595,518 @@ input:focus {
                 0
             </div>
 
+            <div class="stat-sub">
+                Current query
+            </div>
+
         </div>
 
     </div>
 
 
-    <!-- DATABREACH -->
+    <!-- =================================================
+         WORKSPACE
+    ================================================= -->
 
-    <section
-        id="databreach"
-        class="search-panel page"
-    >
-
-        <div class="panel-header">
-
-            <h2>
-                Databreach Search
-            </h2>
-
-            <span>
-                Exact Match
-            </span>
-
-        </div>
+    <div class="workspace">
 
 
-        <div class="input-row">
+        <!-- MAIN PANEL -->
 
-            <input
-                id="databaseQuery"
-                type="text"
-                autocomplete="off"
-                placeholder="Search name, email, phone, address..."
+        <section class="panel main-panel">
+
+
+            <!-- DATABREACH -->
+
+            <div
+                id="page-databreach"
+                class="page active-page"
             >
 
-            <button
-                class="search-btn"
-                onclick="databaseSearch()"
-            >
-                Search
-            </button>
+                <div class="panel-head">
 
-        </div>
+                    <div class="panel-head-left">
 
+                        <div class="panel-symbol">
+                            ◈
+                        </div>
 
-        <div class="results">
+                        <div>
 
-            <div class="result-header">
+                            <h2>
+                                Databreach Search
+                            </h2>
 
-                <span>
-                    SEARCH RESULTS
-                </span>
+                            <p>
+                                Search your authorized local database
+                            </p>
 
-                <span id="searchStatus">
-                    WAITING
-                </span>
+                        </div>
 
-            </div>
+                    </div>
 
 
-            <div id="databaseResults">
+                    <div class="panel-tag">
+                        LOCAL DB
+                    </div>
 
-                <div class="empty">
-                    Enter a value to start a search.
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="databaseQuery"
+                        type="text"
+                        placeholder="Name, email, phone or address..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="databaseSearch()"
+                    >
+                        SEARCH
+                    </button>
+
+                </div>
+
+
+                <div class="results-head">
+
+                    <span>
+                        RESULTS
+                    </span>
+
+                    <span id="searchStatus">
+                        READY
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="results"
+                    id="databaseResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            ◈
+                        </div>
+
+                        Enter a value to begin searching.
+
+                    </div>
+
                 </div>
 
             </div>
 
-        </div>
 
-    </section>
+            <!-- IP -->
 
-
-    <!-- IP -->
-
-    <section
-        id="ip"
-        class="search-panel page hidden"
-    >
-
-        <div class="panel-header">
-
-            <h2>
-                IP Information
-            </h2>
-
-            <span>
-                IPINFO
-            </span>
-
-        </div>
-
-
-        <div class="input-row">
-
-            <input
-                id="ipInput"
-                type="text"
-                placeholder="Enter an IP address..."
+            <div
+                id="page-ip"
+                class="page"
             >
 
-            <button
-                class="search-btn"
-                onclick="ipSearch()"
-            >
-                Lookup
-            </button>
+                <div class="panel-head">
 
-        </div>
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                IP Information
+                            </h2>
+
+                            <p>
+                                Public IP intelligence via IPinfo
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-        <div
-            class="results"
-            id="ipResults"
-        >
+                    <div class="panel-tag">
+                        IPINFO
+                    </div>
 
-            <div class="empty">
-                Enter an IP address.
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="ipInput"
+                        type="text"
+                        placeholder="8.8.8.8"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="ipSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+
+                <div class="results-head">
+
+                    <span>
+                        IP INFORMATION
+                    </span>
+
+                    <span>
+                        IPINFO
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="results"
+                    id="ipResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            ◉
+                        </div>
+
+                        Enter an IP address.
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
 
-    </section>
+            <!-- EMAIL -->
 
-
-    <!-- EMAIL -->
-
-    <section
-        id="email"
-        class="search-panel page hidden"
-    >
-
-        <div class="panel-header">
-
-            <h2>
-                Email Lookup
-            </h2>
-
-            <span>
-                EMAIL
-            </span>
-
-        </div>
-
-
-        <div class="input-row">
-
-            <input
-                id="emailInput"
-                type="email"
-                placeholder="Enter an email address..."
+            <div
+                id="page-email"
+                class="page"
             >
 
-            <button
-                class="search-btn"
-                onclick="emailSearch()"
-            >
-                Lookup
-            </button>
+                <div class="panel-head">
 
-        </div>
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            @
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Email Lookup
+                            </h2>
+
+                            <p>
+                                Email verification via Hunter
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-        <div
-            class="results"
-            id="emailResults"
-        >
+                    <div class="panel-tag">
+                        HUNTER
+                    </div>
 
-            <div class="empty">
-                Enter an email address.
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="emailInput"
+                        type="email"
+                        placeholder="example@domain.com"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="emailSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+
+                <div class="results-head">
+
+                    <span>
+                        EMAIL INFORMATION
+                    </span>
+
+                    <span>
+                        HUNTER
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="results"
+                    id="emailResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            @
+                        </div>
+
+                        Enter an email address.
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
 
-    </section>
+            <!-- PHONE -->
 
-
-    <!-- PHONE -->
-
-    <section
-        id="phone"
-        class="search-panel page hidden"
-    >
-
-        <div class="panel-header">
-
-            <h2>
-                Phone Lookup
-            </h2>
-
-            <span>
-                PHONE
-            </span>
-
-        </div>
-
-
-        <div class="input-row">
-
-            <input
-                id="phoneInput"
-                type="text"
-                placeholder="Enter a phone number..."
+            <div
+                id="page-phone"
+                class="page"
             >
 
-            <button
-                class="search-btn"
-                onclick="phoneSearch()"
-            >
-                Lookup
-            </button>
+                <div class="panel-head">
 
-        </div>
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            #
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Phone Lookup
+                            </h2>
+
+                            <p>
+                                Authorized phone intelligence
+                            </p>
+
+                        </div>
+
+                    </div>
 
 
-        <div
-            class="results"
-            id="phoneResults"
-        >
+                    <div class="panel-tag">
+                        PHONE
+                    </div>
 
-            <div class="empty">
-                Enter a phone number.
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="phoneInput"
+                        type="text"
+                        placeholder="+49 152 5023156"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="phoneSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+
+                <div class="results-head">
+
+                    <span>
+                        PHONE INFORMATION
+                    </span>
+
+                    <span>
+                        READY
+                    </span>
+
+                </div>
+
+
+                <div
+                    class="results"
+                    id="phoneResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            #
+                        </div>
+
+                        Enter a phone number.
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
 
-    </section>
+        </section>
+
+
+        <!-- SIDE PANEL -->
+
+        <aside class="panel side-panel">
+
+            <div class="side-title">
+                ACTIVE MODULES
+            </div>
+
+
+            <div class="module">
+
+                <div class="module-icon">
+                    ◈
+                </div>
+
+                <div>
+
+                    <div class="module-name">
+                        Local Database
+                    </div>
+
+                    <div class="module-status">
+                        Operational
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="module">
+
+                <div class="module-icon">
+                    ◉
+                </div>
+
+                <div>
+
+                    <div class="module-name">
+                        IPinfo
+                    </div>
+
+                    <div class="module-status">
+                        Connected
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="module">
+
+                <div class="module-icon">
+                    @
+                </div>
+
+                <div>
+
+                    <div class="module-name">
+                        Hunter
+                    </div>
+
+                    <div class="module-status">
+                        Connected
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="module">
+
+                <div class="module-icon">
+                    #
+                </div>
+
+                <div>
+
+                    <div class="module-name">
+                        Phone Module
+                    </div>
+
+                    <div class="module-status">
+                        Ready
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <div class="side-title">
+                QUICK ACTIONS
+            </div>
+
+
+            <div class="quick">
+
+                <button
+                    onclick="switchPageByName('databreach')"
+                >
+                    DATABASE
+                </button>
+
+                <button
+                    onclick="switchPageByName('ip')"
+                >
+                    IP LOOKUP
+                </button>
+
+                <button
+                    onclick="switchPageByName('email')"
+                >
+                    EMAIL
+                </button>
+
+                <button
+                    onclick="switchPageByName('phone')"
+                >
+                    PHONE
+                </button>
+
+            </div>
+
+        </aside>
+
+    </div>
 
 </main>
 
@@ -1167,12 +2115,12 @@ input:focus {
 
 <script>
 
-/* ============================================================
-   PINK FLYING STARS
-============================================================ */
+/* =========================================================
+   STARFIELD
+========================================================= */
 
 const canvas =
-    document.getElementById("stars");
+    document.getElementById("space");
 
 const ctx =
     canvas.getContext("2d");
@@ -1180,7 +2128,7 @@ const ctx =
 let stars = [];
 
 
-function resizeCanvas() {
+function resize() {
 
     canvas.width =
         window.innerWidth;
@@ -1188,24 +2136,18 @@ function resizeCanvas() {
     canvas.height =
         window.innerHeight;
 
-    createStars();
-}
-
-
-function createStars() {
-
     stars = [];
 
     const amount =
         Math.min(
             180,
             Math.floor(
-                (
-                    canvas.width *
-                    canvas.height
-                ) / 9500
+                canvas.width *
+                canvas.height /
+                9000
             )
         );
+
 
     for (
         let i = 0;
@@ -1223,24 +2165,34 @@ function createStars() {
                 Math.random() *
                 canvas.height,
 
-            size:
-                Math.random() * 1.5 + .2,
-
             speed:
-                Math.random() * .75 + .15,
+                Math.random() *
+                .8 +
+                .15,
+
+            size:
+                Math.random() *
+                1.25 +
+                .2,
 
             alpha:
-                Math.random() * .65 + .2,
+                Math.random() *
+                .7 +
+                .15,
 
-            length:
-                Math.random() * 20 + 4
+            trail:
+                Math.random() *
+                22 +
+                5
 
         });
+
     }
+
 }
 
 
-function animateStars() {
+function animate() {
 
     ctx.clearRect(
         0,
@@ -1250,32 +2202,36 @@ function animateStars() {
     );
 
 
-    for (const star of stars) {
+    for (
+        const star of stars
+    ) {
 
-        star.x += star.speed;
+        star.x +=
+            star.speed;
 
         star.y +=
-            star.speed * .16;
+            star.speed *
+            .12;
 
 
         if (
             star.x >
-                canvas.width + 30 ||
-            star.y >
-                canvas.height + 30
+                canvas.width + 30
         ) {
 
-            star.x = -20;
+            star.x = -30;
 
             star.y =
                 Math.random() *
                 canvas.height;
+
         }
 
 
         const gradient =
             ctx.createLinearGradient(
-                star.x - star.length,
+                star.x -
+                    star.trail,
                 star.y,
                 star.x,
                 star.y
@@ -1284,7 +2240,7 @@ function animateStars() {
 
         gradient.addColorStop(
             0,
-            "rgba(255,63,169,0)"
+            "rgba(255,55,170,0)"
         );
 
 
@@ -1292,8 +2248,8 @@ function animateStars() {
             1,
             `rgba(
                 255,
-                100,
-                190,
+                90,
+                185,
                 ${star.alpha}
             )`
         );
@@ -1308,7 +2264,8 @@ function animateStars() {
             star.size;
 
         ctx.moveTo(
-            star.x - star.length,
+            star.x -
+                star.trail,
             star.y
         );
 
@@ -1333,114 +2290,168 @@ function animateStars() {
         ctx.arc(
             star.x,
             star.y,
-            star.size * .7,
+            star.size,
             0,
             Math.PI * 2
         );
 
         ctx.fill();
+
     }
 
 
     requestAnimationFrame(
-        animateStars
+        animate
     );
+
 }
 
 
 window.addEventListener(
     "resize",
-    resizeCanvas
+    resize
 );
 
-resizeCanvas();
-animateStars();
+resize();
+
+animate();
 
 
-/* ============================================================
-   NAVIGATION
-============================================================ */
+/* =========================================================
+   PAGE SWITCH
+========================================================= */
 
-function showPage(
+const pageInfo = {
+
+    databreach: {
+        title: "Databreach Search",
+        description:
+            "Search your authorized intelligence sources.",
+        crumb: "DATABASE"
+    },
+
+    ip: {
+        title: "IP Information",
+        description:
+            "Public IP intelligence via IPinfo.",
+        crumb: "IP INTELLIGENCE"
+    },
+
+    email: {
+        title: "Email Lookup",
+        description:
+            "Email verification via Hunter.",
+        crumb: "EMAIL"
+    },
+
+    phone: {
+        title: "Phone Lookup",
+        description:
+            "Authorized phone intelligence.",
+        crumb: "PHONE"
+    }
+
+};
+
+
+function switchPage(
     page,
     button
 ) {
 
     document
         .querySelectorAll(".page")
-        .forEach(element => {
-
-            element.classList.add(
-                "hidden"
-            );
-
-        });
-
-
-    document
-        .getElementById(page)
-        .classList.remove(
-            "hidden"
+        .forEach(
+            element => {
+                element.classList.remove(
+                    "active-page"
+                );
+            }
         );
 
 
     document
-        .querySelectorAll(".nav button")
-        .forEach(element => {
-
-            element.classList.remove(
-                "active"
-            );
-
-        });
-
-
-    button.classList.add(
-        "active"
-    );
-
-
-    const pages = {
-
-        databreach: [
-            "Databreach Search",
-            "Search your authorized dataset for an exact match."
-        ],
-
-        ip: [
-            "IP Information",
-            "Inspect publicly available IP information."
-        ],
-
-        email: [
-            "Email Lookup",
-            "Inspect an email address using authorized sources."
-        ],
-
-        phone: [
-            "Phone Lookup",
-            "Inspect a phone number using authorized sources."
-        ]
-
-    };
+        .getElementById(
+            "page-" + page
+        )
+        .classList.add(
+            "active-page"
+        );
 
 
     document
-        .getElementById("pageTitle")
-        .textContent =
-        pages[page][0];
+        .querySelectorAll(".nav-item")
+        .forEach(
+            element => {
+                element.classList.remove(
+                    "active"
+                );
+            }
+        );
+
+
+    if (button) {
+        button.classList.add(
+            "active"
+        );
+    }
 
 
     document
-        .getElementById("pageDescription")
+        .getElementById(
+            "pageTitle"
+        )
         .textContent =
-        pages[page][1];
+        pageInfo[page].title;
+
+
+    document
+        .getElementById(
+            "pageDescription"
+        )
+        .textContent =
+        pageInfo[page].description;
+
+
+    document
+        .getElementById(
+            "crumb"
+        )
+        .textContent =
+        pageInfo[page].crumb;
+
 }
 
 
-/* ============================================================
-   DATABASE SEARCH
-============================================================ */
+function switchPageByName(
+    page
+) {
+
+    const buttons =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+
+    let index = [
+        "databreach",
+        "ip",
+        "email",
+        "phone"
+    ].indexOf(page);
+
+
+    switchPage(
+        page,
+        buttons[index]
+    );
+
+}
+
+
+/* =========================================================
+   DATABASE
+========================================================= */
 
 async function databaseSearch() {
 
@@ -1453,7 +2464,7 @@ async function databaseSearch() {
             .trim();
 
 
-    const results =
+    const output =
         document.getElementById(
             "databaseResults"
         );
@@ -1467,9 +2478,12 @@ async function databaseSearch() {
 
     if (!query) {
 
-        results.innerHTML = `
+        output.innerHTML = `
             <div class="empty">
-                Please enter a search value.
+                <div class="empty-icon">
+                    ◈
+                </div>
+                Enter a value to search.
             </div>
         `;
 
@@ -1481,7 +2495,7 @@ async function databaseSearch() {
         "SEARCHING";
 
 
-    results.innerHTML = `
+    output.innerHTML = `
         <div class="empty">
             Searching database...
         </div>
@@ -1510,48 +2524,7 @@ async function databaseSearch() {
                 data.error ||
                 "Database search failed"
             );
-        }
 
-
-        if (
-            !data.results ||
-            data.results.length === 0
-        ) {
-
-            document
-                .getElementById(
-                    "resultCount"
-                )
-                .textContent = "0";
-
-
-            status.textContent =
-                "COMPLETED";
-
-
-            results.innerHTML = `
-
-                <div class="result-card not-found">
-
-                    <div class="result-title">
-
-                        No Match
-
-                        <span class="badge safe">
-                            NOT FOUND
-                        </span>
-
-                    </div>
-
-                    <div class="result-data">
-No exact match was found.
-                    </div>
-
-                </div>
-
-            `;
-
-            return;
         }
 
 
@@ -1564,30 +2537,58 @@ No exact match was found.
 
 
         status.textContent =
-            "COMPLETED";
+            "COMPLETE";
 
 
-        results.innerHTML =
+        if (
+            data.results.length === 0
+        ) {
+
+            output.innerHTML = `
+
+                <div class="result-card safe">
+
+                    <div class="result-title">
+
+                        No Match
+
+                        <span class="badge green">
+                            NOT FOUND
+                        </span>
+
+                    </div>
+
+                    <div class="result-content">
+No exact match was found in the local database.
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        output.innerHTML =
             data.results
                 .map(
-                    (item, index) => `
+                    (result, index) => `
 
-                    <div
-                        class="result-card found"
-                    >
+                    <div class="result-card found">
 
                         <div class="result-title">
 
                             Result #${index + 1}
 
-                            <span class="badge found">
+                            <span class="badge pink">
                                 MATCH
                             </span>
 
                         </div>
 
-                        <div class="result-data">
-${escapeHTML(item)}
+                        <div class="result-content">
+${escapeHTML(result)}
                         </div>
 
                     </div>
@@ -1603,28 +2604,30 @@ ${escapeHTML(item)}
             "ERROR";
 
 
-        results.innerHTML = `
+        output.innerHTML = `
 
             <div class="result-card">
 
                 <div class="result-title">
-                    Database Error
+                    Search Error
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 ${escapeHTML(error.message)}
                 </div>
 
             </div>
 
         `;
+
     }
+
 }
 
 
-/* ============================================================
-   IPINFO LOOKUP
-============================================================ */
+/* =========================================================
+   IPINFO
+========================================================= */
 
 async function ipSearch() {
 
@@ -1647,6 +2650,9 @@ async function ipSearch() {
 
         output.innerHTML = `
             <div class="empty">
+                <div class="empty-icon">
+                    ◉
+                </div>
                 Enter an IP address.
             </div>
         `;
@@ -1657,7 +2663,7 @@ async function ipSearch() {
 
     output.innerHTML = `
         <div class="empty">
-            Looking up ${escapeHTML(ip)}...
+            Looking up IP...
         </div>
     `;
 
@@ -1684,11 +2690,20 @@ async function ipSearch() {
                 result.error ||
                 "IP lookup failed"
             );
+
         }
 
 
         const data =
             result.data;
+
+
+        document
+            .getElementById(
+                "resultCount"
+            )
+            .textContent =
+            "1";
 
 
         output.innerHTML = `
@@ -1699,15 +2714,13 @@ async function ipSearch() {
 
                     IP Information
 
-                    <span class="badge found">
+                    <span class="badge pink">
                         FOUND
                     </span>
 
                 </div>
 
-
-                <div class="result-data">
-
+                <div class="result-content">
 IP:
 ${escapeHTML(data.ip || "Unknown")}
 
@@ -1734,13 +2747,11 @@ ${escapeHTML(data.postal || "Unknown")}
 
 Timezone:
 ${escapeHTML(data.timezone || "Unknown")}
-
                 </div>
 
             </div>
 
         `;
-
 
     } catch (error) {
 
@@ -1752,20 +2763,22 @@ ${escapeHTML(data.timezone || "Unknown")}
                     IP Lookup Failed
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 ${escapeHTML(error.message)}
                 </div>
 
             </div>
 
         `;
+
     }
+
 }
 
 
-/* ============================================================
-   EMAIL
-============================================================ */
+/* =========================================================
+   EMAIL / HUNTER
+========================================================= */
 
 async function emailSearch() {
 
@@ -1788,6 +2801,9 @@ async function emailSearch() {
 
         output.innerHTML = `
             <div class="empty">
+                <div class="empty-icon">
+                    @
+                </div>
                 Enter an email address.
             </div>
         `;
@@ -1798,7 +2814,7 @@ async function emailSearch() {
 
     output.innerHTML = `
         <div class="empty">
-            Looking up email...
+            Querying Hunter...
         </div>
     `;
 
@@ -1812,17 +2828,33 @@ async function emailSearch() {
             );
 
 
-        const data =
+        const result =
             await response.json();
 
 
-        if (!response.ok) {
+        if (
+            !response.ok ||
+            !result.success
+        ) {
 
             throw new Error(
-                data.error ||
+                result.error ||
                 "Email lookup failed"
             );
+
         }
+
+
+        const data =
+            result.data;
+
+
+        document
+            .getElementById(
+                "resultCount"
+            )
+            .textContent =
+            "1";
 
 
         output.innerHTML = `
@@ -1831,20 +2863,64 @@ async function emailSearch() {
 
                 <div class="result-title">
 
-                    Email
+                    Email Intelligence
 
-                    <span class="badge found">
-                        VALID
+                    <span class="badge pink">
+                        ${escapeHTML(
+                            String(
+                                data.status ||
+                                "UNKNOWN"
+                            ).toUpperCase()
+                        )}
                     </span>
 
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 Email:
 ${escapeHTML(data.email || email)}
 
 Status:
-${escapeHTML(data.message || "Verified")}
+${escapeHTML(data.status || "Unknown")}
+
+Score:
+${escapeHTML(data.score ?? "Unknown")}
+
+Disposable:
+${escapeHTML(
+    data.disposable === true
+        ? "Yes"
+        : data.disposable === false
+        ? "No"
+        : "Unknown"
+)}
+
+Webmail:
+${escapeHTML(
+    data.webmail === true
+        ? "Yes"
+        : data.webmail === false
+        ? "No"
+        : "Unknown"
+)}
+
+MX Records:
+${escapeHTML(
+    data.mx_records === true
+        ? "Yes"
+        : data.mx_records === false
+        ? "No"
+        : "Unknown"
+)}
+
+SMTP Check:
+${escapeHTML(
+    data.smtp_check === true
+        ? "Yes"
+        : data.smtp_check === false
+        ? "No"
+        : "Unknown"
+)}
                 </div>
 
             </div>
@@ -1861,20 +2937,22 @@ ${escapeHTML(data.message || "Verified")}
                     Email Lookup Failed
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 ${escapeHTML(error.message)}
                 </div>
 
             </div>
 
         `;
+
     }
+
 }
 
 
-/* ============================================================
+/* =========================================================
    PHONE
-============================================================ */
+========================================================= */
 
 async function phoneSearch() {
 
@@ -1897,6 +2975,9 @@ async function phoneSearch() {
 
         output.innerHTML = `
             <div class="empty">
+                <div class="empty-icon">
+                    #
+                </div>
                 Enter a phone number.
             </div>
         `;
@@ -1921,17 +3002,26 @@ async function phoneSearch() {
             );
 
 
-        const data =
+        const result =
             await response.json();
 
 
         if (!response.ok) {
 
             throw new Error(
-                data.error ||
+                result.error ||
                 "Phone lookup failed"
             );
+
         }
+
+
+        document
+            .getElementById(
+                "resultCount"
+            )
+            .textContent =
+            "1";
 
 
         output.innerHTML = `
@@ -1940,20 +3030,26 @@ async function phoneSearch() {
 
                 <div class="result-title">
 
-                    Phone
+                    Phone Intelligence
 
-                    <span class="badge found">
+                    <span class="badge pink">
                         VALID
                     </span>
 
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 Phone:
-${escapeHTML(data.phone || phone)}
+${escapeHTML(
+    result.phone ||
+    phone
+)}
 
 Status:
-${escapeHTML(data.message || "Verified")}
+${escapeHTML(
+    result.message ||
+    "Validated"
+)}
                 </div>
 
             </div>
@@ -1970,20 +3066,150 @@ ${escapeHTML(data.message || "Verified")}
                     Phone Lookup Failed
                 </div>
 
-                <div class="result-data">
+                <div class="result-content">
 ${escapeHTML(error.message)}
                 </div>
 
             </div>
 
         `;
+
     }
+
 }
 
 
-/* ============================================================
-   HTML ESCAPING
-============================================================ */
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+document
+    .getElementById(
+        "globalSearch"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !==
+                "Enter"
+            ) {
+                return;
+            }
+
+
+            const value =
+                event.target.value.trim();
+
+
+            if (!value) {
+                return;
+            }
+
+
+            switchPageByName(
+                "databreach"
+            );
+
+
+            document
+                .getElementById(
+                    "databaseQuery"
+                )
+                .value =
+                value;
+
+
+            databaseSearch();
+
+        }
+    );
+
+
+/* =========================================================
+   ENTER SHORTCUTS
+========================================================= */
+
+document
+    .getElementById(
+        "databaseQuery"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+                databaseSearch();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "ipInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+                ipSearch();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "emailInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+                emailSearch();
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "phoneInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+                phoneSearch();
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHTML(value) {
 
@@ -2013,75 +3239,8 @@ function escapeHTML(value) {
             "'",
             "&#039;"
         );
+
 }
-
-
-/* ============================================================
-   ENTER KEY
-============================================================ */
-
-document
-    .getElementById(
-        "databaseQuery"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                databaseSearch();
-            }
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "ipInput"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                ipSearch();
-            }
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "emailInput"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                emailSearch();
-            }
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "phoneInput"
-    )
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if (event.key === "Enter") {
-                phoneSearch();
-            }
-
-        }
-    );
 
 </script>
 
