@@ -1,82 +1,126 @@
 import fs from "fs";
 import path from "path";
 
-export default async function handler(req, res) {
+export default function handler(req, res) {
     try {
         const query = String(req.query.q || "").trim();
 
         if (!query) {
             return res.status(400).json({
                 success: false,
-                error: "Missing search query"
+                error: "Missing query"
             });
         }
 
-        const famePath = path.join(
+        const filePath = path.join(
             process.cwd(),
             "Fame.txt"
         );
 
-        if (!fs.existsSync(famePath)) {
+        if (!fs.existsSync(filePath)) {
             return res.status(404).json({
                 success: false,
                 error: "Fame.txt not found"
             });
         }
 
-        const content = fs.readFileSync(
-            famePath,
+        const file = fs.readFileSync(
+            filePath,
             "utf8"
         );
 
-        const lines = content
+        const lines = file
+            .replace(/^\uFEFF/, "")
             .split(/\r?\n/)
-            .filter(line => line.trim() !== "");
+            .map(line => line.trim())
+            .filter(Boolean);
+
+        // Header überspringen
+        const data = lines.slice(1);
 
         const search = query.toLowerCase();
 
-        // Header entfernen
-        const dataLines = lines.slice(1);
+        const results = [];
 
-        const results = dataLines
-            .filter(line => {
-                const fields = line.split(",");
+        for (const line of data) {
 
-                const fullName =
-                    (fields[0] || "").toLowerCase();
+            // Das erste Komma trennt den Namen vom Rest.
+            // Dadurch sind Kommas in der Adresse kein Problem.
+            const firstComma = line.indexOf(",");
 
-                return fullName.includes(search);
-            })
-            .slice(0, 100)
-            .map(line => {
-                const fields = line.split(",");
+            if (firstComma === -1) {
+                continue;
+            }
 
-                return {
-                    fullName: fields[0] || "",
-                    email: fields[1] || "",
-                    address: fields[2] || "",
-                    phone: fields[3] || "",
-                    ip: fields[4] || "",
-                    history: fields.slice(5).join(",")
-                };
-            });
+            const fullName =
+                line
+                    .substring(0, firstComma)
+                    .trim();
+
+            if (
+                fullName
+                    .toLowerCase()
+                    .includes(search)
+            ) {
+
+                const rest =
+                    line.substring(
+                        firstComma + 1
+                    );
+
+                /*
+                 * Erwartetes Format:
+                 *
+                 * name,
+                 * email,
+                 * address,
+                 * phone,
+                 * ip,
+                 * history
+                 *
+                 * Achtung:
+                 * Wenn Address selbst Kommas enthält,
+                 * kann ein echtes CSV-Parsing nötig sein.
+                 */
+
+                const fields =
+                    rest.split(",");
+
+                results.push({
+                    fullName: fullName,
+                    email: fields[0]?.trim() || "",
+                    address: fields[1]?.trim() || "",
+                    phone: fields[2]?.trim() || "",
+                    ip: fields[3]?.trim() || "",
+                    history: fields
+                        .slice(4)
+                        .join(",")
+                        .trim()
+                });
+            }
+
+            if (results.length >= 100) {
+                break;
+            }
+        }
 
         return res.status(200).json({
             success: true,
-            query,
+            query: query,
             count: results.length,
-            results
+            results: results
         });
 
     } catch (error) {
+
         console.error(
-            "Fame database error:",
+            "Fame search error:",
             error
         );
 
         return res.status(500).json({
             success: false,
-            error: "Failed to search Fame.txt"
+            error: error.message
         });
     }
 }
