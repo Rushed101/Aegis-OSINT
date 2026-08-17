@@ -1,142 +1,166 @@
 import { Redis } from "@upstash/redis";
 import crypto from "crypto";
 
-const redis = new Redis({
-    url: process.env.UPSTASH_REDIS_REST_URL,
-    token: process.env.UPSTASH_REDIS_REST_TOKEN
-});
-
-function getToday() {
-    return new Date().toISOString().slice(0, 10);
-}
+const redis = Redis.fromEnv();
 
 function getCookie(req, name) {
 
-    const cookies = req.headers.cookie || "";
+    const cookies =
+        req.headers.cookie || "";
 
-    const parts = cookies.split(";");
+    const parts =
+        cookies.split(";");
 
-    for (const part of parts) {
+    for (
+        const part of parts
+    ) {
 
         const [key, ...value] =
             part.trim().split("=");
 
         if (key === name) {
+
             return decodeURIComponent(
                 value.join("=")
             );
+
         }
+
     }
 
     return null;
 }
 
-export default async function handler(req, res) {
 
-    if (req.method !== "POST") {
+function getDateKey() {
+
+    const now =
+        new Date();
+
+    const year =
+        now.getFullYear();
+
+    const month =
+        String(
+            now.getMonth() + 1
+        ).padStart(2, "0");
+
+    const day =
+        String(
+            now.getDate()
+        ).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+export default async function handler(
+    req,
+    res
+) {
+
+    if (
+        req.method !== "POST"
+    ) {
 
         return res.status(405).json({
+
             success: false,
-            error: "Method not allowed"
+
+            error:
+                "POST required"
+
         });
 
     }
 
+
     try {
 
-        const today = getToday();
+        const date =
+            getDateKey();
 
-        let visitorId =
-            getCookie(req, "aegis_visitor");
 
-        let isNewVisitor = false;
+        let visitor =
+            getCookie(
+                req,
+                "aegis_visitor"
+            );
 
-        if (!visitorId) {
 
-            visitorId =
+        if (!visitor) {
+
+            visitor =
                 crypto.randomUUID();
 
-            isNewVisitor = true;
         }
 
-        /*
-         * -------------------------------------------------
-         * TOTAL PAGE VIEWS
-         * -------------------------------------------------
-         */
+
+        // -----------------------------------------
+        // TOTAL PAGE VIEWS
+        // -----------------------------------------
 
         await redis.incr(
             "aegis:stats:pageviews"
         );
 
-        /*
-         * -------------------------------------------------
-         * DAILY PAGE VIEWS
-         * -------------------------------------------------
-         */
+
+        // -----------------------------------------
+        // TODAY VIEWS
+        // -----------------------------------------
 
         await redis.incr(
-            `aegis:stats:views:${today}`
+            `aegis:stats:views:${date}`
         );
 
-        /*
-         * -------------------------------------------------
-         * ALL-TIME UNIQUE USERS
-         * -------------------------------------------------
-         */
+
+        // -----------------------------------------
+        // ALL TIME UNIQUE USERS
+        // -----------------------------------------
 
         await redis.sadd(
             "aegis:stats:unique",
-            visitorId
+            visitor
         );
 
-        /*
-         * -------------------------------------------------
-         * DAILY UNIQUE USERS
-         * -------------------------------------------------
-         */
+
+        // -----------------------------------------
+        // TODAY UNIQUE USERS
+        // -----------------------------------------
 
         await redis.sadd(
-            `aegis:stats:visitors:${today}`,
-            visitorId
+            `aegis:stats:visitors:${date}`,
+            visitor
         );
 
-        /*
-         * -------------------------------------------------
-         * EXPIRATION FOR DAILY SET
-         * 14 DAYS
-         * -------------------------------------------------
-         */
 
         await redis.expire(
-            `aegis:stats:visitors:${today}`,
+            `aegis:stats:visitors:${date}`,
             1209600
         );
 
-        /*
-         * -------------------------------------------------
-         * COOKIE
-         * -------------------------------------------------
-         */
+
+        // -----------------------------------------
+        // COOKIE
+        // -----------------------------------------
 
         res.setHeader(
             "Set-Cookie",
-            `aegis_visitor=${encodeURIComponent(visitorId)}; Max-Age=31536000; Path=/; SameSite=Lax; Secure`
+            `aegis_visitor=${visitor}; Max-Age=31536000; Path=/; SameSite=Lax; Secure`
         );
+
 
         return res.status(200).json({
 
-            success: true,
-
-            newVisitor:
-                isNewVisitor
+            success: true
 
         });
 
     } catch (error) {
 
         console.error(
-            "Tracking error:",
+            "TRACK ERROR:",
             error
         );
 
@@ -145,9 +169,10 @@ export default async function handler(req, res) {
             success: false,
 
             error:
-                "Statistics tracking failed"
+                error.message
 
         });
 
     }
+
 }
