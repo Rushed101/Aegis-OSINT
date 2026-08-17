@@ -1,0 +1,18 @@
+{
+  "name": "aegis-osint",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aegis OSINT web interface",
+  "scripts": {
+    "start": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@vercel/node": "^5.0.0"
+  },
+  "devDependencies": {
+    "vercel": "^48.0.0"
+  }
+}
