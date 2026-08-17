@@ -7,7 +7,6 @@
 <title>Aegis OSINT</title>
 
 <style>
-
 * {
     margin: 0;
     padding: 0;
@@ -16,12 +15,8 @@
 
 :root {
     --bg: #020204;
-    --bg2: #050507;
-    --panel: rgba(10, 10, 14, .72);
-    --panel2: rgba(14, 13, 18, .9);
-
+    --panel: rgba(10, 10, 14, .82);
     --border: rgba(255,255,255,.065);
-    --border-pink: rgba(255, 55, 170, .18);
 
     --pink: #ff3ca6;
     --pink2: #ff72c2;
@@ -29,10 +24,7 @@
 
     --text: #f4f1f5;
     --muted: #77717b;
-    --muted2: #4e4a52;
-
     --green: #57e6a0;
-    --red: #ff5875;
 }
 
 html {
@@ -45,12 +37,12 @@ body {
     background:
         radial-gradient(
             circle at 50% -20%,
-            rgba(255, 40, 160, .10),
+            rgba(255,40,160,.10),
             transparent 38%
         ),
         radial-gradient(
             circle at 100% 100%,
-            rgba(130, 40, 255, .07),
+            rgba(130,40,255,.07),
             transparent 35%
         ),
         var(--bg);
@@ -69,14 +61,12 @@ body {
     overflow-x: hidden;
 }
 
-
 /* =========================================================
    BACKGROUND
 ========================================================= */
 
 #space {
     position: fixed;
-
     inset: 0;
 
     width: 100%;
@@ -89,7 +79,6 @@ body {
 
 .noise {
     position: fixed;
-
     inset: 0;
 
     z-index: 1;
@@ -102,19 +91,16 @@ body {
         url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
 }
 
-
 /* =========================================================
-   LAYOUT
+   APP
 ========================================================= */
 
 .app {
     position: relative;
-
     z-index: 2;
 
     min-height: 100vh;
 }
-
 
 /* =========================================================
    SIDEBAR
@@ -134,8 +120,8 @@ body {
     background:
         linear-gradient(
             180deg,
-            rgba(5,5,8,.94),
-            rgba(2,2,4,.94)
+            rgba(5,5,8,.97),
+            rgba(2,2,4,.97)
         );
 
     border-right:
@@ -182,7 +168,7 @@ body {
 
     box-shadow:
         0 0 30px
-        rgba(255, 50, 170, .25);
+        rgba(255,50,170,.25);
 }
 
 .logo-text {
@@ -201,8 +187,7 @@ body {
     padding:
         0 12px 9px;
 
-    color:
-        #4f4a52;
+    color: #4f4a52;
 
     font-size: 8px;
 
@@ -310,9 +295,8 @@ body {
     color: var(--pink);
 }
 
-
 /* =========================================================
-   SIDEBAR BOTTOM
+   SIDEBAR PROFILE
 ========================================================= */
 
 .sidebar-bottom {
@@ -397,7 +381,6 @@ body {
         rgba(87,230,160,.8);
 }
 
-
 /* =========================================================
    MAIN
 ========================================================= */
@@ -410,7 +393,6 @@ body {
     padding:
         28px 36px 50px;
 }
-
 
 /* =========================================================
    TOP BAR
@@ -491,14 +473,11 @@ body {
     letter-spacing: .7px;
 }
 
-
 /* =========================================================
-   HERO COMMAND BAR
+   COMMAND
 ========================================================= */
 
 .command {
-    position: relative;
-
     display: flex;
 
     align-items: center;
@@ -593,133 +572,32 @@ body {
     font-size: 8px;
 }
 
-
-/* =========================================================
-   STAT CARDS
-========================================================= */
-
-.stats {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 10px;
-
-    max-width: 1100px;
-
-    margin-bottom: 18px;
-}
-
-.stat-card {
-    position: relative;
-
-    overflow: hidden;
-
-    min-height: 92px;
-
-    padding: 15px;
-
-    border:
-        1px solid
-        var(--border);
-
-    border-radius: 11px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(13,12,17,.85),
-            rgba(6,6,9,.85)
-        );
-
-    backdrop-filter:
-        blur(15px);
-}
-
-.stat-card::before {
-    content: "";
-
-    position: absolute;
-
-    width: 90px;
-    height: 90px;
-
-    right: -50px;
-    bottom: -50px;
-
-    border-radius: 50%;
-
-    background:
-        rgba(255,55,170,.08);
-
-    filter:
-        blur(20px);
-}
-
-.stat-top {
-    display: flex;
-
-    justify-content: space-between;
-
-    color: #55505a;
-
-    font-size: 8px;
-
-    letter-spacing: 1px;
-}
-
-.stat-icon {
-    color: var(--pink);
-
-    font-size: 11px;
-}
-
-.stat-value {
-    margin-top: 12px;
-
-    font-size: 18px;
-
-    font-weight: 700;
-}
-
-.stat-sub {
-    margin-top: 3px;
-
-    color: #55505a;
-
-    font-size: 8px;
-}
-
-
 /* =========================================================
    WORKSPACE
 ========================================================= */
 
 .workspace {
+    width: 100%;
     max-width: 1100px;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(0, 1fr)
-        260px;
-
-    gap: 14px;
 }
 
-.panel {
+.main-panel {
+    width: 100%;
+
+    min-height: 500px;
+
+    padding: 21px;
+
     border:
-        1px solid
-        var(--border);
+        1px solid var(--border);
 
     border-radius: 13px;
 
     background:
         linear-gradient(
             145deg,
-            rgba(13,12,17,.87),
-            rgba(6,6,9,.87)
+            rgba(13,12,17,.88),
+            rgba(6,6,9,.88)
         );
 
     box-shadow:
@@ -729,17 +607,6 @@ body {
     backdrop-filter:
         blur(20px);
 }
-
-.main-panel {
-    min-height: 470px;
-
-    padding: 21px;
-}
-
-.side-panel {
-    padding: 17px;
-}
-
 
 /* =========================================================
    PANEL HEADER
@@ -809,7 +676,6 @@ body {
 
     letter-spacing: .8px;
 }
-
 
 /* =========================================================
    SEARCH
@@ -896,7 +762,6 @@ body {
         brightness(1.08);
 }
 
-
 /* =========================================================
    RESULTS
 ========================================================= */
@@ -917,7 +782,7 @@ body {
 }
 
 .results {
-    min-height: 260px;
+    min-height: 280px;
 }
 
 .empty {
@@ -929,7 +794,7 @@ body {
 
     justify-content: center;
 
-    min-height: 230px;
+    min-height: 250px;
 
     border:
         1px dashed
@@ -973,22 +838,6 @@ body {
         resultIn .3s ease;
 }
 
-@keyframes resultIn {
-
-    from {
-        opacity: 0;
-        transform:
-            translateY(5px);
-    }
-
-    to {
-        opacity: 1;
-        transform:
-            translateY(0);
-    }
-
-}
-
 .result-card.found {
     border-left:
         2px solid
@@ -999,6 +848,18 @@ body {
     border-left:
         2px solid
         var(--green);
+}
+
+@keyframes resultIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .result-title {
@@ -1055,130 +916,212 @@ body {
         rgba(87,230,160,.06);
 }
 
-
 /* =========================================================
-   SIDE INFORMATION
+   AEGIS BASE
 ========================================================= */
 
-.side-title {
-    margin-bottom: 14px;
-
-    color: #5a555e;
-
-    font-size: 8px;
-
-    font-weight: 800;
-
-    letter-spacing: 1.2px;
-}
-
-.module {
+.base-info {
     display: flex;
 
+    justify-content: space-between;
+
     align-items: center;
+
+    padding: 12px 14px;
+
+    margin-bottom: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 8px;
+
+    background:
+        rgba(0,0,0,.18);
+
+    color: #77717b;
+
+    font-size: 9px;
+}
+
+.base-info div {
+    display: flex;
 
     gap: 9px;
 
-    padding: 9px;
+    align-items: center;
+}
 
-    margin-bottom: 5px;
+.base-info strong {
+    color: #ddd8df;
+}
+
+.base-results {
+    height: 520px;
+
+    overflow-y: auto;
 
     border:
         1px solid
-        rgba(255,255,255,.035);
+        rgba(255,255,255,.055);
 
-    border-radius: 7px;
+    border-radius: 9px;
 
     background:
-        rgba(255,255,255,.012);
+        rgba(0,0,0,.22);
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255,55,170,.4)
+        transparent;
 }
 
-.module-icon {
-    width: 27px;
-    height: 27px;
+.base-results::-webkit-scrollbar {
+    width: 5px;
+}
 
+.base-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.base-results::-webkit-scrollbar-thumb {
+    background:
+        rgba(255,55,170,.4);
+
+    border-radius: 10px;
+}
+
+.base-line {
+    display: flex;
+
+    min-height: 29px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.035);
+}
+
+.base-line-number {
+    width: 65px;
+
+    flex-shrink: 0;
+
+    padding: 8px 10px;
+
+    color: #403b44;
+
+    text-align: right;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.04);
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+}
+
+.base-line-content {
+    flex: 1;
+
+    padding: 8px 12px;
+
+    color: #8c8690;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+}
+
+.base-line:hover {
+    background:
+        rgba(255,55,170,.025);
+}
+
+.base-line:hover
+.base-line-number {
+    color:
+        rgba(255,55,170,.55);
+}
+
+.base-pagination {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 12px;
+}
+
+.page-btn {
+    padding:
+        8px 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
 
     border-radius: 7px;
 
     background:
-        rgba(255,55,170,.05);
+        rgba(255,255,255,.025);
 
-    color: var(--pink);
+    color: #8c8690;
 
-    font-size: 9px;
-}
+    font-family: inherit;
 
-.module-name {
-    font-size: 9px;
-
-    font-weight: 600;
-}
-
-.module-status {
-    margin-top: 2px;
-
-    color: #4f4a53;
-
-    font-size: 7px;
-}
-
-.divider {
-    height: 1px;
-
-    margin:
-        17px 0;
-
-    background:
-        rgba(255,255,255,.05);
-}
-
-.quick {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 5px;
-}
-
-.quick button {
-    height: 32px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.05);
-
-    border-radius: 6px;
-
-    background:
-        rgba(255,255,255,.015);
-
-    color: #716b74;
+    font-size: 8px;
 
     cursor: pointer;
 
-    font-size: 7px;
-
-    transition: .2s;
+    transition: .2s ease;
 }
 
-.quick button:hover {
-    color: white;
-
+.page-btn:hover:not(:disabled) {
     border-color:
-        var(--border-pink);
+        rgba(255,55,170,.3);
+
+    color: #fff;
 
     background:
         rgba(255,55,170,.04);
 }
 
+.page-btn:disabled {
+    opacity: .3;
+
+    cursor: not-allowed;
+}
+
+#basePageNumber {
+    min-width: 60px;
+
+    color: #ff72c2;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    text-align: center;
+}
 
 /* =========================================================
-   PAGE STATES
+   PAGES
 ========================================================= */
 
 .page {
@@ -1189,23 +1132,9 @@ body {
     display: block;
 }
 
-
 /* =========================================================
    RESPONSIVE
 ========================================================= */
-
-@media(max-width: 1000px) {
-
-    .workspace {
-        grid-template-columns:
-            1fr;
-    }
-
-    .side-panel {
-        display: none;
-    }
-
-}
 
 @media(max-width: 800px) {
 
@@ -1215,6 +1144,7 @@ body {
 
     .logo {
         justify-content: center;
+
         padding-left: 0;
         padding-right: 0;
     }
@@ -1236,20 +1166,9 @@ body {
         padding:
             22px 16px;
     }
-
-    .stats {
-        grid-template-columns:
-            1fr 1fr;
-    }
-
 }
 
 @media(max-width: 550px) {
-
-    .stats {
-        grid-template-columns:
-            1fr;
-    }
 
     .top-actions {
         display: none;
@@ -1267,20 +1186,17 @@ body {
         display: none;
     }
 
-}
+    .base-info {
+        flex-direction: column;
 
+        align-items: flex-start;
 
-/* =========================================================
-   HIDDEN
-========================================================= */
-
-.hidden {
-    display: none !important;
+        gap: 8px;
+    }
 }
 
 </style>
 </head>
-
 
 <body>
 
@@ -1288,9 +1204,7 @@ body {
 
 <div class="noise"></div>
 
-
 <div class="app">
-
 
 <!-- =====================================================
      SIDEBAR
@@ -1310,11 +1224,9 @@ body {
 
     </div>
 
-
     <div class="section-title">
         Intelligence
     </div>
-
 
     <nav class="nav">
 
@@ -1322,67 +1234,58 @@ body {
             class="nav-item active"
             onclick="switchPage('databreach', this)"
         >
-
-            <div class="nav-icon">
-                ◈
-            </div>
+            <div class="nav-icon">◈</div>
 
             <span>
                 Databreach Search
             </span>
-
         </button>
 
+        <button
+            class="nav-item"
+            onclick="switchPage('base', this)"
+        >
+            <div class="nav-icon">▤</div>
+
+            <span>
+                Aegis Base
+            </span>
+        </button>
 
         <button
             class="nav-item"
             onclick="switchPage('ip', this)"
         >
-
-            <div class="nav-icon">
-                ◉
-            </div>
+            <div class="nav-icon">◉</div>
 
             <span>
                 IP Information
             </span>
-
         </button>
-
 
         <button
             class="nav-item"
             onclick="switchPage('email', this)"
         >
-
-            <div class="nav-icon">
-                @
-            </div>
+            <div class="nav-icon">@</div>
 
             <span>
                 Email Lookup
             </span>
-
         </button>
-
 
         <button
             class="nav-item"
             onclick="switchPage('phone', this)"
         >
-
-            <div class="nav-icon">
-                #
-            </div>
+            <div class="nav-icon">#</div>
 
             <span>
                 Phone Lookup
             </span>
-
         </button>
 
     </nav>
-
 
     <div class="sidebar-bottom">
 
@@ -1421,9 +1324,6 @@ body {
 
 <main class="main">
 
-
-    <!-- TOPBAR -->
-
     <header class="topbar">
 
         <div>
@@ -1442,7 +1342,6 @@ body {
 
             </div>
 
-
             <div class="title">
 
                 <h1 id="pageTitle">
@@ -1456,7 +1355,6 @@ body {
             </div>
 
         </div>
-
 
         <div class="top-actions">
 
@@ -1473,7 +1371,9 @@ body {
     </header>
 
 
-    <!-- COMMAND BAR -->
+    <!-- =================================================
+         QUICK SEARCH
+    ================================================= -->
 
     <div class="command">
 
@@ -1495,128 +1395,18 @@ body {
     </div>
 
 
-    <!-- STATS -->
-
-    <div class="stats">
-
-        <div class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    DATABASE
-                </span>
-
-                <span class="stat-icon">
-                    ◈
-                </span>
-
-            </div>
-
-            <div class="stat-value">
-                db.txt
-            </div>
-
-            <div class="stat-sub">
-                Local authorized source
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    IP INTELLIGENCE
-                </span>
-
-                <span class="stat-icon">
-                    ◉
-                </span>
-
-            </div>
-
-            <div class="stat-value">
-                IPinfo
-            </div>
-
-            <div class="stat-sub">
-                External intelligence
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    EMAIL
-                </span>
-
-                <span class="stat-icon">
-                    @
-                </span>
-
-            </div>
-
-            <div class="stat-value">
-                Hunter
-            </div>
-
-            <div class="stat-sub">
-                Email verification
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-top">
-
-                <span>
-                    RESULTS
-                </span>
-
-                <span class="stat-icon">
-                    +
-                </span>
-
-            </div>
-
-            <div
-                class="stat-value"
-                id="resultCount"
-            >
-                0
-            </div>
-
-            <div class="stat-sub">
-                Current query
-            </div>
-
-        </div>
-
-    </div>
-
-
     <!-- =================================================
          WORKSPACE
     ================================================= -->
 
     <div class="workspace">
 
-
-        <!-- MAIN PANEL -->
-
-        <section class="panel main-panel">
+        <section class="main-panel">
 
 
-            <!-- DATABREACH -->
+            <!-- =================================================
+                 DATABREACH
+            ================================================= -->
 
             <div
                 id="page-databreach"
@@ -1638,20 +1428,18 @@ body {
                             </h2>
 
                             <p>
-                                Search your authorized local database
+                                Search your authorized database
                             </p>
 
                         </div>
 
                     </div>
 
-
                     <div class="panel-tag">
-                        LOCAL DB
+                        SEARCH
                     </div>
 
                 </div>
-
 
                 <div class="search-row">
 
@@ -1671,7 +1459,6 @@ body {
 
                 </div>
 
-
                 <div class="results-head">
 
                     <span>
@@ -1683,7 +1470,6 @@ body {
                     </span>
 
                 </div>
-
 
                 <div
                     class="results"
@@ -1705,7 +1491,116 @@ body {
             </div>
 
 
-            <!-- IP -->
+            <!-- =================================================
+                 AEGIS BASE
+            ================================================= -->
+
+            <div
+                id="page-base"
+                class="page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Aegis Base
+                            </h2>
+
+                            <p>
+                                Authorized database browser
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        DB.TXT
+                    </div>
+
+                </div>
+
+
+                <div class="base-info">
+
+                    <div>
+
+                        <strong>
+                            db.txt
+                        </strong>
+
+                        <span>
+                            50,000 lines
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <strong id="basePageInfo">
+                            Page 1
+                        </strong>
+
+                        <span>
+                            100 entries
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="baseResults"
+                    class="base-results"
+                >
+
+                    <div class="empty">
+                        Click Aegis Base to load the database.
+                    </div>
+
+                </div>
+
+
+                <div class="base-pagination">
+
+                    <button
+                        class="page-btn"
+                        onclick="basePrevious()"
+                        id="basePrev"
+                        disabled
+                    >
+                        ← Previous
+                    </button>
+
+                    <span id="basePageNumber">
+                        1 / 500
+                    </span>
+
+                    <button
+                        class="page-btn"
+                        onclick="baseNext()"
+                        id="baseNext"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 IP
+            ================================================= -->
 
             <div
                 id="page-ip"
@@ -1727,20 +1622,18 @@ body {
                             </h2>
 
                             <p>
-                                Public IP intelligence via IPinfo
+                                Public IP intelligence
                             </p>
 
                         </div>
 
                     </div>
 
-
                     <div class="panel-tag">
-                        IPINFO
+                        LOOKUP
                     </div>
 
                 </div>
-
 
                 <div class="search-row">
 
@@ -1760,7 +1653,6 @@ body {
 
                 </div>
 
-
                 <div class="results-head">
 
                     <span>
@@ -1768,11 +1660,10 @@ body {
                     </span>
 
                     <span>
-                        IPINFO
+                        READY
                     </span>
 
                 </div>
-
 
                 <div
                     class="results"
@@ -1794,7 +1685,9 @@ body {
             </div>
 
 
-            <!-- EMAIL -->
+            <!-- =================================================
+                 EMAIL
+            ================================================= -->
 
             <div
                 id="page-email"
@@ -1816,20 +1709,18 @@ body {
                             </h2>
 
                             <p>
-                                Email verification via Hunter
+                                Analyze an email address
                             </p>
 
                         </div>
 
                     </div>
 
-
                     <div class="panel-tag">
-                        HUNTER
+                        LOOKUP
                     </div>
 
                 </div>
-
 
                 <div class="search-row">
 
@@ -1849,7 +1740,6 @@ body {
 
                 </div>
 
-
                 <div class="results-head">
 
                     <span>
@@ -1857,11 +1747,10 @@ body {
                     </span>
 
                     <span>
-                        HUNTER
+                        READY
                     </span>
 
                 </div>
-
 
                 <div
                     class="results"
@@ -1883,7 +1772,9 @@ body {
             </div>
 
 
-            <!-- PHONE -->
+            <!-- =================================================
+                 PHONE
+            ================================================= -->
 
             <div
                 id="page-phone"
@@ -1905,20 +1796,18 @@ body {
                             </h2>
 
                             <p>
-                                Authorized phone intelligence
+                                Analyze a phone number
                             </p>
 
                         </div>
 
                     </div>
 
-
                     <div class="panel-tag">
-                        PHONE
+                        LOOKUP
                     </div>
 
                 </div>
-
 
                 <div class="search-row">
 
@@ -1938,7 +1827,6 @@ body {
 
                 </div>
 
-
                 <div class="results-head">
 
                     <span>
@@ -1950,7 +1838,6 @@ body {
                     </span>
 
                 </div>
-
 
                 <div
                     class="results"
@@ -1971,140 +1858,7 @@ body {
 
             </div>
 
-
         </section>
-
-
-        <!-- SIDE PANEL -->
-
-        <aside class="panel side-panel">
-
-            <div class="side-title">
-                ACTIVE MODULES
-            </div>
-
-
-            <div class="module">
-
-                <div class="module-icon">
-                    ◈
-                </div>
-
-                <div>
-
-                    <div class="module-name">
-                        Local Database
-                    </div>
-
-                    <div class="module-status">
-                        Operational
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="module">
-
-                <div class="module-icon">
-                    ◉
-                </div>
-
-                <div>
-
-                    <div class="module-name">
-                        IPinfo
-                    </div>
-
-                    <div class="module-status">
-                        Connected
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="module">
-
-                <div class="module-icon">
-                    @
-                </div>
-
-                <div>
-
-                    <div class="module-name">
-                        Hunter
-                    </div>
-
-                    <div class="module-status">
-                        Connected
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="module">
-
-                <div class="module-icon">
-                    #
-                </div>
-
-                <div>
-
-                    <div class="module-name">
-                        Phone Module
-                    </div>
-
-                    <div class="module-status">
-                        Ready
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="divider"></div>
-
-
-            <div class="side-title">
-                QUICK ACTIONS
-            </div>
-
-
-            <div class="quick">
-
-                <button
-                    onclick="switchPageByName('databreach')"
-                >
-                    DATABASE
-                </button>
-
-                <button
-                    onclick="switchPageByName('ip')"
-                >
-                    IP LOOKUP
-                </button>
-
-                <button
-                    onclick="switchPageByName('email')"
-                >
-                    EMAIL
-                </button>
-
-                <button
-                    onclick="switchPageByName('phone')"
-                >
-                    PHONE
-                </button>
-
-            </div>
-
-        </aside>
 
     </div>
 
@@ -2127,7 +1881,6 @@ const ctx =
 
 let stars = [];
 
-
 function resize() {
 
     canvas.width =
@@ -2140,14 +1893,13 @@ function resize() {
 
     const amount =
         Math.min(
-            180,
+            100,
             Math.floor(
                 canvas.width *
                 canvas.height /
-                9000
+                15000
             )
         );
-
 
     for (
         let i = 0;
@@ -2167,30 +1919,29 @@ function resize() {
 
             speed:
                 Math.random() *
-                .8 +
-                .15,
+                .45 +
+                .08,
 
             size:
                 Math.random() *
-                1.25 +
+                1 +
                 .2,
 
             alpha:
                 Math.random() *
-                .7 +
+                .6 +
                 .15,
 
             trail:
                 Math.random() *
-                22 +
-                5
+                15 +
+                4
 
         });
 
     }
 
 }
-
 
 function animate() {
 
@@ -2201,7 +1952,6 @@ function animate() {
         canvas.height
     );
 
-
     for (
         const star of stars
     ) {
@@ -2210,13 +1960,11 @@ function animate() {
             star.speed;
 
         star.y +=
-            star.speed *
-            .12;
-
+            star.speed * .08;
 
         if (
             star.x >
-                canvas.width + 30
+            canvas.width + 30
         ) {
 
             star.x = -30;
@@ -2227,22 +1975,18 @@ function animate() {
 
         }
 
-
         const gradient =
             ctx.createLinearGradient(
-                star.x -
-                    star.trail,
+                star.x - star.trail,
                 star.y,
                 star.x,
                 star.y
             );
 
-
         gradient.addColorStop(
             0,
             "rgba(255,55,170,0)"
         );
-
 
         gradient.addColorStop(
             1,
@@ -2254,7 +1998,6 @@ function animate() {
             )`
         );
 
-
         ctx.beginPath();
 
         ctx.strokeStyle =
@@ -2264,8 +2007,7 @@ function animate() {
             star.size;
 
         ctx.moveTo(
-            star.x -
-                star.trail,
+            star.x - star.trail,
             star.y
         );
 
@@ -2275,7 +2017,6 @@ function animate() {
         );
 
         ctx.stroke();
-
 
         ctx.beginPath();
 
@@ -2296,16 +2037,12 @@ function animate() {
         );
 
         ctx.fill();
-
     }
-
 
     requestAnimationFrame(
         animate
     );
-
 }
-
 
 window.addEventListener(
     "resize",
@@ -2313,12 +2050,11 @@ window.addEventListener(
 );
 
 resize();
-
 animate();
 
 
 /* =========================================================
-   PAGE SWITCH
+   PAGE INFO
 ========================================================= */
 
 const pageInfo = {
@@ -2330,29 +2066,40 @@ const pageInfo = {
         crumb: "DATABASE"
     },
 
+    base: {
+        title: "Aegis Base",
+        description:
+            "Browse your authorized database.",
+        crumb: "AEGIS BASE"
+    },
+
     ip: {
         title: "IP Information",
         description:
-            "Public IP intelligence via IPinfo.",
+            "Public IP intelligence.",
         crumb: "IP INTELLIGENCE"
     },
 
     email: {
         title: "Email Lookup",
         description:
-            "Email verification via Hunter.",
+            "Analyze an email address.",
         crumb: "EMAIL"
     },
 
     phone: {
         title: "Phone Lookup",
         description:
-            "Authorized phone intelligence.",
+            "Analyze a phone number.",
         crumb: "PHONE"
     }
 
 };
 
+
+/* =========================================================
+   SWITCH PAGE
+========================================================= */
 
 function switchPage(
     page,
@@ -2363,716 +2110,66 @@ function switchPage(
         .querySelectorAll(".page")
         .forEach(
             element => {
+
                 element.classList.remove(
                     "active-page"
                 );
+
             }
         );
 
-
-    document
-        .getElementById(
+    const target =
+        document.getElementById(
             "page-" + page
-        )
-        .classList.add(
+        );
+
+    if (target) {
+
+        target.classList.add(
             "active-page"
         );
 
+    }
 
     document
         .querySelectorAll(".nav-item")
         .forEach(
             element => {
+
                 element.classList.remove(
                     "active"
                 );
+
             }
         );
 
-
     if (button) {
+
         button.classList.add(
             "active"
         );
+
     }
 
-
-    document
-        .getElementById(
-            "pageTitle"
-        )
-        .textContent =
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
         pageInfo[page].title;
 
-
-    document
-        .getElementById(
-            "pageDescription"
-        )
-        .textContent =
+    document.getElementById(
+        "pageDescription"
+    ).textContent =
         pageInfo[page].description;
 
-
-    document
-        .getElementById(
-            "crumb"
-        )
-        .textContent =
+    document.getElementById(
+        "crumb"
+    ).textContent =
         pageInfo[page].crumb;
 
-}
 
+    if (page === "base") {
 
-function switchPageByName(
-    page
-) {
-
-    const buttons =
-        document.querySelectorAll(
-            ".nav-item"
-        );
-
-
-    let index = [
-        "databreach",
-        "ip",
-        "email",
-        "phone"
-    ].indexOf(page);
-
-
-    switchPage(
-        page,
-        buttons[index]
-    );
-
-}
-
-
-/* =========================================================
-   DATABASE
-========================================================= */
-
-async function databaseSearch() {
-
-    const query =
-        document
-            .getElementById(
-                "databaseQuery"
-            )
-            .value
-            .trim();
-
-
-    const output =
-        document.getElementById(
-            "databaseResults"
-        );
-
-
-    const status =
-        document.getElementById(
-            "searchStatus"
-        );
-
-
-    if (!query) {
-
-        output.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">
-                    ◈
-                </div>
-                Enter a value to search.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    status.textContent =
-        "SEARCHING";
-
-
-    output.innerHTML = `
-        <div class="empty">
-            Searching database...
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/search?q=" +
-                encodeURIComponent(query)
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            throw new Error(
-                data.error ||
-                "Database search failed"
-            );
-
-        }
-
-
-        document
-            .getElementById(
-                "resultCount"
-            )
-            .textContent =
-            data.results.length;
-
-
-        status.textContent =
-            "COMPLETE";
-
-
-        if (
-            data.results.length === 0
-        ) {
-
-            output.innerHTML = `
-
-                <div class="result-card safe">
-
-                    <div class="result-title">
-
-                        No Match
-
-                        <span class="badge green">
-                            NOT FOUND
-                        </span>
-
-                    </div>
-
-                    <div class="result-content">
-No exact match was found in the local database.
-                    </div>
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        output.innerHTML =
-            data.results
-                .map(
-                    (result, index) => `
-
-                    <div class="result-card found">
-
-                        <div class="result-title">
-
-                            Result #${index + 1}
-
-                            <span class="badge pink">
-                                MATCH
-                            </span>
-
-                        </div>
-
-                        <div class="result-content">
-${escapeHTML(result)}
-                        </div>
-
-                    </div>
-
-                `
-                )
-                .join("");
-
-
-    } catch (error) {
-
-        status.textContent =
-            "ERROR";
-
-
-        output.innerHTML = `
-
-            <div class="result-card">
-
-                <div class="result-title">
-                    Search Error
-                </div>
-
-                <div class="result-content">
-${escapeHTML(error.message)}
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================================
-   IPINFO
-========================================================= */
-
-async function ipSearch() {
-
-    const ip =
-        document
-            .getElementById(
-                "ipInput"
-            )
-            .value
-            .trim();
-
-
-    const output =
-        document.getElementById(
-            "ipResults"
-        );
-
-
-    if (!ip) {
-
-        output.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">
-                    ◉
-                </div>
-                Enter an IP address.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    output.innerHTML = `
-        <div class="empty">
-            Looking up IP...
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/ip?ip=" +
-                encodeURIComponent(ip)
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
-
-            throw new Error(
-                result.error ||
-                "IP lookup failed"
-            );
-
-        }
-
-
-        const data =
-            result.data;
-
-
-        document
-            .getElementById(
-                "resultCount"
-            )
-            .textContent =
-            "1";
-
-
-        output.innerHTML = `
-
-            <div class="result-card found">
-
-                <div class="result-title">
-
-                    IP Information
-
-                    <span class="badge pink">
-                        FOUND
-                    </span>
-
-                </div>
-
-                <div class="result-content">
-IP:
-${escapeHTML(data.ip || "Unknown")}
-
-Hostname:
-${escapeHTML(data.hostname || "Unknown")}
-
-City:
-${escapeHTML(data.city || "Unknown")}
-
-Region:
-${escapeHTML(data.region || "Unknown")}
-
-Country:
-${escapeHTML(data.country || "Unknown")}
-
-Location:
-${escapeHTML(data.loc || "Unknown")}
-
-Organization:
-${escapeHTML(data.org || "Unknown")}
-
-Postal:
-${escapeHTML(data.postal || "Unknown")}
-
-Timezone:
-${escapeHTML(data.timezone || "Unknown")}
-                </div>
-
-            </div>
-
-        `;
-
-    } catch (error) {
-
-        output.innerHTML = `
-
-            <div class="result-card">
-
-                <div class="result-title">
-                    IP Lookup Failed
-                </div>
-
-                <div class="result-content">
-${escapeHTML(error.message)}
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================================
-   EMAIL / HUNTER
-========================================================= */
-
-async function emailSearch() {
-
-    const email =
-        document
-            .getElementById(
-                "emailInput"
-            )
-            .value
-            .trim();
-
-
-    const output =
-        document.getElementById(
-            "emailResults"
-        );
-
-
-    if (!email) {
-
-        output.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">
-                    @
-                </div>
-                Enter an email address.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    output.innerHTML = `
-        <div class="empty">
-            Querying Hunter...
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/email?email=" +
-                encodeURIComponent(email)
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !result.success
-        ) {
-
-            throw new Error(
-                result.error ||
-                "Email lookup failed"
-            );
-
-        }
-
-
-        const data =
-            result.data;
-
-
-        document
-            .getElementById(
-                "resultCount"
-            )
-            .textContent =
-            "1";
-
-
-        output.innerHTML = `
-
-            <div class="result-card found">
-
-                <div class="result-title">
-
-                    Email Intelligence
-
-                    <span class="badge pink">
-                        ${escapeHTML(
-                            String(
-                                data.status ||
-                                "UNKNOWN"
-                            ).toUpperCase()
-                        )}
-                    </span>
-
-                </div>
-
-                <div class="result-content">
-Email:
-${escapeHTML(data.email || email)}
-
-Status:
-${escapeHTML(data.status || "Unknown")}
-
-Score:
-${escapeHTML(data.score ?? "Unknown")}
-
-Disposable:
-${escapeHTML(
-    data.disposable === true
-        ? "Yes"
-        : data.disposable === false
-        ? "No"
-        : "Unknown"
-)}
-
-Webmail:
-${escapeHTML(
-    data.webmail === true
-        ? "Yes"
-        : data.webmail === false
-        ? "No"
-        : "Unknown"
-)}
-
-MX Records:
-${escapeHTML(
-    data.mx_records === true
-        ? "Yes"
-        : data.mx_records === false
-        ? "No"
-        : "Unknown"
-)}
-
-SMTP Check:
-${escapeHTML(
-    data.smtp_check === true
-        ? "Yes"
-        : data.smtp_check === false
-        ? "No"
-        : "Unknown"
-)}
-                </div>
-
-            </div>
-
-        `;
-
-    } catch (error) {
-
-        output.innerHTML = `
-
-            <div class="result-card">
-
-                <div class="result-title">
-                    Email Lookup Failed
-                </div>
-
-                <div class="result-content">
-${escapeHTML(error.message)}
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =========================================================
-   PHONE
-========================================================= */
-
-async function phoneSearch() {
-
-    const phone =
-        document
-            .getElementById(
-                "phoneInput"
-            )
-            .value
-            .trim();
-
-
-    const output =
-        document.getElementById(
-            "phoneResults"
-        );
-
-
-    if (!phone) {
-
-        output.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">
-                    #
-                </div>
-                Enter a phone number.
-            </div>
-        `;
-
-        return;
-    }
-
-
-    output.innerHTML = `
-        <div class="empty">
-            Looking up phone...
-        </div>
-    `;
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/phone?phone=" +
-                encodeURIComponent(phone)
-            );
-
-
-        const result =
-            await response.json();
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                result.error ||
-                "Phone lookup failed"
-            );
-
-        }
-
-
-        document
-            .getElementById(
-                "resultCount"
-            )
-            .textContent =
-            "1";
-
-
-        output.innerHTML = `
-
-            <div class="result-card found">
-
-                <div class="result-title">
-
-                    Phone Intelligence
-
-                    <span class="badge pink">
-                        VALID
-                    </span>
-
-                </div>
-
-                <div class="result-content">
-Phone:
-${escapeHTML(
-    result.phone ||
-    phone
-)}
-
-Status:
-${escapeHTML(
-    result.message ||
-    "Validated"
-)}
-                </div>
-
-            </div>
-
-        `;
-
-    } catch (error) {
-
-        output.innerHTML = `
-
-            <div class="result-card">
-
-                <div class="result-title">
-                    Phone Lookup Failed
-                </div>
-
-                <div class="result-content">
-${escapeHTML(error.message)}
-                </div>
-
-            </div>
-
-        `;
+        loadBasePage();
 
     }
 
@@ -3098,33 +2195,835 @@ document
                 return;
             }
 
-
             const value =
                 event.target.value.trim();
-
 
             if (!value) {
                 return;
             }
 
-
             switchPageByName(
                 "databreach"
             );
 
-
-            document
-                .getElementById(
-                    "databaseQuery"
-                )
-                .value =
+            document.getElementById(
+                "databaseQuery"
+            ).value =
                 value;
-
 
             databaseSearch();
 
         }
     );
+
+
+function switchPageByName(
+    page
+) {
+
+    const buttons =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+    const pages = [
+        "databreach",
+        "base",
+        "ip",
+        "email",
+        "phone"
+    ];
+
+    const index =
+        pages.indexOf(page);
+
+    if (index !== -1) {
+
+        switchPage(
+            page,
+            buttons[index]
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DATABASE SEARCH
+========================================================= */
+
+async function databaseSearch() {
+
+    const query =
+        document
+            .getElementById(
+                "databaseQuery"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "databaseResults"
+        );
+
+    const status =
+        document.getElementById(
+            "searchStatus"
+        );
+
+    if (!query) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">◈</div>
+                Enter a value to search.
+            </div>
+        `;
+
+        return;
+    }
+
+    status.textContent =
+        "SEARCHING";
+
+    output.innerHTML = `
+        <div class="empty">
+            Searching database...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/search?q=" +
+                encodeURIComponent(query)
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Database search failed"
+            );
+
+        }
+
+        status.textContent =
+            "COMPLETE";
+
+        const results =
+            Array.isArray(
+                data.results
+            )
+                ? data.results
+                : [];
+
+        if (
+            results.length === 0
+        ) {
+
+            output.innerHTML = `
+                <div class="result-card safe">
+
+                    <div class="result-title">
+
+                        No Match
+
+                        <span class="badge green">
+                            NOT FOUND
+                        </span>
+
+                    </div>
+
+                    <div class="result-content">
+No exact match was found in the authorized database.
+                    </div>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        output.innerHTML =
+            results
+                .map(
+                    (result, index) => `
+
+                    <div class="result-card found">
+
+                        <div class="result-title">
+
+                            Result #${index + 1}
+
+                            <span class="badge pink">
+                                MATCH
+                            </span>
+
+                        </div>
+
+                        <div class="result-content">
+${escapeHTML(
+    typeof result === "string"
+        ? result
+        : JSON.stringify(
+            result,
+            null,
+            2
+        )
+)}
+                        </div>
+
+                    </div>
+                `
+                )
+                .join("");
+
+    } catch (error) {
+
+        status.textContent =
+            "ERROR";
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Search Error
+                </div>
+
+                <div class="result-content">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   AEGIS BASE
+========================================================= */
+
+let basePage = 1;
+
+const BASE_PER_PAGE = 100;
+
+const BASE_TOTAL = 50000;
+
+const BASE_TOTAL_PAGES =
+    Math.ceil(
+        BASE_TOTAL /
+        BASE_PER_PAGE
+    );
+
+
+async function loadBasePage() {
+
+    const output =
+        document.getElementById(
+            "baseResults"
+        );
+
+    output.innerHTML = `
+        <div class="empty">
+            Loading database...
+        </div>
+    `;
+
+    updateBasePagination();
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/base?page=" +
+                basePage +
+                "&limit=" +
+                BASE_PER_PAGE
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Could not load database"
+            );
+
+        }
+
+        const lines =
+            Array.isArray(
+                data.lines
+            )
+                ? data.lines
+                : [];
+
+        if (
+            lines.length === 0
+        ) {
+
+            output.innerHTML = `
+                <div class="empty">
+                    No entries found.
+                </div>
+            `;
+
+            return;
+        }
+
+        const start =
+            ((basePage - 1) *
+                BASE_PER_PAGE) + 1;
+
+        output.innerHTML =
+            lines.map(
+                (line, index) => `
+
+                <div class="base-line">
+
+                    <div class="base-line-number">
+                        ${start + index}
+                    </div>
+
+                    <div class="base-line-content">
+                        ${escapeHTML(line)}
+                    </div>
+
+                </div>
+            `
+            ).join("");
+
+        updateBasePagination();
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="empty">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+        `;
+
+    }
+
+}
+
+
+function updateBasePagination() {
+
+    document.getElementById(
+        "basePageNumber"
+    ).textContent =
+        basePage +
+        " / " +
+        BASE_TOTAL_PAGES;
+
+    document.getElementById(
+        "basePageInfo"
+    ).textContent =
+        "Page " +
+        basePage;
+
+    document.getElementById(
+        "basePrev"
+    ).disabled =
+        basePage <= 1;
+
+    document.getElementById(
+        "baseNext"
+    ).disabled =
+        basePage >=
+        BASE_TOTAL_PAGES;
+
+}
+
+
+function basePrevious() {
+
+    if (basePage <= 1) {
+        return;
+    }
+
+    basePage--;
+
+    loadBasePage();
+
+}
+
+
+function baseNext() {
+
+    if (
+        basePage >=
+        BASE_TOTAL_PAGES
+    ) {
+        return;
+    }
+
+    basePage++;
+
+    loadBasePage();
+
+}
+
+
+/* =========================================================
+   IP SEARCH
+========================================================= */
+
+async function ipSearch() {
+
+    const ip =
+        document
+            .getElementById(
+                "ipInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "ipResults"
+        );
+
+    if (!ip) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">◉</div>
+                Enter an IP address.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Looking up IP...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/ip?ip=" +
+                encodeURIComponent(ip)
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "IP lookup failed"
+            );
+
+        }
+
+        const data =
+            result.data || {};
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    IP Information
+
+                    <span class="badge pink">
+                        FOUND
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+IP:
+${escapeHTML(
+    data.ip ||
+    "Unknown"
+)}
+
+Hostname:
+${escapeHTML(
+    data.hostname ||
+    "Unknown"
+)}
+
+City:
+${escapeHTML(
+    data.city ||
+    "Unknown"
+)}
+
+Region:
+${escapeHTML(
+    data.region ||
+    "Unknown"
+)}
+
+Country:
+${escapeHTML(
+    data.country ||
+    "Unknown"
+)}
+
+Location:
+${escapeHTML(
+    data.loc ||
+    "Unknown"
+)}
+
+Organization:
+${escapeHTML(
+    data.org ||
+    "Unknown"
+)}
+
+Postal:
+${escapeHTML(
+    data.postal ||
+    "Unknown"
+)}
+
+Timezone:
+${escapeHTML(
+    data.timezone ||
+    "Unknown"
+)}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    IP Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   EMAIL SEARCH
+========================================================= */
+
+async function emailSearch() {
+
+    const email =
+        document
+            .getElementById(
+                "emailInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "emailResults"
+        );
+
+    if (!email) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">@</div>
+                Enter an email address.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Processing request...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/email?email=" +
+                encodeURIComponent(email)
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "Email lookup failed"
+            );
+
+        }
+
+        const data =
+            result.data || {};
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Email Intelligence
+
+                    <span class="badge pink">
+${escapeHTML(
+    String(
+        data.status ||
+        "UNKNOWN"
+    ).toUpperCase()
+)}
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+Email:
+${escapeHTML(
+    data.email ||
+    email
+)}
+
+Status:
+${escapeHTML(
+    data.status ||
+    "Unknown"
+)}
+
+Score:
+${escapeHTML(
+    data.score ??
+    "Unknown"
+)}
+
+Disposable:
+${
+    data.disposable === true
+        ? "Yes"
+        : data.disposable === false
+        ? "No"
+        : "Unknown"
+}
+
+Webmail:
+${
+    data.webmail === true
+        ? "Yes"
+        : data.webmail === false
+        ? "No"
+        : "Unknown"
+}
+
+MX Records:
+${
+    data.mx_records === true
+        ? "Yes"
+        : data.mx_records === false
+        ? "No"
+        : "Unknown"
+}
+
+SMTP Check:
+${
+    data.smtp_check === true
+        ? "Yes"
+        : data.smtp_check === false
+        ? "No"
+        : "Unknown"
+}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Email Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   PHONE SEARCH
+========================================================= */
+
+async function phoneSearch() {
+
+    const phone =
+        document
+            .getElementById(
+                "phoneInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "phoneResults"
+        );
+
+    if (!phone) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">#</div>
+                Enter a phone number.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Looking up phone...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/phone?phone=" +
+                encodeURIComponent(phone)
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "Phone lookup failed"
+            );
+
+        }
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Phone Intelligence
+
+                    <span class="badge pink">
+                        RESULT
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+Phone:
+${escapeHTML(
+    result.phone ||
+    phone
+)}
+
+Status:
+${escapeHTML(
+    result.message ||
+    "Request completed"
+)}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Phone Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
 
 
 /* =========================================================
@@ -3143,7 +3042,9 @@ document
                 e.key ===
                 "Enter"
             ) {
+
                 databaseSearch();
+
             }
 
         }
@@ -3162,7 +3063,9 @@ document
                 e.key ===
                 "Enter"
             ) {
+
                 ipSearch();
+
             }
 
         }
@@ -3181,7 +3084,9 @@ document
                 e.key ===
                 "Enter"
             ) {
+
                 emailSearch();
+
             }
 
         }
@@ -3200,7 +3105,9 @@ document
                 e.key ===
                 "Enter"
             ) {
+
                 phoneSearch();
+
             }
 
         }
