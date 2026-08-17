@@ -4,7 +4,7 @@ const https = require("https");
 // IPINFO.IO API KEY
 // =====================================================
 
-const API_KEY = "HIER_DEIN_IPINFO_API_KEY";
+const API_KEY = "ca1ff120de2b51";
 
 
 module.exports = async (req, res) => {
