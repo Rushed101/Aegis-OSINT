@@ -1,12 +1,10 @@
 const https = require("https");
 
-/*
- * =====================================================
- * DEIN API KEY
- * =====================================================
- */
+// =====================================================
+// IPINFO.IO API KEY
+// =====================================================
 
-const API_KEY = "ca1ff120de2b51";
+const API_KEY = "HIER_DEIN_IPINFO_API_KEY";
 
 
 module.exports = async (req, res) => {
@@ -25,92 +23,75 @@ module.exports = async (req, res) => {
         });
     }
 
-    if (!/^[0-9a-fA-F:.]+$/.test(ip)) {
-        return res.status(400).json({
-            error: "Invalid IP address"
-        });
-    }
-
-    if (
-        !API_KEY ||
-        API_KEY === "HIER_DEIN_IPINFO_KEY_EINSETZEN"
-    ) {
+    if (!API_KEY || API_KEY === "HIER_DEIN_IPINFO_API_KEY") {
         return res.status(500).json({
-            error: "IP API key has not been configured"
+            error: "IPinfo API key not configured"
         });
     }
 
     try {
 
-        const data = await new Promise(
-            (resolve, reject) => {
+        const result = await new Promise((resolve, reject) => {
 
-                const url =
-                    "https://ipinfo.io/" +
-                    encodeURIComponent(ip) +
-                    "/json?token=" +
-                    encodeURIComponent(API_KEY);
+            const url =
+                `https://ipinfo.io/${encodeURIComponent(ip)}/json?token=${encodeURIComponent(API_KEY)}`;
 
-                https.get(url, response => {
+            https.get(url, response => {
 
-                    let body = "";
+                let body = "";
 
-                    response.on(
-                        "data",
-                        chunk => {
-                            body += chunk;
+                response.on("data", chunk => {
+                    body += chunk;
+                });
+
+                response.on("end", () => {
+
+                    try {
+
+                        const data = JSON.parse(body);
+
+                        if (response.statusCode < 200 ||
+                            response.statusCode >= 300) {
+
+                            reject(
+                                new Error(
+                                    data.error?.message ||
+                                    `IPinfo HTTP ${response.statusCode}`
+                                )
+                            );
+
+                            return;
                         }
-                    );
 
-                    response.on(
-                        "end",
-                        () => {
+                        resolve(data);
 
-                            if (
-                                response.statusCode < 200 ||
-                                response.statusCode >= 300
-                            ) {
-                                reject(
-                                    new Error(
-                                        "IP API error: " +
-                                        response.statusCode
-                                    )
-                                );
-                                return;
-                            }
+                    } catch (error) {
 
-                            try {
-                                resolve(
-                                    JSON.parse(body)
-                                );
-                            } catch {
-                                reject(
-                                    new Error(
-                                        "Invalid JSON response"
-                                    )
-                                );
-                            }
-                        }
-                    );
+                        reject(
+                            new Error(
+                                "Invalid response from IPinfo"
+                            )
+                        );
+                    }
+                });
 
-                }).on(
-                    "error",
-                    reject
-                );
-            }
-        );
+            }).on("error", reject);
+        });
+
 
         return res.status(200).json({
             success: true,
-            data
+            data: result
         });
+
 
     } catch (error) {
 
-        console.error(error);
+        console.error("IPinfo error:", error);
 
         return res.status(500).json({
-            error: "IP lookup failed"
+            success: false,
+            error: error.message
         });
     }
 };
