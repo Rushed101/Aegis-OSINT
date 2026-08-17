@@ -7,8 +7,9 @@
 <title>Aegis OSINT</title>
 
 <link rel="icon" type="image/png" href="images/icon.png">
-    
+
 <style>
+
 * {
     margin: 0;
     padding: 0;
@@ -94,6 +95,7 @@ body {
 
     min-height: 100vh;
 }
+
 
 /* =========================================================
    SIDEBAR
@@ -277,6 +279,7 @@ body {
     color: var(--pink);
 }
 
+
 /* =========================================================
    PROFILE
 ========================================================= */
@@ -361,6 +364,7 @@ body {
         rgba(87,230,160,.8);
 }
 
+
 /* =========================================================
    MAIN
 ========================================================= */
@@ -444,6 +448,7 @@ body {
 
     letter-spacing: .7px;
 }
+
 
 /* =========================================================
    COMMAND
@@ -539,6 +544,7 @@ body {
 
     font-size: 8px;
 }
+
 
 /* =========================================================
    PANEL
@@ -641,6 +647,7 @@ body {
     letter-spacing: .8px;
 }
 
+
 /* =========================================================
    SEARCH
 ========================================================= */
@@ -722,6 +729,7 @@ body {
     filter:
         brightness(1.08);
 }
+
 
 /* =========================================================
    RESULTS
@@ -812,6 +820,7 @@ body {
 }
 
 @keyframes resultIn {
+
     from {
         opacity: 0;
         transform: translateY(5px);
@@ -821,6 +830,7 @@ body {
         opacity: 1;
         transform: translateY(0);
     }
+
 }
 
 .result-title {
@@ -876,8 +886,9 @@ body {
         rgba(87,230,160,.06);
 }
 
+
 /* =========================================================
-   FAME FIELD GRID
+   FAME GRID
 ========================================================= */
 
 .fame-grid {
@@ -937,6 +948,7 @@ body {
 
     word-break: break-word;
 }
+
 
 /* =========================================================
    AEGIS BASE
@@ -1135,6 +1147,309 @@ body {
     text-align: center;
 }
 
+
+/* =========================================================
+   INFO PAGE
+========================================================= */
+
+.info-update {
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 14px;
+
+    margin-bottom: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(0,0,0,.18);
+}
+
+.info-update-title {
+    color: var(--pink2);
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.3px;
+}
+
+.info-update-text {
+    margin-top: 5px;
+
+    color: #625d66;
+
+    font-size: 8px;
+}
+
+.info-live {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    color: var(--green);
+
+    font-size: 7px;
+
+    letter-spacing: 1px;
+}
+
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 8px;
+
+    margin-bottom: 10px;
+}
+
+.stat-card {
+    padding: 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(18,15,24,.9),
+            rgba(7,6,10,.9)
+        );
+
+    transition: .2s ease;
+}
+
+.stat-card:hover {
+    border-color:
+        rgba(255,55,170,.18);
+
+    transform:
+        translateY(-1px);
+}
+
+.stat-number {
+    color: #f3eef5;
+
+    font-size: 25px;
+
+    font-weight: 750;
+
+    letter-spacing: -1px;
+}
+
+.stat-label {
+    margin-top: 7px;
+
+    color: var(--pink2);
+
+    font-size: 7px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.1px;
+}
+
+.stat-description {
+    margin-top: 5px;
+
+    color: #55505a;
+
+    font-size: 7px;
+}
+
+
+.weekly-panel {
+    padding: 17px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 10px;
+
+    background:
+        rgba(0,0,0,.18);
+}
+
+.weekly-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 16px;
+}
+
+.weekly-title {
+    color: #d8d2dc;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: 1px;
+}
+
+.weekly-subtitle {
+    margin-top: 4px;
+
+    color: #514c55;
+
+    font-size: 7px;
+}
+
+.last-update {
+    color: #625c66;
+
+    font-family: monospace;
+
+    font-size: 7px;
+}
+
+
+.weekly-chart {
+    display: grid;
+
+    grid-template-columns:
+        repeat(7, 1fr);
+
+    align-items: end;
+
+    gap: 9px;
+
+    height: 210px;
+
+    padding:
+        20px 5px 0;
+}
+
+.chart-day {
+    height: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.chart-value {
+    color: #817a86;
+
+    font-family: monospace;
+
+    font-size: 7px;
+}
+
+.chart-bar-container {
+    width: 100%;
+
+    max-width: 45px;
+
+    height: 155px;
+
+    display: flex;
+
+    align-items: flex-end;
+
+    border-radius: 6px;
+
+    background:
+        rgba(255,255,255,.018);
+
+    overflow: hidden;
+}
+
+.chart-bar {
+    width: 100%;
+
+    min-height: 3px;
+
+    border-radius:
+        6px 6px 0 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            var(--pink2),
+            var(--purple)
+        );
+
+    box-shadow:
+        0 0 20px
+        rgba(255,55,170,.12);
+
+    transition:
+        height .5s ease;
+}
+
+.chart-label {
+    color: #514c55;
+
+    font-family: monospace;
+
+    font-size: 7px;
+}
+
+.chart-empty {
+    grid-column:
+        1 / -1;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: #514c55;
+
+    font-size: 8px;
+}
+
+
+.info-footer {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin-top: 10px;
+
+    padding:
+        11px 3px;
+
+    color: #464149;
+
+    font-size: 7px;
+
+    letter-spacing: .5px;
+}
+
+.info-footer span:first-child {
+    color: var(--pink);
+}
+
+
 /* =========================================================
    PAGES
 ========================================================= */
@@ -1147,9 +1462,19 @@ body {
     display: block;
 }
 
+
 /* =========================================================
    RESPONSIVE
 ========================================================= */
+
+@media(max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
 
 @media(max-width: 800px) {
 
@@ -1189,6 +1514,7 @@ body {
     .fame-field.full {
         grid-column: auto;
     }
+
 }
 
 @media(max-width: 550px) {
@@ -1216,7 +1542,31 @@ body {
 
         gap: 8px;
     }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-update {
+        align-items: flex-start;
+
+        gap: 12px;
+
+        flex-direction: column;
+    }
+
+    .weekly-chart {
+        gap: 4px;
+    }
+
+    .info-footer {
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
 }
+
 </style>
 </head>
 
@@ -1227,6 +1577,7 @@ body {
 <div class="noise"></div>
 
 <div class="app">
+
 
 <!-- =====================================================
      SIDEBAR
@@ -1246,9 +1597,11 @@ body {
 
     </div>
 
+
     <div class="section-title">
         Intelligence
     </div>
+
 
     <nav class="nav">
 
@@ -1256,51 +1609,115 @@ body {
             class="nav-item active"
             onclick="switchPage('databreach', this)"
         >
-            <div class="nav-icon">◈</div>
-            <span>Databreach Search</span>
+
+            <div class="nav-icon">
+                ◈
+            </div>
+
+            <span>
+                Databreach Search
+            </span>
+
         </button>
+
 
         <button
             class="nav-item"
             onclick="switchPage('base', this)"
         >
-            <div class="nav-icon">▤</div>
-            <span>Aegis Base</span>
+
+            <div class="nav-icon">
+                ▤
+            </div>
+
+            <span>
+                Aegis Base
+            </span>
+
         </button>
+
 
         <button
             class="nav-item"
             onclick="switchPage('fame', this)"
         >
-            <div class="nav-icon">★</div>
-            <span>Fame Database</span>
+
+            <div class="nav-icon">
+                ★
+            </div>
+
+            <span>
+                Fame Database
+            </span>
+
         </button>
+
 
         <button
             class="nav-item"
             onclick="switchPage('ip', this)"
         >
-            <div class="nav-icon">◉</div>
-            <span>IP Information</span>
+
+            <div class="nav-icon">
+                ◉
+            </div>
+
+            <span>
+                IP Information
+            </span>
+
         </button>
+
 
         <button
             class="nav-item"
             onclick="switchPage('email', this)"
         >
-            <div class="nav-icon">@</div>
-            <span>Email Lookup</span>
+
+            <div class="nav-icon">
+                @
+            </div>
+
+            <span>
+                Email Lookup
+            </span>
+
         </button>
+
 
         <button
             class="nav-item"
             onclick="switchPage('phone', this)"
         >
-            <div class="nav-icon">#</div>
-            <span>Phone Lookup</span>
+
+            <div class="nav-icon">
+                #
+            </div>
+
+            <span>
+                Phone Lookup
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
+            onclick="switchPage('info', this)"
+        >
+
+            <div class="nav-icon">
+                ⓘ
+            </div>
+
+            <span>
+                Info
+            </span>
+
         </button>
 
     </nav>
+
 
     <div class="sidebar-bottom">
 
@@ -1345,11 +1762,18 @@ body {
 
             <div class="breadcrumb">
 
-                <span>AEGIS</span>
+                <span>
+                    AEGIS
+                </span>
+
                 /
-                <span id="crumb">DATABASE</span>
+
+                <span id="crumb">
+                    DATABASE
+                </span>
 
             </div>
+
 
             <div class="title">
 
@@ -1364,6 +1788,7 @@ body {
             </div>
 
         </div>
+
 
         <div class="top-actions">
 
@@ -1380,33 +1805,33 @@ body {
     </header>
 
 
-    <!-- =================================================
-         GLOBAL SEARCH
-    ================================================= -->
+<!-- =====================================================
+     GLOBAL SEARCH
+===================================================== -->
 
-    <div class="command">
+<div class="command">
 
-        <div class="command-icon">
-            ⌕
-        </div>
-
-        <input
-            id="globalSearch"
-            type="text"
-            placeholder="Quick search..."
-            autocomplete="off"
-        >
-
-        <div class="command-key">
-            ENTER
-        </div>
-
+    <div class="command-icon">
+        ⌕
     </div>
 
+    <input
+        id="globalSearch"
+        type="text"
+        placeholder="Quick search..."
+        autocomplete="off"
+    >
 
-    <div class="workspace">
+    <div class="command-key">
+        ENTER
+    </div>
 
-        <section class="main-panel">
+</div>
+
+
+<div class="workspace">
+
+<section class="main-panel">
 
 
 <!-- =====================================================
@@ -1427,11 +1852,15 @@ body {
             </div>
 
             <div>
-                <h2>Databreach Search</h2>
+
+                <h2>
+                    Databreach Search
+                </h2>
 
                 <p>
                     Search your authorized database
                 </p>
+
             </div>
 
         </div>
@@ -1441,6 +1870,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="search-row">
 
@@ -1460,15 +1890,19 @@ body {
 
     </div>
 
+
     <div class="results-head">
 
-        <span>RESULTS</span>
+        <span>
+            RESULTS
+        </span>
 
         <span id="searchStatus">
             READY
         </span>
 
     </div>
+
 
     <div
         class="results"
@@ -1509,7 +1943,9 @@ body {
 
             <div>
 
-                <h2>Aegis Base</h2>
+                <h2>
+                    Aegis Base
+                </h2>
 
                 <p>
                     Browse your authorized database
@@ -1525,11 +1961,14 @@ body {
 
     </div>
 
+
     <div class="base-info">
 
         <div>
 
-            <strong>db.txt</strong>
+            <strong>
+                db.txt
+            </strong>
 
             <span>
                 50,000 lines
@@ -1551,6 +1990,7 @@ body {
 
     </div>
 
+
     <div
         id="baseResults"
         class="base-results"
@@ -1561,6 +2001,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="base-pagination">
 
@@ -1609,7 +2050,9 @@ body {
 
             <div>
 
-                <h2>Fame Database</h2>
+                <h2>
+                    Fame Database
+                </h2>
 
                 <p>
                     Search the authorized Fame database
@@ -1624,6 +2067,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="search-row">
 
@@ -1643,6 +2087,7 @@ body {
 
     </div>
 
+
     <div class="results-head">
 
         <span>
@@ -1654,6 +2099,7 @@ body {
         </span>
 
     </div>
+
 
     <div
         class="results"
@@ -1694,7 +2140,9 @@ body {
 
             <div>
 
-                <h2>IP Information</h2>
+                <h2>
+                    IP Information
+                </h2>
 
                 <p>
                     Public IP intelligence
@@ -1709,6 +2157,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="search-row">
 
@@ -1728,6 +2177,7 @@ body {
 
     </div>
 
+
     <div class="results-head">
 
         <span>
@@ -1739,6 +2189,7 @@ body {
         </span>
 
     </div>
+
 
     <div
         class="results"
@@ -1779,7 +2230,9 @@ body {
 
             <div>
 
-                <h2>Email Lookup</h2>
+                <h2>
+                    Email Lookup
+                </h2>
 
                 <p>
                     Analyze an email address
@@ -1794,6 +2247,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="search-row">
 
@@ -1813,6 +2267,7 @@ body {
 
     </div>
 
+
     <div class="results-head">
 
         <span>
@@ -1824,6 +2279,7 @@ body {
         </span>
 
     </div>
+
 
     <div
         class="results"
@@ -1864,7 +2320,9 @@ body {
 
             <div>
 
-                <h2>Phone Lookup</h2>
+                <h2>
+                    Phone Lookup
+                </h2>
 
                 <p>
                     Analyze a phone number
@@ -1879,6 +2337,7 @@ body {
         </div>
 
     </div>
+
 
     <div class="search-row">
 
@@ -1898,6 +2357,7 @@ body {
 
     </div>
 
+
     <div class="results-head">
 
         <span>
@@ -1909,6 +2369,7 @@ body {
         </span>
 
     </div>
+
 
     <div
         class="results"
@@ -1930,9 +2391,212 @@ body {
 </div>
 
 
-        </section>
+<!-- =====================================================
+     INFO
+===================================================== -->
+
+<div
+    id="page-info"
+    class="page"
+>
+
+    <div class="panel-head">
+
+        <div class="panel-head-left">
+
+            <div class="panel-symbol">
+                ⓘ
+            </div>
+
+            <div>
+
+                <h2>
+                    Platform Information
+                </h2>
+
+                <p>
+                    Live statistics from Aegis
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="panel-tag">
+            LIVE
+        </div>
 
     </div>
+
+
+    <div class="info-update">
+
+        <div>
+
+            <div class="info-update-title">
+                STATISTICS
+            </div>
+
+            <div class="info-update-text">
+                Statistics are automatically updated every 5 minutes.
+            </div>
+
+        </div>
+
+        <div class="info-live">
+
+            <div class="dot"></div>
+
+            LIVE
+
+        </div>
+
+    </div>
+
+
+    <div class="stats-grid">
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-number"
+                id="statVisitors"
+            >
+                —
+            </div>
+
+            <div class="stat-label">
+                UNIQUE VISITORS
+            </div>
+
+            <div class="stat-description">
+                Visitors during the last 7 days
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-number"
+                id="statVisits"
+            >
+                —
+            </div>
+
+            <div class="stat-label">
+                TOTAL VISITS
+            </div>
+
+            <div class="stat-description">
+                Total visits during the last 7 days
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-number"
+                id="statSearches"
+            >
+                —
+            </div>
+
+            <div class="stat-label">
+                SEARCHES
+            </div>
+
+            <div class="stat-description">
+                Searches during the last 7 days
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div
+                class="stat-number"
+                id="statRecords"
+            >
+                —
+            </div>
+
+            <div class="stat-label">
+                RECORDS
+            </div>
+
+            <div class="stat-description">
+                Records currently available
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="weekly-panel">
+
+        <div class="weekly-header">
+
+            <div>
+
+                <div class="weekly-title">
+                    LAST 7 DAYS
+                </div>
+
+                <div class="weekly-subtitle">
+                    Visitor activity
+                </div>
+
+            </div>
+
+            <div
+                class="last-update"
+                id="statsUpdated"
+            >
+                Updating...
+            </div>
+
+        </div>
+
+
+        <div
+            class="weekly-chart"
+            id="weeklyChart"
+        >
+
+            <div class="chart-empty">
+                Loading statistics...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="info-footer">
+
+        <span>
+            AEGIS OSINT
+        </span>
+
+        <span>
+            Statistics update automatically every 5 minutes.
+        </span>
+
+    </div>
+
+</div>
+
+
+</section>
+
+</div>
 
 </main>
 
@@ -1940,6 +2604,7 @@ body {
 
 
 <script>
+
 
 /* =========================================================
    STARFIELD
@@ -1952,6 +2617,7 @@ const ctx =
     canvas.getContext("2d");
 
 let stars = [];
+
 
 function resize() {
 
@@ -1972,6 +2638,7 @@ function resize() {
                 15000
             )
         );
+
 
     for (
         let i = 0;
@@ -2011,6 +2678,7 @@ function resize() {
 
 }
 
+
 function animate() {
 
     ctx.clearRect(
@@ -2020,6 +2688,7 @@ function animate() {
         canvas.height
     );
 
+
     for (
         const star of stars
     ) {
@@ -2028,6 +2697,7 @@ function animate() {
 
         star.y +=
             star.speed * .08;
+
 
         if (
             star.x >
@@ -2042,6 +2712,7 @@ function animate() {
 
         }
 
+
         const gradient =
             ctx.createLinearGradient(
                 star.x - star.trail,
@@ -2050,15 +2721,18 @@ function animate() {
                 star.y
             );
 
+
         gradient.addColorStop(
             0,
             "rgba(255,55,170,0)"
         );
 
+
         gradient.addColorStop(
             1,
             `rgba(255,90,185,${star.alpha})`
         );
+
 
         ctx.beginPath();
 
@@ -2080,6 +2754,7 @@ function animate() {
 
         ctx.stroke();
 
+
         ctx.beginPath();
 
         ctx.fillStyle =
@@ -2097,10 +2772,13 @@ function animate() {
 
     }
 
+
     requestAnimationFrame(
         animate
     );
+
 }
+
 
 window.addEventListener(
     "resize",
@@ -2111,6 +2789,7 @@ resize();
 animate();
 
 
+
 /* =========================================================
    PAGE INFO
 ========================================================= */
@@ -2118,48 +2797,104 @@ animate();
 const pageInfo = {
 
     databreach: {
-        title: "Databreach Search",
+
+        title:
+            "Databreach Search",
+
         description:
             "Search your authorized intelligence sources.",
-        crumb: "DATABASE"
+
+        crumb:
+            "DATABASE"
+
     },
+
 
     base: {
-        title: "Aegis Base",
+
+        title:
+            "Aegis Base",
+
         description:
             "Browse your authorized database.",
-        crumb: "AEGIS BASE"
+
+        crumb:
+            "AEGIS BASE"
+
     },
+
 
     fame: {
-        title: "Fame Database",
+
+        title:
+            "Fame Database",
+
         description:
             "Search the authorized Fame database.",
-        crumb: "FAME DATABASE"
+
+        crumb:
+            "FAME DATABASE"
+
     },
+
 
     ip: {
-        title: "IP Information",
+
+        title:
+            "IP Information",
+
         description:
             "Public IP intelligence.",
-        crumb: "IP INTELLIGENCE"
+
+        crumb:
+            "IP INTELLIGENCE"
+
     },
+
 
     email: {
-        title: "Email Lookup",
+
+        title:
+            "Email Lookup",
+
         description:
             "Analyze an email address.",
-        crumb: "EMAIL"
+
+        crumb:
+            "EMAIL"
+
     },
 
+
     phone: {
-        title: "Phone Lookup",
+
+        title:
+            "Phone Lookup",
+
         description:
             "Analyze a phone number.",
-        crumb: "PHONE"
+
+        crumb:
+            "PHONE"
+
+    },
+
+
+    info: {
+
+        title:
+            "Info",
+
+        description:
+            "Live statistics and platform information.",
+
+        crumb:
+            "INFO"
+
     }
 
 };
+
 
 
 /* =========================================================
@@ -2175,58 +2910,85 @@ function switchPage(
         .querySelectorAll(".page")
         .forEach(
             element => {
+
                 element.classList.remove(
                     "active-page"
                 );
+
             }
         );
+
 
     const target =
         document.getElementById(
             "page-" + page
         );
 
+
     if (target) {
+
         target.classList.add(
             "active-page"
         );
+
     }
+
 
     document
         .querySelectorAll(".nav-item")
         .forEach(
             element => {
+
                 element.classList.remove(
                     "active"
                 );
+
             }
         );
 
+
     if (button) {
+
         button.classList.add(
             "active"
         );
+
     }
+
 
     document.getElementById(
         "pageTitle"
     ).textContent =
         pageInfo[page].title;
 
+
     document.getElementById(
         "pageDescription"
     ).textContent =
         pageInfo[page].description;
+
 
     document.getElementById(
         "crumb"
     ).textContent =
         pageInfo[page].crumb;
 
+
     if (page === "base") {
+
         loadBasePage();
+
     }
+
+
+    if (page === "info") {
+
+        startStatsRefresh();
+
+    }
+
 }
+
 
 
 /* =========================================================
@@ -2242,34 +3004,46 @@ document
             if (
                 event.key !== "Enter"
             ) {
+
                 return;
+
             }
+
 
             const value =
                 event.target.value.trim();
 
+
             if (!value) {
+
                 return;
+
             }
+
 
             const buttons =
                 document.querySelectorAll(
                     ".nav-item"
                 );
 
+
             switchPage(
                 "databreach",
                 buttons[0]
             );
 
+
             document.getElementById(
                 "databaseQuery"
-            ).value = value;
+            ).value =
+                value;
+
 
             databaseSearch();
 
         }
     );
+
 
 
 /* =========================================================
@@ -2284,69 +3058,97 @@ async function databaseSearch() {
             .value
             .trim();
 
+
     const output =
         document.getElementById(
             "databaseResults"
         );
+
 
     const status =
         document.getElementById(
             "searchStatus"
         );
 
+
     if (!query) {
 
         output.innerHTML = `
+
             <div class="empty">
-                <div class="empty-icon">◈</div>
+
+                <div class="empty-icon">
+                    ◈
+                </div>
+
                 Enter a value to search.
+
             </div>
+
         `;
 
         return;
+
     }
+
 
     status.textContent =
         "SEARCHING";
 
+
     output.innerHTML = `
+
         <div class="empty">
             Searching database...
         </div>
+
     `;
+
 
     try {
 
         const response =
             await fetch(
                 "/api/search?q=" +
-                encodeURIComponent(query)
+                encodeURIComponent(
+                    query
+                )
             );
+
 
         const data =
             await response.json();
+
 
         if (
             !response.ok ||
             !data.success
         ) {
+
             throw new Error(
                 data.error ||
                 "Database search failed"
             );
+
         }
+
 
         status.textContent =
             "COMPLETE";
 
+
         const results =
-            Array.isArray(data.results)
+            Array.isArray(
+                data.results
+            )
                 ? data.results
                 : [];
+
 
         if (!results.length) {
 
             output.innerHTML = `
+
                 <div class="result-card safe">
 
                     <div class="result-title">
@@ -2364,10 +3166,13 @@ No exact match was found.
                     </div>
 
                 </div>
+
             `;
 
             return;
+
         }
+
 
         output.innerHTML =
             results.map(
@@ -2398,15 +3203,19 @@ ${escapeHTML(
                     </div>
 
                 </div>
+
             `
             ).join("");
+
 
     } catch (error) {
 
         status.textContent =
             "ERROR";
 
+
         output.innerHTML = `
+
             <div class="result-card">
 
                 <div class="result-title">
@@ -2414,14 +3223,19 @@ ${escapeHTML(
                 </div>
 
                 <div class="result-content">
-${escapeHTML(error.message)}
+${escapeHTML(
+    error.message
+)}
                 </div>
 
             </div>
+
         `;
 
     }
+
 }
+
 
 
 /* =========================================================
@@ -2436,19 +3250,23 @@ async function fameSearch() {
             .value
             .trim();
 
+
     const output =
         document.getElementById(
             "fameResults"
         );
+
 
     const status =
         document.getElementById(
             "fameStatus"
         );
 
+
     if (!query) {
 
         output.innerHTML = `
+
             <div class="empty">
 
                 <div class="empty-icon">
@@ -2458,52 +3276,71 @@ async function fameSearch() {
                 Enter a name to search.
 
             </div>
+
         `;
 
         return;
+
     }
+
 
     status.textContent =
         "SEARCHING";
 
+
     output.innerHTML = `
+
         <div class="empty">
             Searching Fame Database...
         </div>
+
     `;
+
 
     try {
 
         const response =
             await fetch(
                 "/api/fame?q=" +
-                encodeURIComponent(query)
+                encodeURIComponent(
+                    query
+                )
             );
+
 
         const data =
             await response.json();
+
 
         if (
             !response.ok ||
             !data.success
         ) {
+
             throw new Error(
                 data.error ||
                 "Fame database search failed"
             );
+
         }
+
 
         status.textContent =
             "COMPLETE";
 
+
         const results =
-            Array.isArray(data.results)
+            Array.isArray(
+                data.results
+            )
                 ? data.results
                 : [];
+
 
         if (!results.length) {
 
             output.innerHTML = `
+
                 <div class="result-card safe">
 
                     <div class="result-title">
@@ -2521,14 +3358,17 @@ No matching name was found in Fame.txt.
                     </div>
 
                 </div>
+
             `;
 
             return;
+
         }
+
 
         output.innerHTML =
             results.map(
-                (person, index) => `
+                person => `
 
                 <div class="result-card found">
 
@@ -2545,7 +3385,9 @@ No matching name was found in Fame.txt.
 
                     </div>
 
+
                     <div class="fame-grid">
+
 
                         <div class="fame-field">
 
@@ -2561,6 +3403,7 @@ ${escapeHTML(
 
                         </div>
 
+
                         <div class="fame-field">
 
                             <div class="fame-label">
@@ -2574,6 +3417,7 @@ ${escapeHTML(
                             </div>
 
                         </div>
+
 
                         <div class="fame-field">
 
@@ -2589,6 +3433,7 @@ ${escapeHTML(
 
                         </div>
 
+
                         <div class="fame-field">
 
                             <div class="fame-label">
@@ -2603,6 +3448,7 @@ ${escapeHTML(
 
                         </div>
 
+
                         <div class="fame-field">
 
                             <div class="fame-label">
@@ -2616,6 +3462,7 @@ ${escapeHTML(
                             </div>
 
                         </div>
+
 
                         <div class="fame-field full">
 
@@ -2634,15 +3481,19 @@ ${escapeHTML(
                     </div>
 
                 </div>
+
             `
             ).join("");
+
 
     } catch (error) {
 
         status.textContent =
             "ERROR";
 
+
         output.innerHTML = `
+
             <div class="result-card">
 
                 <div class="result-title">
@@ -2650,14 +3501,19 @@ ${escapeHTML(
                 </div>
 
                 <div class="result-content">
-${escapeHTML(error.message)}
+${escapeHTML(
+    error.message
+)}
                 </div>
 
             </div>
+
         `;
 
     }
+
 }
+
 
 
 /* =========================================================
@@ -2667,6 +3523,7 @@ ${escapeHTML(error.message)}
 let basePage = 1;
 
 const BASE_PER_PAGE = 100;
+
 const BASE_TOTAL = 50000;
 
 const BASE_TOTAL_PAGES =
@@ -2683,13 +3540,18 @@ async function loadBasePage() {
             "baseResults"
         );
 
+
     output.innerHTML = `
+
         <div class="empty">
             Loading database...
         </div>
+
     `;
 
+
     updateBasePagination();
+
 
     try {
 
@@ -2701,38 +3563,53 @@ async function loadBasePage() {
                 BASE_PER_PAGE
             );
 
+
         const data =
             await response.json();
+
 
         if (
             !response.ok ||
             !data.success
         ) {
+
             throw new Error(
                 data.error ||
                 "Could not load database"
             );
+
         }
 
+
         const lines =
-            Array.isArray(data.lines)
+            Array.isArray(
+                data.lines
+            )
                 ? data.lines
                 : [];
+
 
         if (!lines.length) {
 
             output.innerHTML = `
+
                 <div class="empty">
                     No entries found.
                 </div>
+
             `;
 
             return;
+
         }
 
+
         const start =
-            ((basePage - 1) *
-                BASE_PER_PAGE) + 1;
+            (
+                (basePage - 1) *
+                BASE_PER_PAGE
+            ) + 1;
+
 
         output.innerHTML =
             lines.map(
@@ -2749,22 +3626,28 @@ async function loadBasePage() {
                     </div>
 
                 </div>
+
             `
             ).join("");
 
+
         updateBasePagination();
+
 
     } catch (error) {
 
         output.innerHTML = `
+
             <div class="empty">
                 ${escapeHTML(
                     error.message
                 )}
             </div>
+
         `;
 
     }
+
 }
 
 
@@ -2777,16 +3660,19 @@ function updateBasePagination() {
         " / " +
         BASE_TOTAL_PAGES;
 
+
     document.getElementById(
         "basePageInfo"
     ).textContent =
         "Page " +
         basePage;
 
+
     document.getElementById(
         "basePrev"
     ).disabled =
         basePage <= 1;
+
 
     document.getElementById(
         "baseNext"
@@ -2798,9 +3684,14 @@ function updateBasePagination() {
 
 function basePrevious() {
 
-    if (basePage <= 1) {
+    if (
+        basePage <= 1
+    ) {
+
         return;
+
     }
+
 
     basePage--;
 
@@ -2815,14 +3706,18 @@ function baseNext() {
         basePage >=
         BASE_TOTAL_PAGES
     ) {
+
         return;
+
     }
+
 
     basePage++;
 
     loadBasePage();
 
 }
+
 
 
 /* =========================================================
@@ -2837,28 +3732,42 @@ async function ipSearch() {
             .value
             .trim();
 
+
     const output =
         document.getElementById(
             "ipResults"
         );
 
+
     if (!ip) {
 
         output.innerHTML = `
+
             <div class="empty">
-                <div class="empty-icon">◉</div>
+
+                <div class="empty-icon">
+                    ◉
+                </div>
+
                 Enter an IP address.
+
             </div>
+
         `;
 
         return;
+
     }
 
+
     output.innerHTML = `
+
         <div class="empty">
             Looking up IP...
         </div>
+
     `;
+
 
     try {
 
@@ -2868,21 +3777,27 @@ async function ipSearch() {
                 encodeURIComponent(ip)
             );
 
+
         const result =
             await response.json();
+
 
         if (
             !response.ok ||
             !result.success
         ) {
+
             throw new Error(
                 result.error ||
                 "IP lookup failed"
             );
+
         }
+
 
         const data =
             result.data || {};
+
 
         output.innerHTML = `
 
@@ -2901,40 +3816,61 @@ async function ipSearch() {
                 <div class="result-content">
 
 IP:
-${escapeHTML(data.ip || "Unknown")}
+${escapeHTML(
+    data.ip || "Unknown"
+)}
 
 Hostname:
-${escapeHTML(data.hostname || "Unknown")}
+${escapeHTML(
+    data.hostname || "Unknown"
+)}
 
 City:
-${escapeHTML(data.city || "Unknown")}
+${escapeHTML(
+    data.city || "Unknown"
+)}
 
 Region:
-${escapeHTML(data.region || "Unknown")}
+${escapeHTML(
+    data.region || "Unknown"
+)}
 
 Country:
-${escapeHTML(data.country || "Unknown")}
+${escapeHTML(
+    data.country || "Unknown"
+)}
 
 Location:
-${escapeHTML(data.loc || "Unknown")}
+${escapeHTML(
+    data.loc || "Unknown"
+)}
 
 Organization:
-${escapeHTML(data.org || "Unknown")}
+${escapeHTML(
+    data.org || "Unknown"
+)}
 
 Postal:
-${escapeHTML(data.postal || "Unknown")}
+${escapeHTML(
+    data.postal || "Unknown"
+)}
 
 Timezone:
-${escapeHTML(data.timezone || "Unknown")}
+${escapeHTML(
+    data.timezone || "Unknown"
+)}
 
                 </div>
 
             </div>
+
         `;
+
 
     } catch (error) {
 
         output.innerHTML = `
+
             <div class="result-card">
 
                 <div class="result-title">
@@ -2942,14 +3878,19 @@ ${escapeHTML(data.timezone || "Unknown")}
                 </div>
 
                 <div class="result-content">
-${escapeHTML(error.message)}
+${escapeHTML(
+    error.message
+)}
                 </div>
 
             </div>
+
         `;
 
     }
+
 }
+
 
 
 /* =========================================================
@@ -2964,52 +3905,74 @@ async function emailSearch() {
             .value
             .trim();
 
+
     const output =
         document.getElementById(
             "emailResults"
         );
 
+
     if (!email) {
 
         output.innerHTML = `
+
             <div class="empty">
-                <div class="empty-icon">@</div>
+
+                <div class="empty-icon">
+                    @
+                </div>
+
                 Enter an email address.
+
             </div>
+
         `;
 
         return;
+
     }
 
+
     output.innerHTML = `
+
         <div class="empty">
             Processing request...
         </div>
+
     `;
+
 
     try {
 
         const response =
             await fetch(
                 "/api/email?email=" +
-                encodeURIComponent(email)
+                encodeURIComponent(
+                    email
+                )
             );
+
 
         const result =
             await response.json();
+
 
         if (
             !response.ok ||
             !result.success
         ) {
+
             throw new Error(
                 result.error ||
                 "Email lookup failed"
             );
+
         }
+
 
         const data =
             result.data || {};
+
 
         output.innerHTML = `
 
@@ -3028,13 +3991,19 @@ async function emailSearch() {
                 <div class="result-content">
 
 Email:
-${escapeHTML(data.email || email)}
+${escapeHTML(
+    data.email || email
+)}
 
 Status:
-${escapeHTML(data.status || "Unknown")}
+${escapeHTML(
+    data.status || "Unknown"
+)}
 
 Score:
-${escapeHTML(data.score ?? "Unknown")}
+${escapeHTML(
+    data.score ?? "Unknown"
+)}
 
 Disposable:
 ${
@@ -3075,11 +4044,14 @@ ${
                 </div>
 
             </div>
+
         `;
+
 
     } catch (error) {
 
         output.innerHTML = `
+
             <div class="result-card">
 
                 <div class="result-title">
@@ -3087,14 +4059,19 @@ ${
                 </div>
 
                 <div class="result-content">
-${escapeHTML(error.message)}
+${escapeHTML(
+    error.message
+)}
                 </div>
 
             </div>
+
         `;
 
     }
+
 }
+
 
 
 /* =========================================================
@@ -3109,46 +4086,67 @@ async function phoneSearch() {
             .value
             .trim();
 
+
     const output =
         document.getElementById(
             "phoneResults"
         );
 
+
     if (!phone) {
 
         output.innerHTML = `
+
             <div class="empty">
-                <div class="empty-icon">#</div>
+
+                <div class="empty-icon">
+                    #
+                </div>
+
                 Enter a phone number.
+
             </div>
+
         `;
 
         return;
+
     }
 
+
     output.innerHTML = `
+
         <div class="empty">
             Looking up phone...
         </div>
+
     `;
+
 
     try {
 
         const response =
             await fetch(
                 "/api/phone?phone=" +
-                encodeURIComponent(phone)
+                encodeURIComponent(
+                    phone
+                )
             );
+
 
         const result =
             await response.json();
 
+
         if (!response.ok) {
+
             throw new Error(
                 result.error ||
                 "Phone lookup failed"
             );
+
         }
+
 
         output.innerHTML = `
 
@@ -3180,11 +4178,14 @@ ${escapeHTML(
                 </div>
 
             </div>
+
         `;
+
 
     } catch (error) {
 
         output.innerHTML = `
+
             <div class="result-card">
 
                 <div class="result-title">
@@ -3192,14 +4193,19 @@ ${escapeHTML(
                 </div>
 
                 <div class="result-content">
-${escapeHTML(error.message)}
+${escapeHTML(
+    error.message
+)}
                 </div>
 
             </div>
+
         `;
 
     }
+
 }
+
 
 
 /* =========================================================
@@ -3211,9 +4217,15 @@ document
     .addEventListener(
         "keydown",
         e => {
-            if (e.key === "Enter") {
+
+            if (
+                e.key === "Enter"
+            ) {
+
                 databaseSearch();
+
             }
+
         }
     );
 
@@ -3223,9 +4235,15 @@ document
     .addEventListener(
         "keydown",
         e => {
-            if (e.key === "Enter") {
+
+            if (
+                e.key === "Enter"
+            ) {
+
                 fameSearch();
+
             }
+
         }
     );
 
@@ -3235,9 +4253,15 @@ document
     .addEventListener(
         "keydown",
         e => {
-            if (e.key === "Enter") {
+
+            if (
+                e.key === "Enter"
+            ) {
+
                 ipSearch();
+
             }
+
         }
     );
 
@@ -3247,9 +4271,15 @@ document
     .addEventListener(
         "keydown",
         e => {
-            if (e.key === "Enter") {
+
+            if (
+                e.key === "Enter"
+            ) {
+
                 emailSearch();
+
             }
+
         }
     );
 
@@ -3259,11 +4289,320 @@ document
     .addEventListener(
         "keydown",
         e => {
-            if (e.key === "Enter") {
+
+            if (
+                e.key === "Enter"
+            ) {
+
                 phoneSearch();
+
             }
+
         }
     );
+
+
+
+/* =========================================================
+   LIVE STATISTICS
+========================================================= */
+
+let statsRefreshTimer = null;
+
+
+async function loadStats() {
+
+    const visitors =
+        document.getElementById(
+            "statVisitors"
+        );
+
+    const visits =
+        document.getElementById(
+            "statVisits"
+        );
+
+    const searches =
+        document.getElementById(
+            "statSearches"
+        );
+
+    const records =
+        document.getElementById(
+            "statRecords"
+        );
+
+    const updated =
+        document.getElementById(
+            "statsUpdated"
+        );
+
+    const chart =
+        document.getElementById(
+            "weeklyChart"
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/stats",
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Statistics unavailable"
+            );
+
+        }
+
+
+        visitors.textContent =
+            formatNumber(
+                data.uniqueVisitors7d
+            );
+
+
+        visits.textContent =
+            formatNumber(
+                data.visits7d
+            );
+
+
+        searches.textContent =
+            formatNumber(
+                data.searches7d
+            );
+
+
+        records.textContent =
+            formatNumber(
+                data.totalRecords
+            );
+
+
+        if (
+            data.updatedAt
+        ) {
+
+            const date =
+                new Date(
+                    data.updatedAt
+                );
+
+
+            updated.textContent =
+                "Updated " +
+                date.toLocaleTimeString(
+                    [],
+                    {
+                        hour:
+                            "2-digit",
+
+                        minute:
+                            "2-digit"
+                    }
+                );
+
+        } else {
+
+            updated.textContent =
+                "Updated just now";
+
+        }
+
+
+        const week =
+            Array.isArray(
+                data.week
+            )
+                ? data.week
+                : [];
+
+
+        if (
+            !week.length
+        ) {
+
+            chart.innerHTML = `
+
+                <div class="chart-empty">
+                    No weekly statistics available.
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        const max =
+            Math.max(
+                ...week.map(
+                    item =>
+                        Number(
+                            item.visitors
+                        ) || 0
+                ),
+                1
+            );
+
+
+        chart.innerHTML =
+            week.map(
+                item => {
+
+                    const value =
+                        Number(
+                            item.visitors
+                        ) || 0;
+
+
+                    const height =
+                        Math.max(
+                            3,
+                            (
+                                value /
+                                max
+                            ) * 100
+                        );
+
+
+                    return `
+
+                        <div class="chart-day">
+
+                            <div class="chart-value">
+                                ${formatNumber(
+                                    value
+                                )}
+                            </div>
+
+                            <div class="chart-bar-container">
+
+                                <div
+                                    class="chart-bar"
+                                    style="height:${height}%"
+                                ></div>
+
+                            </div>
+
+                            <div class="chart-label">
+                                ${escapeHTML(
+                                    item.day || "-"
+                                )}
+                            </div>
+
+                        </div>
+
+                    `;
+
+                }
+            ).join("");
+
+
+    } catch (error) {
+
+        visitors.textContent =
+            "—";
+
+        visits.textContent =
+            "—";
+
+        searches.textContent =
+            "—";
+
+        records.textContent =
+            "—";
+
+
+        updated.textContent =
+            "Statistics unavailable";
+
+
+        chart.innerHTML = `
+
+            <div class="chart-empty">
+                Could not load statistics.
+            </div>
+
+        `;
+
+
+        console.error(
+            "Stats error:",
+            error
+        );
+
+    }
+
+}
+
+
+function formatNumber(value) {
+
+    const number =
+        Number(value);
+
+
+    if (
+        !Number.isFinite(
+            number
+        )
+    ) {
+
+        return "—";
+
+    }
+
+
+    return number.toLocaleString(
+        "en-US"
+    );
+
+}
+
+
+function startStatsRefresh() {
+
+    if (
+        statsRefreshTimer
+    ) {
+
+        clearInterval(
+            statsRefreshTimer
+        );
+
+    }
+
+
+    loadStats();
+
+
+    statsRefreshTimer =
+        setInterval(
+            loadStats,
+            5 * 60 * 1000
+        );
+
+}
+
 
 
 /* =========================================================
