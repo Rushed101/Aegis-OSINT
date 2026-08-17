@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>NightTrace OSINT</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #07090d;
+            --panel: #0d1118;
+            --panel2: #111720;
+            --border: #1c2530;
+            --text: #edf2f7;
+            --muted: #7f8b99;
+            --accent: #5b8cff;
+            --accent2: #7c5cff;
+            --danger: #ff5c6c;
+            --success: #4ade80;
+        }
+
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 20% 0%, rgba(91,140,255,.10), transparent 30%),
+                radial-gradient(circle at 90% 20%, rgba(124,92,255,.08), transparent 30%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+
+        .sidebar {
+            width: 245px;
+            border-right: 1px solid var(--border);
+            background: rgba(8,11,16,.92);
+            padding: 22px 15px;
+            position: fixed;
+            inset: 0 auto 0 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 5px 10px 30px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 9px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            font-weight: 800;
+        }
+
+        .nav-title {
+            color: #4e5966;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 0 10px 10px;
+            text-transform: uppercase;
+        }
+
+        .nav button {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+            padding: 12px 13px;
+            border-radius: 9px;
+            margin-bottom: 4px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+            transition: .18s;
+        }
+
+        .nav button:hover,
+        .nav button.active {
+            color: white;
+            background: #131a24;
+        }
+
+        .nav button.active {
+            box-shadow: inset 2px 0 0 var(--accent);
+        }
+
+        /* MAIN */
+
+        .main {
+            margin-left: 245px;
+            width: calc(100% - 245px);
+            padding: 38px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 35px;
+        }
+
+        .title h1 {
+            font-size: 25px;
+            margin-bottom: 6px;
+        }
+
+        .title p {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border);
+            background: var(--panel);
+            border-radius: 20px;
+            padding: 8px 13px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 10px rgba(74,222,128,.7);
+        }
+
+        /* CARDS */
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: rgba(13,17,24,.8);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 9px;
+        }
+
+        .stat-value {
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        /* SEARCH */
+
+        .search-panel {
+            background: rgba(13,17,24,.85);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 24px;
+            max-width: 950px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 22px;
+        }
+
+        .panel-header h2 {
+            font-size: 16px;
+        }
+
+        .panel-header span {
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            height: 46px;
+            background: #080c11;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            outline: none;
+            padding: 0 14px;
+            color: white;
+            font-size: 13px;
+        }
+
+        input:focus {
+            border-color: #315aaf;
+            box-shadow: 0 0 0 3px rgba(91,140,255,.08);
+        }
+
+        .search-btn {
+            height: 46px;
+            border: 0;
+            border-radius: 8px;
+            padding: 0 22px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+        }
+
+        .search-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        /* RESULTS */
+
+        .results {
+            margin-top: 22px;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 10px;
+        }
+
+        .result-card {
+            background: #090d13;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 8px;
+        }
+
+        .result-card.found {
+            border-left: 3px solid var(--danger);
+        }
+
+        .result-card.not-found {
+            border-left: 3px solid var(--success);
+        }
+
+        .result-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .result-data {
+            white-space: pre-wrap;
+            color: #aab4c0;
+            font-family: monospace;
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: 9px;
+            padding: 4px 7px;
+            border-radius: 5px;
+            margin-left: 6px;
+        }
+
+        .badge.found {
+            background: rgba(255,92,108,.12);
+            color: #ff7784;
+        }
+
+        .badge.safe {
+            background: rgba(74,222,128,.10);
+            color: var(--success);
+        }
+
+        .empty {
+            padding: 35px;
+            text-align: center;
+            color: var(--muted);
+            border: 1px dashed var(--border);
+            border-radius: 9px;
+            font-size: 13px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 800px) {
+            .sidebar {
+                width: 70px;
+            }
+
+            .logo span,
+            .nav-title,
+            .nav button span {
+                display: none;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+                padding: 20px;
+            }
+
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media(max-width: 500px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">N</div>
+            <span>NightTrace</span>
+        </div>
+
+        <div class="nav-title">Lookups</div>
+
+        <div class="nav">
+
+            <button class="active" onclick="showPage('databreach', this)">
+                ◈ <span>Databreach Search</span>
+            </button>
+
+            <button onclick="showPage('ip', this)">
+                ◉ <span>IP Information</span>
+            </button>
+
+            <button onclick="showPage('email', this)">
+                @ <span>Email Lookup</span>
+            </button>
+
+            <button onclick="showPage('phone', this)">
+                # <span>Phone Lookup</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <div class="title">
+                <h1 id="pageTitle">Databreach Search</h1>
+                <p id="pageDescription">
+                    Search your authorized dataset for an exact match.
+                </p>
+            </div>
+
+            <div class="status">
+                <span class="dot"></span>
+                System Online
+            </div>
+
+        </div>
+
+
+        <div class="dashboard">
+
+            <div class="stat">
+                <div class="stat-label">DATABASE</div>
+                <div class="stat-value">db.txt</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">SEARCH MODE</div>
+                <div class="stat-value">Exact</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">API STATUS</div>
+                <div class="stat-value">Online</div>
+            </div>
+
+            <div class="stat">
+                <div class="stat-label">RESULTS</div>
+                <div class="stat-value" id="resultCount">0</div>
+            </div>
+
+        </div>
+
+
+        <!-- DATABREACH -->
+
+        <section id="databreach" class="search-panel page">
+
+            <div class="panel-header">
+                <h2>Databreach Search</h2>
+                <span>Exact match</span>
+            </div>
+
+            <div class="input-row">
+
+                <input
+                    id="databaseQuery"
+                    type="text"
+                    placeholder="Name, email, phone, address..."
+                    autocomplete="off"
+                >
+
+                <button class="search-btn" onclick="databaseSearch()">
+                    Search
+                </button>
+
+            </div>
+
+            <div class="results">
+
+                <div class="result-header">
+                    <span>SEARCH RESULTS</span>
+                    <span id="searchStatus">Waiting</span>
+                </div>
+
+                <div id="databaseResults">
+                    <div class="empty">
+                        Enter a value to start a search.
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OTHER PAGES -->
+
+        <section id="ip" class="search-panel page hidden">
+
+            <div class="panel-header">
+                <h2>IP Information</h2>
+                <span>IP intelligence</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="ipInput"
+                    placeholder="Example: 8.8.8.8"
+                >
+
+                <button class="search-btn" onclick="ipSearch()">
+                    Lookup
+                </button>
+            </div>
+
+            <div class="results" id="ipResults">
+                <div class="empty">
+                    Enter an IP address.
+                </div>
+            </div>
+
+        </section>
+
+
+        <section id="email" class="search-panel page hidden">
+
+            <div class="panel-header">
+                <h2>Email Lookup</h2>
+                <span>Email intelligence</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="emailInput"
+                    type="email"
+                    placeholder="example@email.com"
+                >
+
+                <button class="search-btn" onclick="emailSearch()">
+                    Lookup
+                </button>
+            </div>
+
+            <div class="results" id="emailResults">
+                <div class="empty">
+                    Enter an email address.
+                </div>
+            </div>
+
+        </section>
+
+
+        <section id="phone" class="search-panel page hidden">
+
+            <div class="panel-header">
+                <h2>Phone Lookup</h2>
+                <span>Phone intelligence</span>
+            </div>
+
+            <div class="input-row">
+                <input
+                    id="phoneInput"
+                    placeholder="+49..."
+                >
+
+                <button class="search-btn" onclick="phoneSearch()">
+                    Lookup
+                </button>
+            </div>
+
+            <div class="results" id="phoneResults">
+                <div class="empty">
+                    Enter a phone number.
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+    function showPage(page, button) {
+
+        document.querySelectorAll(".page").forEach(el => {
+            el.classList.add("hidden");
+        });
+
+        document.getElementById(page).classList.remove("hidden");
+
+        document.querySelectorAll(".nav button").forEach(el => {
+            el.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const titles = {
+            databreach: [
+                "Databreach Search",
+                "Search your authorized dataset for an exact match."
+            ],
+            ip: [
+                "IP Information",
+                "Inspect publicly available IP information."
+            ],
+            email: [
+                "Email Lookup",
+                "Inspect an email address using your authorized sources."
+            ],
+            phone: [
+                "Phone Lookup",
+                "Inspect a phone number using your authorized sources."
+            ]
+        };
+
+        document.getElementById("pageTitle").textContent =
+            titles[page][0];
+
+        document.getElementById("pageDescription").textContent =
+            titles[page][1];
+    }
+
+
+    async function databaseSearch() {
+
+        const query =
+            document.getElementById("databaseQuery").value.trim();
+
+        const results =
+            document.getElementById("databaseResults");
+
+        const status =
+            document.getElementById("searchStatus");
+
+        if (!query) {
+            results.innerHTML = `
+                <div class="empty">
+                    Please enter a search value.
+                </div>
+            `;
+            return;
+        }
+
+        status.textContent = "Searching...";
+
+        results.innerHTML = `
+            <div class="empty">
+                Searching authorized database...
+            </div>
+        `;
+
+        try {
+
+            /*
+             * IMPORTANT:
+             *
+             * Vercel frontend cannot safely read db.txt directly.
+             *
+             * Your Vercel backend should expose:
+             *
+             * GET /api/search?q=VALUE
+             *
+             * The API reads db.txt on the server and returns
+             * only the matching records.
+             */
+
+            const response = await fetch(
+                "/api/search?q=" + encodeURIComponent(query)
+            );
+
+            if (!response.ok) {
+                throw new Error("API error");
+            }
+
+            const data = await response.json();
+
+            if (!data.results || data.results.length === 0) {
+
+                results.innerHTML = `
+                    <div class="result-card not-found">
+                        <div class="result-title">
+                            No Match
+                            <span class="badge safe">NOT FOUND</span>
+                        </div>
+
+                        <div class="result-data">
+No exact match was found.
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById("resultCount")
+                    .textContent = "0";
+
+                status.textContent = "Completed";
+
+                return;
+            }
+
+
+            document.getElementById("resultCount")
+                .textContent = data.results.length;
+
+            status.textContent = "Completed";
+
+            results.innerHTML = data.results.map((item, index) => `
+
+                <div class="result-card found">
+
+                    <div class="result-title">
+                        Result #${index + 1}
+                        <span class="badge found">MATCH</span>
+                    </div>
+
+                    <div class="result-data">${escapeHTML(item)}</div>
+
+                </div>
+
+            `).join("");
+
+        } catch (error) {
+
+            status.textContent = "Error";
+
+            results.innerHTML = `
+                <div class="result-card">
+                    <div class="result-title">
+                        Backend unavailable
+                    </div>
+
+                    <div class="result-data">
+The /api/search endpoint is not configured yet.
+                    </div>
+                </div>
+            `;
+        }
+    }
+
+
+    function escapeHTML(value) {
+
+        return String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+    }
+
+
+    async function ipSearch() {
+
+        const ip =
+            document.getElementById("ipInput").value.trim();
+
+        const output =
+            document.getElementById("ipResults");
+
+        if (!ip) return;
+
+        output.innerHTML = `
+            <div class="empty">
+                IP lookup backend not configured.
+            </div>
+        `;
+
+        /*
+         * Connect this to your own authorized IP intelligence API.
+         */
+    }
+
+
+    async function emailSearch() {
+
+        const email =
+            document.getElementById("emailInput").value.trim();
+
+        const output =
+            document.getElementById("emailResults");
+
+        if (!email) return;
+
+        output.innerHTML = `
+            <div class="empty">
+                Email lookup backend not configured.
+            </div>
+        `;
+    }
+
+
+    async function phoneSearch() {
+
+        const phone =
+            document.getElementById("phoneInput").value.trim();
+
+        const output =
+            document.getElementById("phoneResults");
+
+        if (!phone) return;
+
+        output.innerHTML = `
+            <div class="empty">
+                Phone lookup backend not configured.
+            </div>
+        `;
+    }
+
+
+    document
+        .getElementById("databaseQuery")
+        .addEventListener("keydown", function(event) {
+
+            if (event.key === "Enter") {
+                databaseSearch();
+            }
+
+        });
+
+</script>
+
+</body>
+</html>
