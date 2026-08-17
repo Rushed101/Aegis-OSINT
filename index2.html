@@ -1,0 +1,3155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Aegis OSINT</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg: #020204;
+    --panel: rgba(10, 10, 14, .82);
+    --border: rgba(255,255,255,.065);
+
+    --pink: #ff3ca6;
+    --pink2: #ff72c2;
+    --purple: #a34cff;
+
+    --text: #f4f1f5;
+    --muted: #77717b;
+    --green: #57e6a0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+
+    background:
+        radial-gradient(
+            circle at 50% -20%,
+            rgba(255,40,160,.10),
+            transparent 38%
+        ),
+        radial-gradient(
+            circle at 100% 100%,
+            rgba(130,40,255,.07),
+            transparent 35%
+        ),
+        var(--bg);
+
+    color: var(--text);
+
+    font-family:
+        Inter,
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    overflow-x: hidden;
+}
+
+/* =========================================================
+   BACKGROUND
+========================================================= */
+
+#space {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    z-index: 0;
+
+    pointer-events: none;
+}
+
+.noise {
+    position: fixed;
+    inset: 0;
+
+    z-index: 1;
+
+    pointer-events: none;
+
+    opacity: .025;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   APP
+========================================================= */
+
+.app {
+    position: relative;
+    z-index: 2;
+
+    min-height: 100vh;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 250px;
+
+    padding: 22px 14px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(5,5,8,.97),
+            rgba(2,2,4,.97)
+        );
+
+    border-right:
+        1px solid var(--border);
+
+    backdrop-filter:
+        blur(24px);
+
+    z-index: 50;
+}
+
+.logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        5px 10px 30px;
+}
+
+.logo-mark {
+    width: 37px;
+    height: 37px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink),
+            var(--purple)
+        );
+
+    font-size: 15px;
+
+    font-weight: 900;
+
+    box-shadow:
+        0 0 30px
+        rgba(255,50,170,.25);
+}
+
+.logo-text {
+    font-size: 16px;
+
+    font-weight: 750;
+
+    letter-spacing: -.4px;
+}
+
+.logo-text span {
+    color: var(--pink);
+}
+
+.section-title {
+    padding:
+        0 12px 9px;
+
+    color: #4f4a52;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: 1.7px;
+
+    text-transform: uppercase;
+}
+
+.nav {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+.nav-item {
+    position: relative;
+
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding:
+        11px 12px;
+
+    border: 0;
+
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: #77717b;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    font-size: 11px;
+
+    transition:
+        .2s ease;
+}
+
+.nav-item:hover {
+    color: #ddd9df;
+
+    background:
+        rgba(255,255,255,.025);
+
+    transform:
+        translateX(2px);
+}
+
+.nav-item.active {
+    color: #fff;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,55,170,.12),
+            rgba(255,55,170,.025)
+        );
+}
+
+.nav-item.active::before {
+    content: "";
+
+    position: absolute;
+
+    left: 0;
+
+    top: 8px;
+    bottom: 8px;
+
+    width: 2px;
+
+    border-radius: 4px;
+
+    background:
+        var(--pink);
+
+    box-shadow:
+        0 0 12px
+        var(--pink);
+}
+
+.nav-icon {
+    width: 17px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    color: #57515b;
+}
+
+.nav-item.active .nav-icon {
+    color: var(--pink);
+}
+
+/* =========================================================
+   SIDEBAR PROFILE
+========================================================= */
+
+.sidebar-bottom {
+    position: absolute;
+
+    left: 14px;
+    right: 14px;
+
+    bottom: 18px;
+}
+
+.profile {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 10px;
+
+    background:
+        rgba(255,255,255,.018);
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255,55,170,.1);
+
+    color: var(--pink);
+
+    font-size: 11px;
+
+    font-weight: 800;
+}
+
+.profile-name {
+    font-size: 10px;
+
+    font-weight: 600;
+}
+
+.profile-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin-top: 3px;
+
+    color: #625c66;
+
+    font-size: 8px;
+}
+
+.dot {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background:
+        var(--green);
+
+    box-shadow:
+        0 0 9px
+        rgba(87,230,160,.8);
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main {
+    margin-left: 250px;
+
+    min-height: 100vh;
+
+    padding:
+        28px 36px 50px;
+}
+
+/* =========================================================
+   TOP BAR
+========================================================= */
+
+.topbar {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 26px;
+}
+
+.breadcrumb {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 8px;
+
+    color: #55505a;
+
+    font-size: 9px;
+}
+
+.breadcrumb span:last-child {
+    color: var(--pink);
+}
+
+.title h1 {
+    font-size: 24px;
+
+    letter-spacing: -.8px;
+}
+
+.title p {
+    margin-top: 5px;
+
+    color: var(--muted);
+
+    font-size: 10px;
+}
+
+.top-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+}
+
+.status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 20px;
+
+    background:
+        rgba(8,8,11,.7);
+
+    color: #6f6973;
+
+    font-size: 8px;
+
+    letter-spacing: .7px;
+}
+
+/* =========================================================
+   COMMAND
+========================================================= */
+
+.command {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    width: 100%;
+
+    max-width: 1100px;
+
+    margin-bottom: 18px;
+
+    padding: 4px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 12px;
+
+    background:
+        rgba(9,8,12,.82);
+
+    box-shadow:
+        0 25px 80px
+        rgba(0,0,0,.3);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+.command-icon {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-left: 2px;
+
+    border-radius: 9px;
+
+    background:
+        rgba(255,55,170,.07);
+
+    color: var(--pink);
+
+    font-size: 13px;
+}
+
+.command input {
+    flex: 1;
+
+    height: 42px;
+
+    border: 0;
+
+    outline: 0;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 11px;
+}
+
+.command input::placeholder {
+    color: #514c54;
+}
+
+.command-key {
+    margin-right: 8px;
+
+    padding:
+        5px 7px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 5px;
+
+    color: #57515b;
+
+    font-family:
+        monospace;
+
+    font-size: 8px;
+}
+
+/* =========================================================
+   WORKSPACE
+========================================================= */
+
+.workspace {
+    width: 100%;
+    max-width: 1100px;
+}
+
+.main-panel {
+    width: 100%;
+
+    min-height: 500px;
+
+    padding: 21px;
+
+    border:
+        1px solid var(--border);
+
+    border-radius: 13px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(13,12,17,.88),
+            rgba(6,6,9,.88)
+        );
+
+    box-shadow:
+        0 20px 70px
+        rgba(0,0,0,.24);
+
+    backdrop-filter:
+        blur(20px);
+}
+
+/* =========================================================
+   PANEL HEADER
+========================================================= */
+
+.panel-head {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 20px;
+}
+
+.panel-head-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.panel-symbol {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background:
+        rgba(255,55,170,.07);
+
+    color: var(--pink);
+
+    font-size: 11px;
+}
+
+.panel-head h2 {
+    font-size: 12px;
+}
+
+.panel-head p {
+    margin-top: 3px;
+
+    color: #55505a;
+
+    font-size: 8px;
+}
+
+.panel-tag {
+    padding:
+        5px 7px;
+
+    border-radius: 5px;
+
+    color: var(--pink2);
+
+    background:
+        rgba(255,55,170,.06);
+
+    font-size: 7px;
+
+    letter-spacing: .8px;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search-row {
+    display: flex;
+
+    gap: 7px;
+
+    padding: 4px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(0,0,0,.22);
+}
+
+.search-row input {
+    flex: 1;
+
+    height: 39px;
+
+    padding:
+        0 10px;
+
+    border: 0;
+
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+
+    font-size: 10px;
+}
+
+.search-row input::placeholder {
+    color: #504b53;
+}
+
+.search-btn {
+    height: 39px;
+
+    padding:
+        0 18px;
+
+    border: 0;
+
+    border-radius: 7px;
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink),
+            var(--purple)
+        );
+
+    color: white;
+
+    font-size: 9px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 8px 25px
+        rgba(255,55,170,.12);
+
+    transition:
+        .2s ease;
+}
+
+.search-btn:hover {
+    transform:
+        translateY(-1px);
+
+    filter:
+        brightness(1.08);
+}
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+.results-head {
+    display: flex;
+
+    justify-content: space-between;
+
+    margin:
+        22px 2px 9px;
+
+    color: #55505a;
+
+    font-size: 7px;
+
+    letter-spacing: 1px;
+}
+
+.results {
+    min-height: 280px;
+}
+
+.empty {
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 250px;
+
+    border:
+        1px dashed
+        rgba(255,255,255,.07);
+
+    border-radius: 9px;
+
+    color: #514c55;
+
+    font-size: 9px;
+
+    text-align: center;
+}
+
+.empty-icon {
+    margin-bottom: 9px;
+
+    color:
+        rgba(255,55,170,.35);
+
+    font-size: 20px;
+}
+
+.result-card {
+    position: relative;
+
+    margin-bottom: 7px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 8px;
+
+    background:
+        rgba(0,0,0,.18);
+
+    animation:
+        resultIn .3s ease;
+}
+
+.result-card.found {
+    border-left:
+        2px solid
+        var(--pink);
+}
+
+.result-card.safe {
+    border-left:
+        2px solid
+        var(--green);
+}
+
+@keyframes resultIn {
+    from {
+        opacity: 0;
+        transform: translateY(5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-title {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-bottom: 7px;
+
+    font-size: 10px;
+
+    font-weight: 650;
+}
+
+.result-content {
+    color: #8c8690;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+
+    line-height: 1.8;
+
+    white-space: pre-wrap;
+}
+
+.badge {
+    padding:
+        3px 6px;
+
+    border-radius: 4px;
+
+    font-size: 6px;
+
+    letter-spacing: .7px;
+}
+
+.badge.pink {
+    color: var(--pink2);
+
+    background:
+        rgba(255,55,170,.07);
+}
+
+.badge.green {
+    color: var(--green);
+
+    background:
+        rgba(87,230,160,.06);
+}
+
+/* =========================================================
+   AEGIS BASE
+========================================================= */
+
+.base-info {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 12px 14px;
+
+    margin-bottom: 10px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 8px;
+
+    background:
+        rgba(0,0,0,.18);
+
+    color: #77717b;
+
+    font-size: 9px;
+}
+
+.base-info div {
+    display: flex;
+
+    gap: 9px;
+
+    align-items: center;
+}
+
+.base-info strong {
+    color: #ddd8df;
+}
+
+.base-results {
+    height: 520px;
+
+    overflow-y: auto;
+
+    border:
+        1px solid
+        rgba(255,255,255,.055);
+
+    border-radius: 9px;
+
+    background:
+        rgba(0,0,0,.22);
+
+    scrollbar-width: thin;
+
+    scrollbar-color:
+        rgba(255,55,170,.4)
+        transparent;
+}
+
+.base-results::-webkit-scrollbar {
+    width: 5px;
+}
+
+.base-results::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.base-results::-webkit-scrollbar-thumb {
+    background:
+        rgba(255,55,170,.4);
+
+    border-radius: 10px;
+}
+
+.base-line {
+    display: flex;
+
+    min-height: 29px;
+
+    border-bottom:
+        1px solid
+        rgba(255,255,255,.035);
+}
+
+.base-line-number {
+    width: 65px;
+
+    flex-shrink: 0;
+
+    padding: 8px 10px;
+
+    color: #403b44;
+
+    text-align: right;
+
+    border-right:
+        1px solid
+        rgba(255,255,255,.04);
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+}
+
+.base-line-content {
+    flex: 1;
+
+    padding: 8px 12px;
+
+    color: #8c8690;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    font-family:
+        "SFMono-Regular",
+        Consolas,
+        monospace;
+
+    font-size: 9px;
+}
+
+.base-line:hover {
+    background:
+        rgba(255,55,170,.025);
+}
+
+.base-line:hover
+.base-line-number {
+    color:
+        rgba(255,55,170,.55);
+}
+
+.base-pagination {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 15px;
+
+    margin-top: 12px;
+}
+
+.page-btn {
+    padding:
+        8px 13px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.07);
+
+    border-radius: 7px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    color: #8c8690;
+
+    font-family: inherit;
+
+    font-size: 8px;
+
+    cursor: pointer;
+
+    transition: .2s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    border-color:
+        rgba(255,55,170,.3);
+
+    color: #fff;
+
+    background:
+        rgba(255,55,170,.04);
+}
+
+.page-btn:disabled {
+    opacity: .3;
+
+    cursor: not-allowed;
+}
+
+#basePageNumber {
+    min-width: 60px;
+
+    color: #ff72c2;
+
+    font-family: monospace;
+
+    font-size: 9px;
+
+    text-align: center;
+}
+
+/* =========================================================
+   PAGES
+========================================================= */
+
+.page {
+    display: none;
+}
+
+.page.active-page {
+    display: block;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width: 800px) {
+
+    .sidebar {
+        width: 66px;
+    }
+
+    .logo {
+        justify-content: center;
+
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    .logo-text,
+    .section-title,
+    .nav-item span,
+    .sidebar-bottom {
+        display: none;
+    }
+
+    .nav-item {
+        justify-content: center;
+    }
+
+    .main {
+        margin-left: 66px;
+
+        padding:
+            22px 16px;
+    }
+}
+
+@media(max-width: 550px) {
+
+    .top-actions {
+        display: none;
+    }
+
+    .search-row {
+        flex-direction: column;
+    }
+
+    .search-btn {
+        width: 100%;
+    }
+
+    .command-key {
+        display: none;
+    }
+
+    .base-info {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 8px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="space"></canvas>
+
+<div class="noise"></div>
+
+<div class="app">
+
+<!-- =====================================================
+     SIDEBAR
+===================================================== -->
+
+<aside class="sidebar">
+
+    <div class="logo">
+
+        <div class="logo-mark">
+            A
+        </div>
+
+        <div class="logo-text">
+            Aegis <span>OSINT</span>
+        </div>
+
+    </div>
+
+    <div class="section-title">
+        Intelligence
+    </div>
+
+    <nav class="nav">
+
+        <button
+            class="nav-item active"
+            onclick="switchPage('databreach', this)"
+        >
+            <div class="nav-icon">◈</div>
+
+            <span>
+                Databreach Search
+            </span>
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="switchPage('base', this)"
+        >
+            <div class="nav-icon">▤</div>
+
+            <span>
+                Aegis Base
+            </span>
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="switchPage('ip', this)"
+        >
+            <div class="nav-icon">◉</div>
+
+            <span>
+                IP Information
+            </span>
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="switchPage('email', this)"
+        >
+            <div class="nav-icon">@</div>
+
+            <span>
+                Email Lookup
+            </span>
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="switchPage('phone', this)"
+        >
+            <div class="nav-icon">#</div>
+
+            <span>
+                Phone Lookup
+            </span>
+        </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="profile">
+
+            <div class="avatar">
+                A
+            </div>
+
+            <div>
+
+                <div class="profile-name">
+                    Aegis Operator
+                </div>
+
+                <div class="profile-status">
+
+                    <div class="dot"></div>
+
+                    Systems online
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
+<main class="main">
+
+    <header class="topbar">
+
+        <div>
+
+            <div class="breadcrumb">
+
+                <span>
+                    AEGIS
+                </span>
+
+                /
+
+                <span id="crumb">
+                    DATABASE
+                </span>
+
+            </div>
+
+            <div class="title">
+
+                <h1 id="pageTitle">
+                    Databreach Search
+                </h1>
+
+                <p id="pageDescription">
+                    Search your authorized intelligence sources.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="top-actions">
+
+            <div class="status">
+
+                <div class="dot"></div>
+
+                SYSTEM OPERATIONAL
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =================================================
+         QUICK SEARCH
+    ================================================= -->
+
+    <div class="command">
+
+        <div class="command-icon">
+            ⌕
+        </div>
+
+        <input
+            id="globalSearch"
+            type="text"
+            placeholder="Quick search..."
+            autocomplete="off"
+        >
+
+        <div class="command-key">
+            ENTER
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         WORKSPACE
+    ================================================= -->
+
+    <div class="workspace">
+
+        <section class="main-panel">
+
+
+            <!-- =================================================
+                 DATABREACH
+            ================================================= -->
+
+            <div
+                id="page-databreach"
+                class="page active-page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            ◈
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Databreach Search
+                            </h2>
+
+                            <p>
+                                Search your authorized database
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        SEARCH
+                    </div>
+
+                </div>
+
+                <div class="search-row">
+
+                    <input
+                        id="databaseQuery"
+                        type="text"
+                        placeholder="Name, email, phone or address..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="databaseSearch()"
+                    >
+                        SEARCH
+                    </button>
+
+                </div>
+
+                <div class="results-head">
+
+                    <span>
+                        RESULTS
+                    </span>
+
+                    <span id="searchStatus">
+                        READY
+                    </span>
+
+                </div>
+
+                <div
+                    class="results"
+                    id="databaseResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            ◈
+                        </div>
+
+                        Enter a value to begin searching.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 AEGIS BASE
+            ================================================= -->
+
+            <div
+                id="page-base"
+                class="page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            ▤
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Aegis Base
+                            </h2>
+
+                            <p>
+                                Authorized database browser
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        DB.TXT
+                    </div>
+
+                </div>
+
+
+                <div class="base-info">
+
+                    <div>
+
+                        <strong>
+                            db.txt
+                        </strong>
+
+                        <span>
+                            50,000 lines
+                        </span>
+
+                    </div>
+
+                    <div>
+
+                        <strong id="basePageInfo">
+                            Page 1
+                        </strong>
+
+                        <span>
+                            100 entries
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="baseResults"
+                    class="base-results"
+                >
+
+                    <div class="empty">
+                        Click Aegis Base to load the database.
+                    </div>
+
+                </div>
+
+
+                <div class="base-pagination">
+
+                    <button
+                        class="page-btn"
+                        onclick="basePrevious()"
+                        id="basePrev"
+                        disabled
+                    >
+                        ← Previous
+                    </button>
+
+                    <span id="basePageNumber">
+                        1 / 500
+                    </span>
+
+                    <button
+                        class="page-btn"
+                        onclick="baseNext()"
+                        id="baseNext"
+                    >
+                        Next →
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 IP
+            ================================================= -->
+
+            <div
+                id="page-ip"
+                class="page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                IP Information
+                            </h2>
+
+                            <p>
+                                Public IP intelligence
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        LOOKUP
+                    </div>
+
+                </div>
+
+                <div class="search-row">
+
+                    <input
+                        id="ipInput"
+                        type="text"
+                        placeholder="8.8.8.8"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="ipSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+                <div class="results-head">
+
+                    <span>
+                        IP INFORMATION
+                    </span>
+
+                    <span>
+                        READY
+                    </span>
+
+                </div>
+
+                <div
+                    class="results"
+                    id="ipResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            ◉
+                        </div>
+
+                        Enter an IP address.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMAIL
+            ================================================= -->
+
+            <div
+                id="page-email"
+                class="page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            @
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Email Lookup
+                            </h2>
+
+                            <p>
+                                Analyze an email address
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        LOOKUP
+                    </div>
+
+                </div>
+
+                <div class="search-row">
+
+                    <input
+                        id="emailInput"
+                        type="email"
+                        placeholder="example@domain.com"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="emailSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+                <div class="results-head">
+
+                    <span>
+                        EMAIL INFORMATION
+                    </span>
+
+                    <span>
+                        READY
+                    </span>
+
+                </div>
+
+                <div
+                    class="results"
+                    id="emailResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            @
+                        </div>
+
+                        Enter an email address.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PHONE
+            ================================================= -->
+
+            <div
+                id="page-phone"
+                class="page"
+            >
+
+                <div class="panel-head">
+
+                    <div class="panel-head-left">
+
+                        <div class="panel-symbol">
+                            #
+                        </div>
+
+                        <div>
+
+                            <h2>
+                                Phone Lookup
+                            </h2>
+
+                            <p>
+                                Analyze a phone number
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="panel-tag">
+                        LOOKUP
+                    </div>
+
+                </div>
+
+                <div class="search-row">
+
+                    <input
+                        id="phoneInput"
+                        type="text"
+                        placeholder="+49 152 5023156"
+                        autocomplete="off"
+                    >
+
+                    <button
+                        class="search-btn"
+                        onclick="phoneSearch()"
+                    >
+                        LOOKUP
+                    </button>
+
+                </div>
+
+                <div class="results-head">
+
+                    <span>
+                        PHONE INFORMATION
+                    </span>
+
+                    <span>
+                        READY
+                    </span>
+
+                </div>
+
+                <div
+                    class="results"
+                    id="phoneResults"
+                >
+
+                    <div class="empty">
+
+                        <div class="empty-icon">
+                            #
+                        </div>
+
+                        Enter a phone number.
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   STARFIELD
+========================================================= */
+
+const canvas =
+    document.getElementById("space");
+
+const ctx =
+    canvas.getContext("2d");
+
+let stars = [];
+
+function resize() {
+
+    canvas.width =
+        window.innerWidth;
+
+    canvas.height =
+        window.innerHeight;
+
+    stars = [];
+
+    const amount =
+        Math.min(
+            100,
+            Math.floor(
+                canvas.width *
+                canvas.height /
+                15000
+            )
+        );
+
+    for (
+        let i = 0;
+        i < amount;
+        i++
+    ) {
+
+        stars.push({
+
+            x:
+                Math.random() *
+                canvas.width,
+
+            y:
+                Math.random() *
+                canvas.height,
+
+            speed:
+                Math.random() *
+                .45 +
+                .08,
+
+            size:
+                Math.random() *
+                1 +
+                .2,
+
+            alpha:
+                Math.random() *
+                .6 +
+                .15,
+
+            trail:
+                Math.random() *
+                15 +
+                4
+
+        });
+
+    }
+
+}
+
+function animate() {
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    for (
+        const star of stars
+    ) {
+
+        star.x +=
+            star.speed;
+
+        star.y +=
+            star.speed * .08;
+
+        if (
+            star.x >
+            canvas.width + 30
+        ) {
+
+            star.x = -30;
+
+            star.y =
+                Math.random() *
+                canvas.height;
+
+        }
+
+        const gradient =
+            ctx.createLinearGradient(
+                star.x - star.trail,
+                star.y,
+                star.x,
+                star.y
+            );
+
+        gradient.addColorStop(
+            0,
+            "rgba(255,55,170,0)"
+        );
+
+        gradient.addColorStop(
+            1,
+            `rgba(
+                255,
+                90,
+                185,
+                ${star.alpha}
+            )`
+        );
+
+        ctx.beginPath();
+
+        ctx.strokeStyle =
+            gradient;
+
+        ctx.lineWidth =
+            star.size;
+
+        ctx.moveTo(
+            star.x - star.trail,
+            star.y
+        );
+
+        ctx.lineTo(
+            star.x,
+            star.y
+        );
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.fillStyle =
+            `rgba(
+                255,
+                120,
+                205,
+                ${star.alpha}
+            )`;
+
+        ctx.arc(
+            star.x,
+            star.y,
+            star.size,
+            0,
+            Math.PI * 2
+        );
+
+        ctx.fill();
+    }
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+resize();
+animate();
+
+
+/* =========================================================
+   PAGE INFO
+========================================================= */
+
+const pageInfo = {
+
+    databreach: {
+        title: "Databreach Search",
+        description:
+            "Search your authorized intelligence sources.",
+        crumb: "DATABASE"
+    },
+
+    base: {
+        title: "Aegis Base",
+        description:
+            "Browse your authorized database.",
+        crumb: "AEGIS BASE"
+    },
+
+    ip: {
+        title: "IP Information",
+        description:
+            "Public IP intelligence.",
+        crumb: "IP INTELLIGENCE"
+    },
+
+    email: {
+        title: "Email Lookup",
+        description:
+            "Analyze an email address.",
+        crumb: "EMAIL"
+    },
+
+    phone: {
+        title: "Phone Lookup",
+        description:
+            "Analyze a phone number.",
+        crumb: "PHONE"
+    }
+
+};
+
+
+/* =========================================================
+   SWITCH PAGE
+========================================================= */
+
+function switchPage(
+    page,
+    button
+) {
+
+    document
+        .querySelectorAll(".page")
+        .forEach(
+            element => {
+
+                element.classList.remove(
+                    "active-page"
+                );
+
+            }
+        );
+
+    const target =
+        document.getElementById(
+            "page-" + page
+        );
+
+    if (target) {
+
+        target.classList.add(
+            "active-page"
+        );
+
+    }
+
+    document
+        .querySelectorAll(".nav-item")
+        .forEach(
+            element => {
+
+                element.classList.remove(
+                    "active"
+                );
+
+            }
+        );
+
+    if (button) {
+
+        button.classList.add(
+            "active"
+        );
+
+    }
+
+    document.getElementById(
+        "pageTitle"
+    ).textContent =
+        pageInfo[page].title;
+
+    document.getElementById(
+        "pageDescription"
+    ).textContent =
+        pageInfo[page].description;
+
+    document.getElementById(
+        "crumb"
+    ).textContent =
+        pageInfo[page].crumb;
+
+
+    if (page === "base") {
+
+        loadBasePage();
+
+    }
+
+}
+
+
+/* =========================================================
+   GLOBAL SEARCH
+========================================================= */
+
+document
+    .getElementById(
+        "globalSearch"
+    )
+    .addEventListener(
+        "keydown",
+        event => {
+
+            if (
+                event.key !==
+                "Enter"
+            ) {
+                return;
+            }
+
+            const value =
+                event.target.value.trim();
+
+            if (!value) {
+                return;
+            }
+
+            switchPageByName(
+                "databreach"
+            );
+
+            document.getElementById(
+                "databaseQuery"
+            ).value =
+                value;
+
+            databaseSearch();
+
+        }
+    );
+
+
+function switchPageByName(
+    page
+) {
+
+    const buttons =
+        document.querySelectorAll(
+            ".nav-item"
+        );
+
+    const pages = [
+        "databreach",
+        "base",
+        "ip",
+        "email",
+        "phone"
+    ];
+
+    const index =
+        pages.indexOf(page);
+
+    if (index !== -1) {
+
+        switchPage(
+            page,
+            buttons[index]
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DATABASE SEARCH
+========================================================= */
+
+async function databaseSearch() {
+
+    const query =
+        document
+            .getElementById(
+                "databaseQuery"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "databaseResults"
+        );
+
+    const status =
+        document.getElementById(
+            "searchStatus"
+        );
+
+    if (!query) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">◈</div>
+                Enter a value to search.
+            </div>
+        `;
+
+        return;
+    }
+
+    status.textContent =
+        "SEARCHING";
+
+    output.innerHTML = `
+        <div class="empty">
+            Searching database...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/search?q=" +
+                encodeURIComponent(query)
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Database search failed"
+            );
+
+        }
+
+        status.textContent =
+            "COMPLETE";
+
+        const results =
+            Array.isArray(
+                data.results
+            )
+                ? data.results
+                : [];
+
+        if (
+            results.length === 0
+        ) {
+
+            output.innerHTML = `
+                <div class="result-card safe">
+
+                    <div class="result-title">
+
+                        No Match
+
+                        <span class="badge green">
+                            NOT FOUND
+                        </span>
+
+                    </div>
+
+                    <div class="result-content">
+No exact match was found in the authorized database.
+                    </div>
+
+                </div>
+            `;
+
+            return;
+        }
+
+        output.innerHTML =
+            results
+                .map(
+                    (result, index) => `
+
+                    <div class="result-card found">
+
+                        <div class="result-title">
+
+                            Result #${index + 1}
+
+                            <span class="badge pink">
+                                MATCH
+                            </span>
+
+                        </div>
+
+                        <div class="result-content">
+${escapeHTML(
+    typeof result === "string"
+        ? result
+        : JSON.stringify(
+            result,
+            null,
+            2
+        )
+)}
+                        </div>
+
+                    </div>
+                `
+                )
+                .join("");
+
+    } catch (error) {
+
+        status.textContent =
+            "ERROR";
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Search Error
+                </div>
+
+                <div class="result-content">
+${escapeHTML(error.message)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   AEGIS BASE
+========================================================= */
+
+let basePage = 1;
+
+const BASE_PER_PAGE = 100;
+
+const BASE_TOTAL = 50000;
+
+const BASE_TOTAL_PAGES =
+    Math.ceil(
+        BASE_TOTAL /
+        BASE_PER_PAGE
+    );
+
+
+async function loadBasePage() {
+
+    const output =
+        document.getElementById(
+            "baseResults"
+        );
+
+    output.innerHTML = `
+        <div class="empty">
+            Loading database...
+        </div>
+    `;
+
+    updateBasePagination();
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/base?page=" +
+                basePage +
+                "&limit=" +
+                BASE_PER_PAGE
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "Could not load database"
+            );
+
+        }
+
+        const lines =
+            Array.isArray(
+                data.lines
+            )
+                ? data.lines
+                : [];
+
+        if (
+            lines.length === 0
+        ) {
+
+            output.innerHTML = `
+                <div class="empty">
+                    No entries found.
+                </div>
+            `;
+
+            return;
+        }
+
+        const start =
+            ((basePage - 1) *
+                BASE_PER_PAGE) + 1;
+
+        output.innerHTML =
+            lines.map(
+                (line, index) => `
+
+                <div class="base-line">
+
+                    <div class="base-line-number">
+                        ${start + index}
+                    </div>
+
+                    <div class="base-line-content">
+                        ${escapeHTML(line)}
+                    </div>
+
+                </div>
+            `
+            ).join("");
+
+        updateBasePagination();
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="empty">
+                ${escapeHTML(
+                    error.message
+                )}
+            </div>
+        `;
+
+    }
+
+}
+
+
+function updateBasePagination() {
+
+    document.getElementById(
+        "basePageNumber"
+    ).textContent =
+        basePage +
+        " / " +
+        BASE_TOTAL_PAGES;
+
+    document.getElementById(
+        "basePageInfo"
+    ).textContent =
+        "Page " +
+        basePage;
+
+    document.getElementById(
+        "basePrev"
+    ).disabled =
+        basePage <= 1;
+
+    document.getElementById(
+        "baseNext"
+    ).disabled =
+        basePage >=
+        BASE_TOTAL_PAGES;
+
+}
+
+
+function basePrevious() {
+
+    if (basePage <= 1) {
+        return;
+    }
+
+    basePage--;
+
+    loadBasePage();
+
+}
+
+
+function baseNext() {
+
+    if (
+        basePage >=
+        BASE_TOTAL_PAGES
+    ) {
+        return;
+    }
+
+    basePage++;
+
+    loadBasePage();
+
+}
+
+
+/* =========================================================
+   IP SEARCH
+========================================================= */
+
+async function ipSearch() {
+
+    const ip =
+        document
+            .getElementById(
+                "ipInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "ipResults"
+        );
+
+    if (!ip) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">◉</div>
+                Enter an IP address.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Looking up IP...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/ip?ip=" +
+                encodeURIComponent(ip)
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "IP lookup failed"
+            );
+
+        }
+
+        const data =
+            result.data || {};
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    IP Information
+
+                    <span class="badge pink">
+                        FOUND
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+IP:
+${escapeHTML(
+    data.ip ||
+    "Unknown"
+)}
+
+Hostname:
+${escapeHTML(
+    data.hostname ||
+    "Unknown"
+)}
+
+City:
+${escapeHTML(
+    data.city ||
+    "Unknown"
+)}
+
+Region:
+${escapeHTML(
+    data.region ||
+    "Unknown"
+)}
+
+Country:
+${escapeHTML(
+    data.country ||
+    "Unknown"
+)}
+
+Location:
+${escapeHTML(
+    data.loc ||
+    "Unknown"
+)}
+
+Organization:
+${escapeHTML(
+    data.org ||
+    "Unknown"
+)}
+
+Postal:
+${escapeHTML(
+    data.postal ||
+    "Unknown"
+)}
+
+Timezone:
+${escapeHTML(
+    data.timezone ||
+    "Unknown"
+)}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    IP Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   EMAIL SEARCH
+========================================================= */
+
+async function emailSearch() {
+
+    const email =
+        document
+            .getElementById(
+                "emailInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "emailResults"
+        );
+
+    if (!email) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">@</div>
+                Enter an email address.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Processing request...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/email?email=" +
+                encodeURIComponent(email)
+            );
+
+        const result =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !result.success
+        ) {
+
+            throw new Error(
+                result.error ||
+                "Email lookup failed"
+            );
+
+        }
+
+        const data =
+            result.data || {};
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Email Intelligence
+
+                    <span class="badge pink">
+${escapeHTML(
+    String(
+        data.status ||
+        "UNKNOWN"
+    ).toUpperCase()
+)}
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+Email:
+${escapeHTML(
+    data.email ||
+    email
+)}
+
+Status:
+${escapeHTML(
+    data.status ||
+    "Unknown"
+)}
+
+Score:
+${escapeHTML(
+    data.score ??
+    "Unknown"
+)}
+
+Disposable:
+${
+    data.disposable === true
+        ? "Yes"
+        : data.disposable === false
+        ? "No"
+        : "Unknown"
+}
+
+Webmail:
+${
+    data.webmail === true
+        ? "Yes"
+        : data.webmail === false
+        ? "No"
+        : "Unknown"
+}
+
+MX Records:
+${
+    data.mx_records === true
+        ? "Yes"
+        : data.mx_records === false
+        ? "No"
+        : "Unknown"
+}
+
+SMTP Check:
+${
+    data.smtp_check === true
+        ? "Yes"
+        : data.smtp_check === false
+        ? "No"
+        : "Unknown"
+}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Email Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   PHONE SEARCH
+========================================================= */
+
+async function phoneSearch() {
+
+    const phone =
+        document
+            .getElementById(
+                "phoneInput"
+            )
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "phoneResults"
+        );
+
+    if (!phone) {
+
+        output.innerHTML = `
+            <div class="empty">
+                <div class="empty-icon">#</div>
+                Enter a phone number.
+            </div>
+        `;
+
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Looking up phone...
+        </div>
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/phone?phone=" +
+                encodeURIComponent(phone)
+            );
+
+        const result =
+            await response.json();
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                "Phone lookup failed"
+            );
+
+        }
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    Phone Intelligence
+
+                    <span class="badge pink">
+                        RESULT
+                    </span>
+
+                </div>
+
+                <div class="result-content">
+
+Phone:
+${escapeHTML(
+    result.phone ||
+    phone
+)}
+
+Status:
+${escapeHTML(
+    result.message ||
+    "Request completed"
+)}
+
+                </div>
+
+            </div>
+        `;
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="result-card">
+
+                <div class="result-title">
+                    Phone Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(
+    error.message
+)}
+                </div>
+
+            </div>
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   ENTER SHORTCUTS
+========================================================= */
+
+document
+    .getElementById(
+        "databaseQuery"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+
+                databaseSearch();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "ipInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+
+                ipSearch();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "emailInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+
+                emailSearch();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "phoneInput"
+    )
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key ===
+                "Enter"
+            ) {
+
+                phoneSearch();
+
+            }
+
+        }
+    );
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+</script>
+
+</body>
+</html>
