@@ -1702,6 +1702,22 @@ body {
 
         <button
             class="nav-item"
+            onclick="switchPage('name', this)"
+        >
+
+            <div class="nav-icon">
+                ♪
+            </div>
+
+            <span>
+                TikTok Lookup
+            </span>
+
+        </button>
+
+
+        <button
+            class="nav-item"
             onclick="switchPage('info', this)"
         >
 
@@ -2391,6 +2407,96 @@ body {
 
 
 <!-- =====================================================
+     TIKTOK LOOKUP
+===================================================== -->
+
+<div
+    id="page-name"
+    class="page"
+>
+
+    <div class="panel-head">
+
+        <div class="panel-head-left">
+
+            <div class="panel-symbol">
+                ♪
+            </div>
+
+            <div>
+
+                <h2>
+                    TikTok Lookup
+                </h2>
+
+                <p>
+                    Public TikTok profile &amp; country insights
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="panel-tag">
+            TIKTOK
+        </div>
+
+    </div>
+
+
+    <div class="search-row">
+
+        <input
+            id="nameInput"
+            type="text"
+            placeholder="@username or tiktok.com/@username"
+            autocomplete="off"
+        >
+
+        <button
+            class="search-btn"
+            onclick="nameSearch()"
+        >
+            LOOKUP
+        </button>
+
+    </div>
+
+
+    <div class="results-head">
+
+        <span>
+            TIKTOK PROFILE
+        </span>
+
+        <span id="nameStatus">
+            READY
+        </span>
+
+    </div>
+
+
+    <div
+        class="results"
+        id="nameResults"
+    >
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                ♪
+            </div>
+
+            Enter a TikTok username to get public profile &amp; country info.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
      INFO
 ===================================================== -->
 
@@ -2875,6 +2981,20 @@ const pageInfo = {
 
         crumb:
             "PHONE"
+
+    },
+
+
+    name: {
+
+        title:
+            "TikTok Lookup",
+
+        description:
+            "Public TikTok profile information and country insights.",
+
+        crumb:
+            "TIKTOK"
 
     },
 
@@ -4208,6 +4328,364 @@ ${escapeHTML(
 
 
 /* =========================================================
+   TIKTOK LOOKUP
+========================================================= */
+
+async function nameSearch() {
+
+    const raw =
+        document
+            .getElementById("nameInput")
+            .value
+            .trim();
+
+    const output =
+        document.getElementById(
+            "nameResults"
+        );
+
+    const status =
+        document.getElementById(
+            "nameStatus"
+        );
+
+    if (!raw) {
+
+        output.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    ♪
+                </div>
+
+                Enter a TikTok username.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    // Clean username: remove @, extract from URL, lowercase
+    let username = raw
+        .replace(/^@/, "")
+        .replace(/https?:\/\/(www\.)?tiktok\.com\/@?/i, "")
+        .replace(/\/.*$/, "")
+        .replace(/\?.*$/, "")
+        .trim()
+        .toLowerCase();
+
+    if (!username || username.length < 2) {
+
+        output.innerHTML = `
+
+            <div class="empty">
+                Please enter a valid TikTok username.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+    status.textContent = "SEARCHING";
+
+    output.innerHTML = `
+
+        <div class="empty">
+            Looking up TikTok profile @${escapeHTML(username)}...
+        </div>
+
+    `;
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/tiktok?username=" +
+                encodeURIComponent(username)
+            );
+
+        const data =
+            await response.json();
+
+        if (
+            !response.ok ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data.error ||
+                "TikTok lookup failed"
+            );
+
+        }
+
+        const profile =
+            data.profile || data.data || data;
+
+        status.textContent = "COMPLETE";
+
+        const followers =
+            profile.followers ??
+            profile.followerCount ??
+            profile.fans ??
+            null;
+
+        const following =
+            profile.following ??
+            profile.followingCount ??
+            null;
+
+        const likes =
+            profile.likes ??
+            profile.heartCount ??
+            profile.totalLikes ??
+            null;
+
+        const videos =
+            profile.videos ??
+            profile.videoCount ??
+            null;
+
+        const country =
+            profile.country ||
+            profile.region ||
+            profile.location ||
+            profile.countryCode ||
+            "Unknown";
+
+        const nickname =
+            profile.nickname ||
+            profile.displayName ||
+            profile.name ||
+            username;
+
+        const bio =
+            profile.bio ||
+            profile.signature ||
+            profile.description ||
+            "-";
+
+        const verified =
+            profile.verified === true ||
+            profile.isVerified === true
+                ? "Yes"
+                : profile.verified === false
+                ? "No"
+                : "Unknown";
+
+        const privateAcc =
+            profile.private === true ||
+            profile.isPrivate === true
+                ? "Yes"
+                : profile.private === false
+                ? "No"
+                : "Unknown";
+
+        output.innerHTML = `
+
+            <div class="result-card found">
+
+                <div class="result-title">
+
+                    @${escapeHTML(username)}
+
+                    <span class="badge pink">
+                        FOUND
+                    </span>
+
+                </div>
+
+                <div class="fame-grid">
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Username
+                        </div>
+
+                        <div class="fame-value">
+@${escapeHTML(username)}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Display Name
+                        </div>
+
+                        <div class="fame-value">
+${escapeHTML(nickname)}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Country / Region
+                        </div>
+
+                        <div class="fame-value">
+${escapeHTML(String(country))}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Verified
+                        </div>
+
+                        <div class="fame-value">
+${escapeHTML(verified)}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Followers
+                        </div>
+
+                        <div class="fame-value">
+${followers != null ? escapeHTML(formatNumber(followers)) : "-"}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Following
+                        </div>
+
+                        <div class="fame-value">
+${following != null ? escapeHTML(formatNumber(following)) : "-"}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Total Likes
+                        </div>
+
+                        <div class="fame-value">
+${likes != null ? escapeHTML(formatNumber(likes)) : "-"}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Videos
+                        </div>
+
+                        <div class="fame-value">
+${videos != null ? escapeHTML(formatNumber(videos)) : "-"}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field">
+
+                        <div class="fame-label">
+                            Private Account
+                        </div>
+
+                        <div class="fame-value">
+${escapeHTML(privateAcc)}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field full">
+
+                        <div class="fame-label">
+                            Bio
+                        </div>
+
+                        <div class="fame-value">
+${escapeHTML(bio)}
+                        </div>
+
+                    </div>
+
+                    <div class="fame-field full">
+
+                        <div class="fame-label">
+                            Profile Link
+                        </div>
+
+                        <div class="fame-value">
+https://www.tiktok.com/@${escapeHTML(username)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    } catch (error) {
+
+        status.textContent = "ERROR";
+
+        output.innerHTML = `
+
+            <div class="result-card">
+
+                <div class="result-title">
+                    TikTok Lookup Failed
+                </div>
+
+                <div class="result-content">
+${escapeHTML(error.message)}
+
+Make sure your backend has /api/tiktok implemented.
+Expected response example:
+{
+  "success": true,
+  "profile": {
+    "username": "example",
+    "nickname": "Example User",
+    "bio": "...",
+    "followers": 12345,
+    "following": 100,
+    "likes": 50000,
+    "videos": 42,
+    "country": "Germany",
+    "verified": false,
+    "private": false
+  }
+}
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+
+/* =========================================================
    ENTER SHORTCUTS
 ========================================================= */
 
@@ -4294,6 +4772,24 @@ document
             ) {
 
                 phoneSearch();
+
+            }
+
+        }
+    );
+
+
+document
+    .getElementById("nameInput")
+    .addEventListener(
+        "keydown",
+        e => {
+
+            if (
+                e.key === "Enter"
+            ) {
+
+                nameSearch();
 
             }
 
