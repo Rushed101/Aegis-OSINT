@@ -4340,36 +4340,22 @@ async function nameSearch() {
             .trim();
 
     const output =
-        document.getElementById(
-            "nameResults"
-        );
+        document.getElementById("nameResults");
 
     const status =
-        document.getElementById(
-            "nameStatus"
-        );
+        document.getElementById("nameStatus");
 
     if (!raw) {
-
         output.innerHTML = `
-
             <div class="empty">
-
-                <div class="empty-icon">
-                    ♪
-                </div>
-
+                <div class="empty-icon">♪</div>
                 Enter a TikTok username.
-
             </div>
-
         `;
-
         return;
-
     }
 
-    // Clean username: remove @, extract from URL
+    // Username sauber machen
     let username = raw
         .replace(/^@/, "")
         .replace(/https?:\/\/(www\.)?tiktok\.com\/@?/i, "")
@@ -4379,373 +4365,111 @@ async function nameSearch() {
         .toLowerCase();
 
     if (!username || username.length < 2) {
-
         output.innerHTML = `
-
             <div class="empty">
                 Please enter a valid TikTok username.
             </div>
-
         `;
-
         return;
-
     }
 
     status.textContent = "SEARCHING";
-
     output.innerHTML = `
-
         <div class="empty">
-            Looking up TikTok profile @${escapeHTML(username)}...
+            Looking up @${escapeHTML(username)}...
         </div>
-
     `;
 
-    let profile = null;
-    let source = "api";
-
-    // 1. Try own backend first
     try {
+        // TikTok oEmbed – öffentliche API, kein Key nötig
+        const url =
+            "https://www.tiktok.com/oembed?url=" +
+            encodeURIComponent("https://www.tiktok.com/@" + username);
 
-        const response =
-            await fetch(
-                "/api/tiktok?username=" +
-                encodeURIComponent(username)
-            );
+        const response = await fetch(url);
 
-        const contentType =
-            response.headers.get("content-type") || "";
-
-        if (
-            contentType.includes("application/json")
-        ) {
-
-            const data =
-                await response.json();
-
-            if (
-                response.ok &&
-                data.success !== false
-            ) {
-
-                profile =
-                    data.profile ||
-                    data.data ||
-                    data;
-
-            }
-
+        if (!response.ok) {
+            throw new Error("Profile not found or private");
         }
 
-    } catch (e) {
-        // Backend not available – continue to fallback
-    }
+        const data = await response.json();
 
-    // 2. Fallback: TikTok oEmbed (public, no key needed)
-    if (!profile) {
+        status.textContent = "COMPLETE";
 
-        try {
+        const nickname = data.author_name || username;
+        const title = data.title || "—";
+        const profileUrl = data.author_url || ("https://www.tiktok.com/@" + username);
+        const thumbnail = data.thumbnail_url || null;
 
-            const oembedUrl =
-                "https://www.tiktok.com/oembed?url=" +
-                encodeURIComponent(
-                    "https://www.tiktok.com/@" + username
-                );
+        output.innerHTML = `
+            <div class="result-card found">
 
-            const oembedRes =
-                await fetch(oembedUrl);
+                <div class="result-title">
+                    @${escapeHTML(username)}
+                    <span class="badge pink">FOUND</span>
+                </div>
 
-            if (oembedRes.ok) {
+                <div class="fame-grid">
 
-                const oembed =
-                    await oembedRes.json();
+                    <div class="fame-field">
+                        <div class="fame-label">Username</div>
+                        <div class="fame-value">@${escapeHTML(username)}</div>
+                    </div>
 
-                profile = {
-                    username: username,
-                    nickname:
-                        oembed.author_name ||
-                        username,
-                    bio:
-                        oembed.title ||
-                        "-",
-                    thumbnail:
-                        oembed.thumbnail_url ||
-                        null,
-                    author_url:
-                        oembed.author_url ||
-                        "https://www.tiktok.com/@" + username,
-                    // oEmbed does not provide country / followers
-                    country: "Not available via public endpoint",
-                    followers: null,
-                    following: null,
-                    likes: null,
-                    videos: null,
-                    verified: null,
-                    private: null
-                };
+                    <div class="fame-field">
+                        <div class="fame-label">Display Name</div>
+                        <div class="fame-value">${escapeHTML(nickname)}</div>
+                    </div>
 
-                source = "oembed";
+                    <div class="fame-field full">
+                        <div class="fame-label">Title / Bio</div>
+                        <div class="fame-value">${escapeHTML(title)}</div>
+                    </div>
 
-            }
+                    <div class="fame-field full">
+                        <div class="fame-label">Profile Link</div>
+                        <div class="fame-value">
+                            <a href="${escapeHTML(profileUrl)}" target="_blank" style="color:var(--pink2);text-decoration:none;">
+                                ${escapeHTML(profileUrl)}
+                            </a>
+                        </div>
+                    </div>
 
-        } catch (e) {
-            // oEmbed also failed
-        }
+                    ${thumbnail ? `
+                    <div class="fame-field full">
+                        <div class="fame-label">Thumbnail</div>
+                        <div class="fame-value">
+                            <img src="${escapeHTML(thumbnail)}" alt="thumbnail" style="max-width:120px;border-radius:8px;margin-top:6px;">
+                        </div>
+                    </div>
+                    ` : ""}
 
-    }
+                    <div class="fame-field full">
+                        <div class="fame-label">Note</div>
+                        <div class="fame-value">
+                            Public data via TikTok oEmbed.<br>
+                            Country, Followers, Likes etc. are not available through the free public API.
+                        </div>
+                    </div>
 
-    // 3. Show results or error
-    if (!profile) {
+                </div>
+            </div>
+        `;
 
+    } catch (error) {
         status.textContent = "ERROR";
 
         output.innerHTML = `
-
             <div class="result-card">
-
-                <div class="result-title">
-                    TikTok Lookup Failed
-                </div>
-
+                <div class="result-title">TikTok Lookup Failed</div>
                 <div class="result-content">
-Could not load public data for @${escapeHTML(username)}.
+${escapeHTML(error.message)}
 
-Possible reasons:
-• Account does not exist or is private
-• Backend /api/tiktok is not implemented yet
-• Network / CORS restriction
-
-Tip: Implement /api/tiktok on your server for full data
-(country, followers, likes, etc.).
+Account existiert nicht, ist privat oder TikTok blockiert die Anfrage.
                 </div>
-
             </div>
-
         `;
-
-        return;
-
     }
-
-    status.textContent = "COMPLETE";
-
-    const followers =
-        profile.followers ??
-        profile.followerCount ??
-        profile.fans ??
-        null;
-
-    const following =
-        profile.following ??
-        profile.followingCount ??
-        null;
-
-    const likes =
-        profile.likes ??
-        profile.heartCount ??
-        profile.totalLikes ??
-        null;
-
-    const videos =
-        profile.videos ??
-        profile.videoCount ??
-        null;
-
-    const country =
-        profile.country ||
-        profile.region ||
-        profile.location ||
-        profile.countryCode ||
-        "Unknown";
-
-    const nickname =
-        profile.nickname ||
-        profile.displayName ||
-        profile.name ||
-        username;
-
-    const bio =
-        profile.bio ||
-        profile.signature ||
-        profile.description ||
-        "-";
-
-    const verified =
-        profile.verified === true ||
-        profile.isVerified === true
-            ? "Yes"
-            : profile.verified === false
-            ? "No"
-            : "Unknown";
-
-    const privateAcc =
-        profile.private === true ||
-        profile.isPrivate === true
-            ? "Yes"
-            : profile.private === false
-            ? "No"
-            : "Unknown";
-
-    const badgeText =
-        source === "oembed"
-            ? "PUBLIC"
-            : "FOUND";
-
-    output.innerHTML = `
-
-        <div class="result-card found">
-
-            <div class="result-title">
-
-                @${escapeHTML(username)}
-
-                <span class="badge pink">
-                    ${badgeText}
-                </span>
-
-            </div>
-
-            <div class="fame-grid">
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Username
-                    </div>
-
-                    <div class="fame-value">
-@${escapeHTML(username)}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Display Name
-                    </div>
-
-                    <div class="fame-value">
-${escapeHTML(nickname)}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Country / Region
-                    </div>
-
-                    <div class="fame-value">
-${escapeHTML(String(country))}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Verified
-                    </div>
-
-                    <div class="fame-value">
-${escapeHTML(verified)}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Followers
-                    </div>
-
-                    <div class="fame-value">
-${followers != null ? escapeHTML(formatNumber(followers)) : "—"}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Following
-                    </div>
-
-                    <div class="fame-value">
-${following != null ? escapeHTML(formatNumber(following)) : "—"}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Total Likes
-                    </div>
-
-                    <div class="fame-value">
-${likes != null ? escapeHTML(formatNumber(likes)) : "—"}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Videos
-                    </div>
-
-                    <div class="fame-value">
-${videos != null ? escapeHTML(formatNumber(videos)) : "—"}
-                    </div>
-
-                </div>
-
-                <div class="fame-field">
-
-                    <div class="fame-label">
-                        Private Account
-                    </div>
-
-                    <div class="fame-value">
-${escapeHTML(privateAcc)}
-                    </div>
-
-                </div>
-
-                <div class="fame-field full">
-
-                    <div class="fame-label">
-                        Bio / Title
-                    </div>
-
-                    <div class="fame-value">
-${escapeHTML(bio)}
-                    </div>
-
-                </div>
-
-                <div class="fame-field full">
-
-                    <div class="fame-label">
-                        Profile Link
-                    </div>
-
-                    <div class="fame-value">
-https://www.tiktok.com/@${escapeHTML(username)}
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    `;
-
 }
 
 
