@@ -94,6 +94,219 @@ body {
     z-index: 2;
 
     min-height: 100vh;
+    display: none;
+}
+
+.app.visible {
+    display: block;
+}
+
+
+/* =========================================================
+   LOGIN / KEY SYSTEM
+========================================================= */
+
+.login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            rgba(255,40,160,.12),
+            transparent 45%
+        ),
+        radial-gradient(
+            circle at 80% 80%,
+            rgba(130,40,255,.08),
+            transparent 40%
+        ),
+        #020204;
+}
+
+.login-screen.hidden {
+    display: none;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 380px;
+    padding: 36px 32px 32px;
+
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(14,12,18,.95),
+            rgba(6,5,9,.97)
+        );
+
+    box-shadow:
+        0 0 0 1px rgba(255,55,170,.06),
+        0 30px 80px rgba(0,0,0,.55),
+        0 0 60px rgba(255,55,170,.08);
+
+    backdrop-filter: blur(24px);
+}
+
+.login-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.login-logo-mark {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 11px;
+    overflow: hidden;
+    box-shadow: 0 0 28px rgba(255,50,170,.3);
+    background: rgba(255,55,170,.1);
+}
+
+.login-logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.login-logo-text {
+    font-size: 20px;
+    font-weight: 750;
+    letter-spacing: -.5px;
+}
+
+.login-logo-text span {
+    color: var(--pink);
+}
+
+.login-title {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    color: #e8e2ea;
+}
+
+.login-subtitle {
+    text-align: center;
+    margin-bottom: 26px;
+    font-size: 9px;
+    color: #5c5660;
+    letter-spacing: .4px;
+}
+
+.login-field {
+    margin-bottom: 14px;
+}
+
+.login-label {
+    display: block;
+    margin-bottom: 6px;
+    padding-left: 2px;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #4f4a52;
+}
+
+.login-input {
+    width: 100%;
+    height: 42px;
+    padding: 0 14px;
+
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 9px;
+
+    background: rgba(0,0,0,.35);
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 12px;
+    outline: none;
+
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+.login-input::placeholder {
+    color: #4a444e;
+}
+
+.login-input:focus {
+    border-color: rgba(255,55,170,.45);
+    box-shadow: 0 0 0 3px rgba(255,55,170,.08);
+}
+
+.login-btn {
+    width: 100%;
+    height: 44px;
+    margin-top: 8px;
+
+    border: 0;
+    border-radius: 9px;
+
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: .8px;
+    cursor: pointer;
+
+    box-shadow: 0 10px 30px rgba(255,55,170,.18);
+    transition: transform .15s ease, filter .15s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-error {
+    display: none;
+    margin-top: 14px;
+    padding: 10px 12px;
+
+    border: 1px solid rgba(255,60,100,.25);
+    border-radius: 8px;
+    background: rgba(255,40,80,.06);
+
+    color: #ff6b9a;
+    font-size: 10px;
+    text-align: center;
+    letter-spacing: .3px;
+}
+
+.login-error.visible {
+    display: block;
+}
+
+.login-footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 8px;
+    color: #3d3840;
+    letter-spacing: .6px;
 }
 
 
@@ -1148,308 +1361,6 @@ body {
 
 
 /* =========================================================
-   INFO PAGE
-========================================================= */
-
-.info-update {
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 14px;
-
-    margin-bottom: 10px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.055);
-
-    border-radius: 9px;
-
-    background:
-        rgba(0,0,0,.18);
-}
-
-.info-update-title {
-    color: var(--pink2);
-
-    font-size: 8px;
-
-    font-weight: 800;
-
-    letter-spacing: 1.3px;
-}
-
-.info-update-text {
-    margin-top: 5px;
-
-    color: #625d66;
-
-    font-size: 8px;
-}
-
-.info-live {
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    color: var(--green);
-
-    font-size: 7px;
-
-    letter-spacing: 1px;
-}
-
-
-.stats-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 8px;
-
-    margin-bottom: 10px;
-}
-
-.stat-card {
-    padding: 17px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.055);
-
-    border-radius: 10px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(18,15,24,.9),
-            rgba(7,6,10,.9)
-        );
-
-    transition: .2s ease;
-}
-
-.stat-card:hover {
-    border-color:
-        rgba(255,55,170,.18);
-
-    transform:
-        translateY(-1px);
-}
-
-.stat-number {
-    color: #f3eef5;
-
-    font-size: 25px;
-
-    font-weight: 750;
-
-    letter-spacing: -1px;
-}
-
-.stat-label {
-    margin-top: 7px;
-
-    color: var(--pink2);
-
-    font-size: 7px;
-
-    font-weight: 800;
-
-    letter-spacing: 1.1px;
-}
-
-.stat-description {
-    margin-top: 5px;
-
-    color: #55505a;
-
-    font-size: 7px;
-}
-
-
-.weekly-panel {
-    padding: 17px;
-
-    border:
-        1px solid
-        rgba(255,255,255,.055);
-
-    border-radius: 10px;
-
-    background:
-        rgba(0,0,0,.18);
-}
-
-.weekly-header {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 16px;
-}
-
-.weekly-title {
-    color: #d8d2dc;
-
-    font-size: 9px;
-
-    font-weight: 800;
-
-    letter-spacing: 1px;
-}
-
-.weekly-subtitle {
-    margin-top: 4px;
-
-    color: #514c55;
-
-    font-size: 7px;
-}
-
-.last-update {
-    color: #625c66;
-
-    font-family: monospace;
-
-    font-size: 7px;
-}
-
-
-.weekly-chart {
-    display: grid;
-
-    grid-template-columns:
-        repeat(7, 1fr);
-
-    align-items: end;
-
-    gap: 9px;
-
-    height: 210px;
-
-    padding:
-        20px 5px 0;
-}
-
-.chart-day {
-    height: 100%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    justify-content: flex-end;
-
-    align-items: center;
-
-    gap: 8px;
-}
-
-.chart-value {
-    color: #817a86;
-
-    font-family: monospace;
-
-    font-size: 7px;
-}
-
-.chart-bar-container {
-    width: 100%;
-
-    max-width: 45px;
-
-    height: 155px;
-
-    display: flex;
-
-    align-items: flex-end;
-
-    border-radius: 6px;
-
-    background:
-        rgba(255,255,255,.018);
-
-    overflow: hidden;
-}
-
-.chart-bar {
-    width: 100%;
-
-    min-height: 3px;
-
-    border-radius:
-        6px 6px 0 0;
-
-    background:
-        linear-gradient(
-            180deg,
-            var(--pink2),
-            var(--purple)
-        );
-
-    box-shadow:
-        0 0 20px
-        rgba(255,55,170,.12);
-
-    transition:
-        height .5s ease;
-}
-
-.chart-label {
-    color: #514c55;
-
-    font-family: monospace;
-
-    font-size: 7px;
-}
-
-.chart-empty {
-    grid-column:
-        1 / -1;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    color: #514c55;
-
-    font-size: 8px;
-}
-
-
-.info-footer {
-    display: flex;
-
-    justify-content: space-between;
-
-    margin-top: 10px;
-
-    padding:
-        11px 3px;
-
-    color: #464149;
-
-    font-size: 7px;
-
-    letter-spacing: .5px;
-}
-
-.info-footer span:first-child {
-    color: var(--pink);
-}
-
-
-/* =========================================================
    PAGES
 ========================================================= */
 
@@ -1465,15 +1376,6 @@ body {
 /* =========================================================
    RESPONSIVE
 ========================================================= */
-
-@media(max-width: 900px) {
-
-    .stats-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-    }
-
-}
 
 @media(max-width: 800px) {
 
@@ -1542,26 +1444,9 @@ body {
         gap: 8px;
     }
 
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .info-update {
-        align-items: flex-start;
-
-        gap: 12px;
-
-        flex-direction: column;
-    }
-
-    .weekly-chart {
-        gap: 4px;
-    }
-
-    .info-footer {
-        flex-direction: column;
-
-        gap: 5px;
+    .login-box {
+        margin: 0 16px;
+        padding: 28px 22px 24px;
     }
 
 }
@@ -1575,7 +1460,68 @@ body {
 
 <div class="noise"></div>
 
-<div class="app">
+
+<!-- =====================================================
+     LOGIN / KEY SYSTEM
+===================================================== -->
+
+<div class="login-screen" id="loginScreen">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            <div class="login-logo-mark">
+                <img src="images/5.png" alt="Aegis">
+            </div>
+            <div class="login-logo-text">
+                Aegis <span>OSINT</span>
+            </div>
+        </div>
+
+        <div class="login-title">ACCESS CONTROL</div>
+        <div class="login-subtitle">Enter credentials to continue</div>
+
+        <div class="login-field">
+            <label class="login-label" for="loginUser">Username</label>
+            <input
+                class="login-input"
+                id="loginUser"
+                type="text"
+                placeholder="Username"
+                autocomplete="off"
+                spellcheck="false"
+            >
+        </div>
+
+        <div class="login-field">
+            <label class="login-label" for="loginPass">Password</label>
+            <input
+                class="login-input"
+                id="loginPass"
+                type="password"
+                placeholder="Password"
+                autocomplete="off"
+            >
+        </div>
+
+        <button class="login-btn" onclick="attemptLogin()">
+            AUTHENTICATE
+        </button>
+
+        <div class="login-error" id="loginError">
+            Access denied. Invalid credentials.
+        </div>
+
+        <div class="login-footer">
+            AUTHORIZED PERSONNEL ONLY
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="app" id="mainApp">
 
 
 <!-- =====================================================
@@ -1711,22 +1657,6 @@ body {
 
             <span>
                 TikTok Lookup
-            </span>
-
-        </button>
-
-
-        <button
-            class="nav-item"
-            onclick="switchPage('info', this)"
-        >
-
-            <div class="nav-icon">
-                ⓘ
-            </div>
-
-            <span>
-                Info
             </span>
 
         </button>
@@ -2496,209 +2426,6 @@ body {
 </div>
 
 
-<!-- =====================================================
-     INFO
-===================================================== -->
-
-<div
-    id="page-info"
-    class="page"
->
-
-    <div class="panel-head">
-
-        <div class="panel-head-left">
-
-            <div class="panel-symbol">
-                ⓘ
-            </div>
-
-            <div>
-
-                <h2>
-                    Platform Information
-                </h2>
-
-                <p>
-                    Live statistics from Aegis
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="panel-tag">
-            LIVE
-        </div>
-
-    </div>
-
-
-    <div class="info-update">
-
-        <div>
-
-            <div class="info-update-title">
-                STATISTICS
-            </div>
-
-            <div class="info-update-text">
-                Statistics are automatically updated every 5 minutes.
-            </div>
-
-        </div>
-
-        <div class="info-live">
-
-            <div class="dot"></div>
-
-            LIVE
-
-        </div>
-
-    </div>
-
-
-    <div class="stats-grid">
-
-
-        <div class="stat-card">
-
-            <div
-                class="stat-number"
-                id="statVisitors"
-            >
-                —
-            </div>
-
-            <div class="stat-label">
-                UNIQUE VISITORS
-            </div>
-
-            <div class="stat-description">
-                Visitors during the last 7 days
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div
-                class="stat-number"
-                id="statVisits"
-            >
-                —
-            </div>
-
-            <div class="stat-label">
-                TOTAL VISITS
-            </div>
-
-            <div class="stat-description">
-                Total visits during the last 7 days
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div
-                class="stat-number"
-                id="statSearches"
-            >
-                —
-            </div>
-
-            <div class="stat-label">
-                SEARCHES
-            </div>
-
-            <div class="stat-description">
-                Searches during the last 7 days
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div
-                class="stat-number"
-                id="statRecords"
-            >
-                —
-            </div>
-
-            <div class="stat-label">
-                RECORDS
-            </div>
-
-            <div class="stat-description">
-                Records currently available
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="weekly-panel">
-
-        <div class="weekly-header">
-
-            <div>
-
-                <div class="weekly-title">
-                    LAST 7 DAYS
-                </div>
-
-                <div class="weekly-subtitle">
-                    Visitor activity
-                </div>
-
-            </div>
-
-            <div
-                class="last-update"
-                id="statsUpdated"
-            >
-                Updating...
-            </div>
-
-        </div>
-
-
-        <div
-            class="weekly-chart"
-            id="weeklyChart"
-        >
-
-            <div class="chart-empty">
-                Loading statistics...
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <div class="info-footer">
-
-        <span>
-            AEGIS OSINT
-        </span>
-
-        <span>
-            Statistics update automatically every 5 minutes.
-        </span>
-
-    </div>
-
-</div>
-
-
 </section>
 
 </div>
@@ -2709,6 +2436,55 @@ body {
 
 
 <script>
+
+
+/* =========================================================
+   KEY SYSTEM
+========================================================= */
+
+const VALID_USER = "Databreach";
+const VALID_PASS = "DatabreachHasAccess";
+
+function attemptLogin() {
+    const user = document.getElementById("loginUser").value.trim();
+    const pass = document.getElementById("loginPass").value;
+    const errorEl = document.getElementById("loginError");
+
+    if (user === VALID_USER && pass === VALID_PASS) {
+        sessionStorage.setItem("aegis_auth", "1");
+        showApp();
+        errorEl.classList.remove("visible");
+    } else {
+        errorEl.classList.add("visible");
+        document.getElementById("loginPass").value = "";
+        document.getElementById("loginPass").focus();
+    }
+}
+
+function showApp() {
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("mainApp").classList.add("visible");
+}
+
+function checkAuth() {
+    if (sessionStorage.getItem("aegis_auth") === "1") {
+        showApp();
+    }
+}
+
+document.getElementById("loginUser").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        document.getElementById("loginPass").focus();
+    }
+});
+
+document.getElementById("loginPass").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+        attemptLogin();
+    }
+});
+
+checkAuth();
 
 
 /* =========================================================
@@ -2996,20 +2772,6 @@ const pageInfo = {
         crumb:
             "TIKTOK"
 
-    },
-
-
-    info: {
-
-        title:
-            "Info",
-
-        description:
-            "Live statistics and platform information.",
-
-        crumb:
-            "INFO"
-
     }
 
 };
@@ -3096,13 +2858,6 @@ function switchPage(
     if (page === "base") {
 
         loadBasePage();
-
-    }
-
-
-    if (page === "info") {
-
-        startStatsRefresh();
 
     }
 
@@ -4584,308 +4339,6 @@ document
 
         }
     );
-
-
-
-/* =========================================================
-   LIVE STATISTICS
-========================================================= */
-
-let statsRefreshTimer = null;
-
-
-async function loadStats() {
-
-    const visitors =
-        document.getElementById(
-            "statVisitors"
-        );
-
-    const visits =
-        document.getElementById(
-            "statVisits"
-        );
-
-    const searches =
-        document.getElementById(
-            "statSearches"
-        );
-
-    const records =
-        document.getElementById(
-            "statRecords"
-        );
-
-    const updated =
-        document.getElementById(
-            "statsUpdated"
-        );
-
-    const chart =
-        document.getElementById(
-            "weeklyChart"
-        );
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/stats",
-                {
-                    cache:
-                        "no-store"
-                }
-            );
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            throw new Error(
-                data.error ||
-                "Statistics unavailable"
-            );
-
-        }
-
-
-        visitors.textContent =
-            formatNumber(
-                data.uniqueVisitors7d
-            );
-
-
-        visits.textContent =
-            formatNumber(
-                data.visits7d
-            );
-
-
-        searches.textContent =
-            formatNumber(
-                data.searches7d
-            );
-
-
-        records.textContent =
-            formatNumber(
-                data.totalRecords
-            );
-
-
-        if (
-            data.updatedAt
-        ) {
-
-            const date =
-                new Date(
-                    data.updatedAt
-                );
-
-
-            updated.textContent =
-                "Updated " +
-                date.toLocaleTimeString(
-                    [],
-                    {
-                        hour:
-                            "2-digit",
-
-                        minute:
-                            "2-digit"
-                    }
-                );
-
-        } else {
-
-            updated.textContent =
-                "Updated just now";
-
-        }
-
-
-        const week =
-            Array.isArray(
-                data.week
-            )
-                ? data.week
-                : [];
-
-
-        if (
-            !week.length
-        ) {
-
-            chart.innerHTML = `
-
-                <div class="chart-empty">
-                    No weekly statistics available.
-                </div>
-
-            `;
-
-            return;
-
-        }
-
-
-        const max =
-            Math.max(
-                ...week.map(
-                    item =>
-                        Number(
-                            item.visitors
-                        ) || 0
-                ),
-                1
-            );
-
-
-        chart.innerHTML =
-            week.map(
-                item => {
-
-                    const value =
-                        Number(
-                            item.visitors
-                        ) || 0;
-
-
-                    const height =
-                        Math.max(
-                            3,
-                            (
-                                value /
-                                max
-                            ) * 100
-                        );
-
-
-                    return `
-
-                        <div class="chart-day">
-
-                            <div class="chart-value">
-                                ${formatNumber(
-                                    value
-                                )}
-                            </div>
-
-                            <div class="chart-bar-container">
-
-                                <div
-                                    class="chart-bar"
-                                    style="height:${height}%"
-                                ></div>
-
-                            </div>
-
-                            <div class="chart-label">
-                                ${escapeHTML(
-                                    item.day || "-"
-                                )}
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            ).join("");
-
-
-    } catch (error) {
-
-        visitors.textContent =
-            "—";
-
-        visits.textContent =
-            "—";
-
-        searches.textContent =
-            "—";
-
-        records.textContent =
-            "—";
-
-
-        updated.textContent =
-            "Statistics unavailable";
-
-
-        chart.innerHTML = `
-
-            <div class="chart-empty">
-                Could not load statistics.
-            </div>
-
-        `;
-
-
-        console.error(
-            "Stats error:",
-            error
-        );
-
-    }
-
-}
-
-
-function formatNumber(value) {
-
-    const number =
-        Number(value);
-
-
-    if (
-        !Number.isFinite(
-            number
-        )
-    ) {
-
-        return "—";
-
-    }
-
-
-    return number.toLocaleString(
-        "en-US"
-    );
-
-}
-
-
-function startStatsRefresh() {
-
-    if (
-        statsRefreshTimer
-    ) {
-
-        clearInterval(
-            statsRefreshTimer
-        );
-
-    }
-
-
-    loadStats();
-
-
-    statsRefreshTimer =
-        setInterval(
-            loadStats,
-            5 * 60 * 1000
-        );
-
-}
 
 
 
