@@ -4669,9 +4669,14 @@ async function loadLogs() {
         // fall through to local
     }
 
-    // 2) Local fallback (always works in this browser)
-    const localLogs = readLocalLogs().slice().reverse();
-    renderLogs(localLogs, output);
+    // Do not use browser-local logs here.
+    // The Logs tab is admin-only and must show the shared server log
+    // containing logins from every user/device.
+    output.innerHTML = `
+        <div class="empty">
+            No shared login logs are available from the server.
+        </div>
+    `;
 
 }
 
@@ -4715,4 +4720,4 @@ function escapeHTML(value) {
 </script>
 
 </body>
-</html
+</ht
