@@ -3,7 +3,7 @@ const https = require("https");
 // =====================================================
 // OSINTDOG API KEY
 // =====================================================
-const API_KEY = "YOUR_API_KEY_HERE";
+const API_KEY = "j9l9nmt7l_j7DU-xUvo4FPYTU-1OACk-JRTNouhYims";
 
 // =====================================================
 // VIP SEARCH (OSINTDog)
