@@ -576,6 +576,28 @@ body {
         rgba(87,230,160,.8);
 }
 
+.logout-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 8px;
+    background: rgba(255,255,255,.018);
+    color: #77717b;
+    font-family: inherit;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .7px;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.logout-btn:hover {
+    color: #fff;
+    border-color: rgba(255,55,170,.3);
+    background: rgba(255,55,170,.05);
+}
+
 
 /* =========================================================
    MAIN
@@ -1708,6 +1730,10 @@ body {
 
         </div>
 
+        <button class="logout-btn" type="button" onclick="logoutUser()">
+            LOG OUT
+        </button>
+
     </div>
 
 </aside>
@@ -2614,6 +2640,20 @@ function clearDeviceSession() {
     localStorage.removeItem("aegis_auth_at");
     sessionStorage.removeItem("aegis_auth");
     sessionStorage.removeItem("aegis_auth_user");
+}
+
+function logoutUser() {
+    clearDeviceSession();
+    currentUser = null;
+
+    document.getElementById("mainApp").classList.remove("visible");
+    document.getElementById("loginScreen").classList.remove("hidden");
+
+    document.getElementById("loginUser").value = "";
+    document.getElementById("loginPass").value = "";
+    document.getElementById("loginError").classList.remove("visible");
+
+    document.getElementById("loginUser").focus();
 }
 
 function isTrustedDevice() {
@@ -4675,4 +4715,4 @@ function escapeHTML(value) {
 </script>
 
 </body>
-</html>
+</html
