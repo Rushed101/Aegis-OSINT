@@ -1661,6 +1661,24 @@ body {
 
         </button>
 
+
+        <button
+            class="nav-item"
+            id="navLogs"
+            style="display:none;"
+            onclick="switchPage('logs', this)"
+        >
+
+            <div class="nav-icon">
+                ▣
+            </div>
+
+            <span>
+                Logs
+            </span>
+
+        </button>
+
     </nav>
 
 
@@ -2426,6 +2444,88 @@ body {
 </div>
 
 
+<!-- =====================================================
+     LOGS (Databreach only)
+===================================================== -->
+
+<div
+    id="page-logs"
+    class="page"
+>
+
+    <div class="panel-head">
+
+        <div class="panel-head-left">
+
+            <div class="panel-symbol">
+                ▣
+            </div>
+
+            <div>
+
+                <h2>
+                    Login Logs
+                </h2>
+
+                <p>
+                    Account logins with IP &amp; device ID
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="panel-tag">
+            ADMIN
+        </div>
+
+    </div>
+
+
+    <div class="base-info">
+
+        <div>
+
+            <strong>
+                Access log
+            </strong>
+
+            <span>
+                Visible only for Databreach
+            </span>
+
+        </div>
+
+        <div>
+
+            <button
+                class="page-btn"
+                onclick="loadLogs()"
+                type="button"
+            >
+                Refresh
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="logsResults"
+        class="base-results"
+        style="height:420px;"
+    >
+
+        <div class="empty">
+            Loading logs...
+        </div>
+
+    </div>
+
+</div>
+
+
 </section>
 
 </div>
@@ -2439,7 +2539,7 @@ body {
 
 
 /* =========================================================
-   KEY SYSTEM
+   KEY SYSTEM + DEVICE MEMORY
 ========================================================= */
 
 const VALID_ACCOUNTS = [
@@ -2447,7 +2547,142 @@ const VALID_ACCOUNTS = [
     { user: "charlikirk", pass: "charlikirk" }
 ];
 
-function attemptLogin() {
+let currentUser = null;
+
+function getOrCreateHWID() {
+    const key = "aegis_hwid";
+    let hwid = localStorage.getItem(key);
+
+    if (hwid && hwid.length > 8) {
+        return hwid;
+    }
+
+    const raw = [
+        navigator.userAgent || "",
+        navigator.language || "",
+        screen.width + "x" + screen.height,
+        screen.colorDepth || "",
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+        navigator.hardwareConcurrency || "",
+        navigator.platform || ""
+    ].join("|");
+
+    let hash = 0;
+    for (let i = 0; i < raw.length; i++) {
+        hash = ((hash << 5) - hash) + raw.charCodeAt(i);
+        hash |= 0;
+    }
+
+    const rand = (
+        crypto.randomUUID
+            ? crypto.randomUUID().replace(/-/g, "")
+            : (Date.now().toString(36) + Math.random().toString(36).slice(2))
+    );
+
+    hwid = "HWID-" + Math.abs(hash).toString(16) + "-" + rand.slice(0, 16);
+    localStorage.setItem(key, hwid);
+    return hwid;
+}
+
+async function getClientIP() {
+    try {
+        const res = await fetch("https://api.ipify.org?format=json", {
+            cache: "no-store"
+        });
+        const data = await res.json();
+        return data.ip || "unknown";
+    } catch (_) {
+        return "unknown";
+    }
+}
+
+function saveDeviceSession(user, hwid, ip) {
+    localStorage.setItem("aegis_auth", "1");
+    localStorage.setItem("aegis_auth_user", user);
+    localStorage.setItem("aegis_auth_hwid", hwid);
+    localStorage.setItem("aegis_auth_ip", ip || "");
+    localStorage.setItem("aegis_auth_at", String(Date.now()));
+    sessionStorage.setItem("aegis_auth", "1");
+    sessionStorage.setItem("aegis_auth_user", user);
+}
+
+function clearDeviceSession() {
+    localStorage.removeItem("aegis_auth");
+    localStorage.removeItem("aegis_auth_user");
+    localStorage.removeItem("aegis_auth_hwid");
+    localStorage.removeItem("aegis_auth_ip");
+    localStorage.removeItem("aegis_auth_at");
+    sessionStorage.removeItem("aegis_auth");
+    sessionStorage.removeItem("aegis_auth_user");
+}
+
+function isTrustedDevice() {
+    if (localStorage.getItem("aegis_auth") !== "1") {
+        return false;
+    }
+
+    const savedHwid = localStorage.getItem("aegis_auth_hwid");
+    const savedUser = localStorage.getItem("aegis_auth_user");
+    const currentHwid = getOrCreateHWID();
+
+    if (!savedHwid || !savedUser) {
+        return false;
+    }
+
+    if (savedHwid !== currentHwid) {
+        return false;
+    }
+
+    const known = VALID_ACCOUNTS.some(a => a.user === savedUser);
+    return known;
+}
+
+async function recordLogin(user, hwid, ip) {
+    const entry = {
+        user: user,
+        ip: ip || "unknown",
+        hwid: hwid,
+        userAgent: navigator.userAgent || "",
+        at: new Date().toISOString()
+    };
+
+    try {
+        await fetch("/api/logs", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(entry)
+        });
+    } catch (_) {
+        // backend optional – ignore network errors
+    }
+}
+
+function updateLogsNav() {
+    const nav = document.getElementById("navLogs");
+    if (!nav) return;
+
+    if (currentUser === "Databreach") {
+        nav.style.display = "";
+    } else {
+        nav.style.display = "none";
+    }
+}
+
+function showApp(user) {
+    currentUser = user || localStorage.getItem("aegis_auth_user") || "Operator";
+    document.getElementById("loginScreen").classList.add("hidden");
+    document.getElementById("mainApp").classList.add("visible");
+    updateLogsNav();
+
+    const profileName = document.querySelector(".profile-name");
+    if (profileName) {
+        profileName.textContent = currentUser;
+    }
+}
+
+async function attemptLogin() {
     const user = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value;
     const errorEl = document.getElementById("loginError");
@@ -2456,25 +2691,37 @@ function attemptLogin() {
         account => account.user === user && account.pass === pass
     );
 
-    if (ok) {
-        sessionStorage.setItem("aegis_auth", "1");
-        showApp();
-        errorEl.classList.remove("visible");
-    } else {
+    if (!ok) {
         errorEl.classList.add("visible");
         document.getElementById("loginPass").value = "";
         document.getElementById("loginPass").focus();
+        return;
     }
+
+    errorEl.classList.remove("visible");
+
+    const hwid = getOrCreateHWID();
+    const ip = await getClientIP();
+
+    saveDeviceSession(user, hwid, ip);
+    await recordLogin(user, hwid, ip);
+    showApp(user);
 }
 
-function showApp() {
-    document.getElementById("loginScreen").classList.add("hidden");
-    document.getElementById("mainApp").classList.add("visible");
-}
+async function checkAuth() {
+    if (isTrustedDevice()) {
+        const user = localStorage.getItem("aegis_auth_user");
+        sessionStorage.setItem("aegis_auth", "1");
+        sessionStorage.setItem("aegis_auth_user", user);
+        showApp(user);
+        return;
+    }
 
-function checkAuth() {
     if (sessionStorage.getItem("aegis_auth") === "1") {
-        showApp();
+        const user = sessionStorage.getItem("aegis_auth_user");
+        if (user) {
+            showApp(user);
+        }
     }
 }
 
@@ -2778,6 +3025,20 @@ const pageInfo = {
         crumb:
             "TIKTOK"
 
+    },
+
+
+    logs: {
+
+        title:
+            "Login Logs",
+
+        description:
+            "Account logins with IP and device ID.",
+
+        crumb:
+            "LOGS"
+
     }
 
 };
@@ -2864,6 +3125,18 @@ function switchPage(
     if (page === "base") {
 
         loadBasePage();
+
+    }
+
+
+    if (page === "logs") {
+
+        if (currentUser !== "Databreach") {
+            switchPage("databreach", document.querySelector(".nav-item"));
+            return;
+        }
+
+        loadLogs();
 
     }
 
@@ -4256,6 +4529,96 @@ bindEnter("ipInput", ipSearch);
 bindEnter("emailInput", emailSearch);
 bindEnter("phoneInput", phoneSearch);
 bindEnter("nameInput", nameSearch);
+
+
+
+/* =========================================================
+   LOGIN LOGS (Databreach only)
+========================================================= */
+
+async function loadLogs() {
+
+    const output = document.getElementById("logsResults");
+
+    if (!output) return;
+
+    if (currentUser !== "Databreach") {
+        output.innerHTML = `
+            <div class="empty">
+                Access denied.
+            </div>
+        `;
+        return;
+    }
+
+    output.innerHTML = `
+        <div class="empty">
+            Loading logs...
+        </div>
+    `;
+
+    try {
+
+        const response = await fetch("/api/logs", {
+            cache: "no-store"
+        });
+
+        const raw = await response.text();
+        let data;
+
+        try {
+            data = JSON.parse(raw);
+        } catch (_) {
+            throw new Error(
+                "Backend /api/logs returned no JSON. Deploy api/logs.js on your server."
+            );
+        }
+
+        if (!response.ok || data.success === false) {
+            throw new Error(
+                data.error || ("HTTP " + response.status)
+            );
+        }
+
+        const logs = Array.isArray(data.logs) ? data.logs : [];
+
+        if (!logs.length) {
+            output.innerHTML = `
+                <div class="empty">
+                    No login events yet.
+                </div>
+            `;
+            return;
+        }
+
+        output.innerHTML = logs.map((entry, index) => {
+            const when = entry.at
+                ? new Date(entry.at).toLocaleString()
+                : "-";
+
+            return `
+                <div class="base-line">
+                    <div class="base-line-number">
+                        ${index + 1}
+                    </div>
+                    <div class="base-line-content">
+${escapeHTML(when)}  |  user=${escapeHTML(entry.user || "-")}  |  ip=${escapeHTML(entry.ip || "-")}  |  hwid=${escapeHTML(entry.hwid || "-")}
+                    </div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (error) {
+
+        output.innerHTML = `
+            <div class="empty">
+                ${escapeHTML(error.message)}
+            </div>
+        `;
+
+    }
+
+}
 
 
 
