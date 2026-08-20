@@ -1661,22 +1661,6 @@ body {
 
         </button>
 
-
-        <button
-            class="nav-item"
-            onclick="switchPage('vip', this)"
-        >
-
-            <div class="nav-icon">
-                ◆
-            </div>
-
-            <span>
-                Vip Search
-            </span>
-
-        </button>
-
     </nav>
 
 
@@ -2442,96 +2426,6 @@ body {
 </div>
 
 
-<!-- =====================================================
-     VIP SEARCH (OSINTDog)
-===================================================== -->
-
-<div
-    id="page-vip"
-    class="page"
->
-
-    <div class="panel-head">
-
-        <div class="panel-head-left">
-
-            <div class="panel-symbol">
-                ◆
-            </div>
-
-            <div>
-
-                <h2>
-                    Vip Search
-                </h2>
-
-                <p>
-                    Multi-source intelligence via OSINTDog
-                </p>
-
-            </div>
-
-        </div>
-
-        <div class="panel-tag">
-            OSINTDOG
-        </div>
-
-    </div>
-
-
-    <div class="search-row">
-
-        <input
-            id="vipInput"
-            type="text"
-            placeholder="Email, username, phone, domain or IP..."
-            autocomplete="off"
-        >
-
-        <button
-            class="search-btn"
-            onclick="vipSearch()"
-        >
-            SEARCH
-        </button>
-
-    </div>
-
-
-    <div class="results-head">
-
-        <span>
-            VIP RESULTS
-        </span>
-
-        <span id="vipStatus">
-            READY
-        </span>
-
-    </div>
-
-
-    <div
-        class="results"
-        id="vipResults"
-    >
-
-        <div class="empty">
-
-            <div class="empty-icon">
-                ◆
-            </div>
-
-            Enter an email, username, phone, domain or IP to search.
-
-        </div>
-
-    </div>
-
-</div>
-
-
 </section>
 
 </div>
@@ -2541,8 +2435,6 @@ body {
 </div>
 
 
-<script src="api/config.js"></script>
-
 <script>
 
 
@@ -2550,20 +2442,21 @@ body {
    KEY SYSTEM
 ========================================================= */
 
-const VALID_USER = "Databreach";
-const VALID_PASS = "DatabreachHasAccess";
-
-/* Fallback if api/config.js failed to load */
-if (typeof OSINTDOG_API_KEY === "undefined") {
-    var OSINTDOG_API_KEY = "YOUR_API_KEY_HERE";
-}
+const VALID_ACCOUNTS = [
+    { user: "Databreach", pass: "DatabreachHasAccess" },
+    { user: "charlikirk", pass: "charlikirk" }
+];
 
 function attemptLogin() {
     const user = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value;
     const errorEl = document.getElementById("loginError");
 
-    if (user === VALID_USER && pass === VALID_PASS) {
+    const ok = VALID_ACCOUNTS.some(
+        account => account.user === user && account.pass === pass
+    );
+
+    if (ok) {
         sessionStorage.setItem("aegis_auth", "1");
         showApp();
         errorEl.classList.remove("visible");
@@ -2884,20 +2777,6 @@ const pageInfo = {
 
         crumb:
             "TIKTOK"
-
-    },
-
-
-    vip: {
-
-        title:
-            "Vip Search",
-
-        description:
-            "Multi-source intelligence via OSINTDog API.",
-
-        crumb:
-            "VIP SEARCH"
 
     }
 
@@ -4357,215 +4236,6 @@ Account existiert nicht, ist privat oder TikTok blockiert die Anfrage.
 
 
 /* =========================================================
-   VIP SEARCH (OSINTDog)
-========================================================= */
-
-function detectVipType(query) {
-    const q = query.trim();
-
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(q)) {
-        return "email";
-    }
-
-    if (/^(\+?\d[\d\s\-().]{6,}\d)$/.test(q.replace(/\s/g, ""))) {
-        return "phone";
-    }
-
-    if (/^(?:\d{1,3}\.){3}\d{1,3}$/.test(q) || q.includes(":")) {
-        return "ip";
-    }
-
-    if (/^[a-z0-9]([a-z0-9\-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9\-]*[a-z0-9])?)+$/i.test(q) && q.includes(".")) {
-        return "domain";
-    }
-
-    return "username";
-}
-
-async function vipSearch() {
-
-    const query =
-        document
-            .getElementById("vipInput")
-            .value
-            .trim();
-
-    const output =
-        document.getElementById("vipResults");
-
-    const status =
-        document.getElementById("vipStatus");
-
-    if (!query) {
-        output.innerHTML = `
-            <div class="empty">
-                <div class="empty-icon">◆</div>
-                Enter a value to search.
-            </div>
-        `;
-        return;
-    }
-
-    status.textContent = "SEARCHING";
-    output.innerHTML = `
-        <div class="empty">
-            Querying OSINTDog sources...
-        </div>
-    `;
-
-    const type = detectVipType(query);
-
-    try {
-
-        const response = await fetch(
-            "/api/vip?q=" + encodeURIComponent(query) + "&type=" + encodeURIComponent(type)
-        );
-
-        const data = await response.json();
-
-        if (!response.ok || data.success === false) {
-            throw new Error(
-                data.error ||
-                data.message ||
-                ("HTTP " + response.status)
-            );
-        }
-
-        status.textContent = "COMPLETE";
-
-        const results = data.results || data;
-        const searchTerm = data.search_term || query;
-        const searchType = data.search_type || type;
-
-        let cards = "";
-
-        // Header card
-        cards += `
-            <div class="result-card found">
-                <div class="result-title">
-                    Search Summary
-                    <span class="badge pink">VIP</span>
-                </div>
-                <div class="fame-grid">
-                    <div class="fame-field">
-                        <div class="fame-label">Query</div>
-                        <div class="fame-value">${escapeHTML(searchTerm)}</div>
-                    </div>
-                    <div class="fame-field">
-                        <div class="fame-label">Type</div>
-                        <div class="fame-value">${escapeHTML(String(searchType).toUpperCase())}</div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // If results is an object with source keys (leakcheck, hackcheck, etc.)
-        if (results && typeof results === "object" && !Array.isArray(results)) {
-
-            const sources = Object.keys(results);
-
-            if (!sources.length) {
-                cards += `
-                    <div class="result-card safe">
-                        <div class="result-title">
-                            No Match
-                            <span class="badge green">NOT FOUND</span>
-                        </div>
-                        <div class="result-content">
-No results returned from OSINTDog sources.
-                        </div>
-                    </div>
-                `;
-            } else {
-                sources.forEach(source => {
-                    const srcData = results[source];
-                    const found =
-                        srcData &&
-                        (srcData.found !== undefined
-                            ? srcData.found
-                            : (Array.isArray(srcData)
-                                ? srcData.length
-                                : (srcData.data
-                                    ? (Array.isArray(srcData.data) ? srcData.data.length : 1)
-                                    : 1)));
-
-                    const hasHits = found > 0 || (srcData && Object.keys(srcData).length > 0 && found !== 0);
-
-                    cards += `
-                        <div class="result-card ${hasHits ? "found" : "safe"}">
-                            <div class="result-title">
-                                ${escapeHTML(source)}
-                                <span class="badge ${hasHits ? "pink" : "green"}">
-                                    ${hasHits ? "MATCH" : "EMPTY"}
-                                </span>
-                            </div>
-                            <div class="result-content">
-${escapeHTML(
-    typeof srcData === "string"
-        ? srcData
-        : JSON.stringify(srcData, null, 2)
-)}
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-        } else if (Array.isArray(results) && results.length) {
-
-            results.forEach((item, index) => {
-                cards += `
-                    <div class="result-card found">
-                        <div class="result-title">
-                            Result #${index + 1}
-                            <span class="badge pink">MATCH</span>
-                        </div>
-                        <div class="result-content">
-${escapeHTML(
-    typeof item === "string"
-        ? item
-        : JSON.stringify(item, null, 2)
-)}
-                        </div>
-                    </div>
-                `;
-            });
-
-        } else {
-            // Fallback: show full response
-            cards += `
-                <div class="result-card found">
-                    <div class="result-title">
-                        Raw Response
-                        <span class="badge pink">DATA</span>
-                    </div>
-                    <div class="result-content">
-${escapeHTML(JSON.stringify(data, null, 2))}
-                    </div>
-                </div>
-            `;
-        }
-
-        output.innerHTML = cards;
-
-    } catch (error) {
-
-        status.textContent = "ERROR";
-
-        output.innerHTML = `
-            <div class="result-card">
-                <div class="result-title">Vip Search Failed</div>
-                <div class="result-content">
-${escapeHTML(error.message)}
-                </div>
-            </div>
-        `;
-    }
-}
-
-
-
-/* =========================================================
    ENTER SHORTCUTS
 ========================================================= */
 
@@ -4586,7 +4256,6 @@ bindEnter("ipInput", ipSearch);
 bindEnter("emailInput", emailSearch);
 bindEnter("phoneInput", phoneSearch);
 bindEnter("nameInput", nameSearch);
-bindEnter("vipInput", vipSearch);
 
 
 
