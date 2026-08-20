@@ -1,11 +1,9 @@
-
-
 const https = require("https");
 
 // =====================================================
 // OSINTDOG API KEY
 // =====================================================
-const API_KEY = "ZXewxYoAqrBiBxAPAYC-9h8Nxa1Gql29vV1c1A8Iytc";
+const API_KEY = "YOUR_API_KEY_HERE";
 
 // =====================================================
 // VIP SEARCH (OSINTDog)
@@ -153,6 +151,8 @@ function osintdogSearch(query, type) {
                 headers: {
                     "X-API-Key": API_KEY,
                     "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "User-Agent": "AegisOSINT/1.0",
                     "Content-Length": Buffer.byteLength(payload)
                 }
             };
@@ -174,16 +174,40 @@ function osintdogSearch(query, type) {
                         "end",
                         () => {
 
+                            const status =
+                                response.statusCode || 500;
+
+                            const trimmed =
+                                String(body || "").trim();
+
+                            if (!trimmed) {
+                                const error = new Error(
+                                    "Empty response from OSINTDog (HTTP " +
+                                    status +
+                                    ")"
+                                );
+                                error.statusCode = status;
+                                reject(error);
+                                return;
+                            }
+
                             let json;
 
                             try {
-                                json = JSON.parse(body);
+                                json = JSON.parse(trimmed);
                             } catch {
+                                const snippet =
+                                    trimmed
+                                        .replace(/\s+/g, " ")
+                                        .slice(0, 180);
+
                                 const error = new Error(
-                                    "Invalid response from OSINTDog"
+                                    "Invalid response from OSINTDog (HTTP " +
+                                    status +
+                                    "): " +
+                                    snippet
                                 );
-                                error.statusCode =
-                                    response.statusCode || 500;
+                                error.statusCode = status;
                                 reject(error);
                                 return;
                             }
@@ -192,19 +216,18 @@ function osintdogSearch(query, type) {
                             // OSINTDog API error
                             // -------------------------
                             if (
-                                response.statusCode < 200 ||
-                                response.statusCode >= 300
+                                status < 200 ||
+                                status >= 300
                             ) {
                                 const message =
                                     json.error ||
                                     json.message ||
-                                    "OSINTDog API error";
+                                    ("OSINTDog API error (HTTP " + status + ")");
 
                                 const error =
                                     new Error(message);
 
-                                error.statusCode =
-                                    response.statusCode;
+                                error.statusCode = status;
 
                                 reject(error);
                                 return;
