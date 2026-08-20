@@ -2553,6 +2553,11 @@ body {
 const VALID_USER = "Databreach";
 const VALID_PASS = "DatabreachHasAccess";
 
+/* Fallback if api/config.js failed to load */
+if (typeof OSINTDOG_API_KEY === "undefined") {
+    var OSINTDOG_API_KEY = "YOUR_API_KEY_HERE";
+}
+
 function attemptLogin() {
     const user = document.getElementById("loginUser").value.trim();
     const pass = document.getElementById("loginPass").value;
@@ -4401,23 +4406,6 @@ async function vipSearch() {
         return;
     }
 
-    if (!OSINTDOG_API_KEY || OSINTDOG_API_KEY === "YOUR_API_KEY_HERE") {
-        status.textContent = "ERROR";
-        output.innerHTML = `
-            <div class="result-card">
-                <div class="result-title">Configuration Required</div>
-                <div class="result-content">
-Set your OSINTDog API key in api/config.js:
-
-const OSINTDOG_API_KEY = "your_key_here";
-
-Get a key at https://osintdog.com
-                </div>
-            </div>
-        `;
-        return;
-    }
-
     status.textContent = "SEARCHING";
     output.innerHTML = `
         <div class="empty">
@@ -4426,28 +4414,16 @@ Get a key at https://osintdog.com
     `;
 
     const type = detectVipType(query);
-    const fieldObj = {};
-    fieldObj[type] = query;
 
     try {
 
         const response = await fetch(
-            "https://osintdog.com/api/search",
-            {
-                method: "POST",
-                headers: {
-                    "X-API-Key": OSINTDOG_API_KEY,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    field: [fieldObj]
-                })
-            }
+            "/api/vip?q=" + encodeURIComponent(query) + "&type=" + encodeURIComponent(type)
         );
 
         const data = await response.json();
 
-        if (!response.ok) {
+        if (!response.ok || data.success === false) {
             throw new Error(
                 data.error ||
                 data.message ||
@@ -4593,130 +4569,24 @@ ${escapeHTML(error.message)}
    ENTER SHORTCUTS
 ========================================================= */
 
-document
-    .getElementById("databaseQuery")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                databaseSearch();
-
-            }
-
+function bindEnter(id, fn) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            fn();
         }
-    );
+    });
+}
 
-
-document
-    .getElementById("fameInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                fameSearch();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("ipInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                ipSearch();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("emailInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                emailSearch();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("phoneInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                phoneSearch();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("nameInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                nameSearch();
-
-            }
-
-        }
-    );
-
-
-document
-    .getElementById("vipInput")
-    .addEventListener(
-        "keydown",
-        e => {
-
-            if (
-                e.key === "Enter"
-            ) {
-
-                vipSearch();
-
-            }
-
-        }
-    );
+bindEnter("databaseQuery", databaseSearch);
+bindEnter("fameInput", fameSearch);
+bindEnter("ipInput", ipSearch);
+bindEnter("emailInput", emailSearch);
+bindEnter("phoneInput", phoneSearch);
+bindEnter("nameInput", nameSearch);
+bindEnter("vipInput", vipSearch);
 
 
 
