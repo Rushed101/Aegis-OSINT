@@ -1183,6 +1183,94 @@ body {
     word-break: break-word;
 }
 
+/* =========================================================
+   DC WEBHOOK
+========================================================= */
+.dc-webhook-row {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.dc-webhook-row label {
+    color: #4e4952;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+    min-width: 70px;
+}
+.dc-webhook-row input,
+.dc-webhook-row textarea {
+    flex: 1;
+    min-width: 140px;
+    height: 34px;
+    padding: 0 10px;
+    border: 1px solid rgba(255,255,255,.07);
+    border-radius: 6px;
+    background: rgba(0,0,0,.3);
+    color: #fff;
+    font-family: inherit;
+    font-size: 10px;
+    outline: none;
+}
+.dc-webhook-row textarea {
+    height: 56px;
+    padding: 8px 10px;
+    resize: vertical;
+}
+.dc-webhook-row input:focus,
+.dc-webhook-row textarea:focus {
+    border-color: rgba(255,55,170,.4);
+}
+.dc-actions {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 6px;
+}
+.dc-btn {
+    height: 32px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: .6px;
+    cursor: pointer;
+    transition: .15s ease;
+    box-shadow: 0 4px 14px rgba(255,55,170,.12);
+}
+.dc-btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.dc-btn.danger { background: #c42f4a; }
+.dc-btn.secondary { background: rgba(255,255,255,.06); color: #b0aab5; }
+.dc-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+.dc-status {
+    color: #8c8690;
+    font-size: 8px;
+    margin-left: 6px;
+}
+.dc-log {
+    margin-top: 12px;
+    padding: 8px 10px;
+    border: 1px solid rgba(255,255,255,.05);
+    border-radius: 6px;
+    background: rgba(0,0,0,.2);
+    max-height: 160px;
+    overflow-y: auto;
+    font-family: monospace;
+    font-size: 8px;
+    color: #a5a0aa;
+    white-space: pre-wrap;
+}
+.dc-log .dc-log-line {
+    border-bottom: 1px solid rgba(255,255,255,.02);
+    padding: 3px 0;
+}
 
 /* =========================================================
    AEGIS BASE
@@ -1683,6 +1771,14 @@ body {
 
         </button>
 
+        <!-- Dc Webhook nav item -->
+        <button
+            class="nav-item"
+            onclick="switchPage('dcwebhook', this)"
+        >
+            <div class="nav-icon">⚡</div>
+            <span>Dc Webhook</span>
+        </button>
 
         <button
             class="nav-item"
@@ -2469,6 +2565,45 @@ body {
 
 </div>
 
+<!-- =====================================================
+     DC WEBHOOK
+===================================================== -->
+<div id="page-dcwebhook" class="page">
+    <div class="panel-head">
+        <div class="panel-head-left">
+            <div class="panel-symbol">⚡</div>
+            <div>
+                <h2>Dc Webhook</h2>
+                <p>Send messages via Discord webhook</p>
+            </div>
+        </div>
+        <div class="panel-tag">WEBHOOK</div>
+    </div>
+
+    <div class="dc-webhook-row">
+        <label>Webhook URL</label>
+        <input id="dcWebhookUrl" type="url" placeholder="https://discord.com/api/webhooks/..." value="">
+    </div>
+    <div class="dc-webhook-row">
+        <label>Message</label>
+        <textarea id="dcMessage" placeholder="Message content...">Hello from Aegis!</textarea>
+    </div>
+    <div class="dc-webhook-row">
+        <label>Count / Loop</label>
+        <input id="dcCount" type="text" placeholder="e.g. 5 or Loop" value="1">
+        <span class="dc-status" id="dcStatus">Idle</span>
+    </div>
+
+    <div class="dc-actions">
+        <button class="dc-btn" id="dcStartStopBtn" onclick="toggleDcLoop()">▶ Start</button>
+        <button class="dc-btn secondary" onclick="renameWebhook()">✎ Rename</button>
+        <button class="dc-btn danger" onclick="deleteWebhook()">✕ Delete</button>
+    </div>
+
+    <div class="dc-log" id="dcLog">
+        <div class="dc-log-line">Ready.</div>
+    </div>
+</div>
 
 <!-- =====================================================
      LOGS (Databreach only)
@@ -3087,6 +3222,12 @@ const pageInfo = {
         crumb:
             "TIKTOK"
 
+    },
+
+    dcwebhook: {
+        title: "Dc Webhook",
+        description: "Send messages via Discord webhook",
+        crumb: "WEBHOOK"
     },
 
 
@@ -4717,7 +4858,190 @@ function escapeHTML(value) {
 
 }
 
+
+/* =========================================================
+   DC WEBHOOK LOGIC
+========================================================= */
+
+let dcRunning = false;
+let dcStopRequested = false;
+let dcLogLines = [];
+
+function addDcLog(msg) {
+    dcLogLines.push(msg);
+    if (dcLogLines.length > 200) dcLogLines.shift();
+    const el = document.getElementById("dcLog");
+    if (el) {
+        el.innerHTML = dcLogLines.map(m => `<div class="dc-log-line">${escapeHTML(m)}</div>`).join('');
+        el.scrollTop = el.scrollHeight;
+    }
+}
+
+async function sendDiscordMessage(url, content, username) {
+    const payload = { content };
+    if (username && username.trim()) payload.username = username.trim();
+
+    const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    });
+
+    if (resp.status === 429) {
+        const data = await resp.json();
+        const retry = data.retry_after || 1;
+        addDcLog(`⏳ Rate limited, waiting ${retry.toFixed(1)}s`);
+        await new Promise(r => setTimeout(r, retry * 1000 + 50));
+        return sendDiscordMessage(url, content, username);
+    }
+
+    if (!resp.ok) {
+        let errMsg = `HTTP ${resp.status}`;
+        try {
+            const errData = await resp.json();
+            errMsg += `: ${errData.message || JSON.stringify(errData)}`;
+        } catch (_) {}
+        throw new Error(errMsg);
+    }
+    return resp;
+}
+
+async function deleteWebhook() {
+    const url = document.getElementById('dcWebhookUrl').value.trim();
+    if (!url) { addDcLog('❌ Webhook URL empty'); return; }
+    if (!confirm('Delete this webhook?')) return;
+
+    try {
+        addDcLog(`🗑️ Deleting webhook...`);
+        const resp = await fetch(url, { method: 'DELETE' });
+        if (resp.status === 429) {
+            const data = await resp.json();
+            const retry = data.retry_after || 1;
+            addDcLog(`⏳ Rate limited, waiting ${retry.toFixed(1)}s`);
+            await new Promise(r => setTimeout(r, retry * 1000 + 50));
+            return deleteWebhook();
+        }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        addDcLog('✅ Webhook deleted successfully.');
+    } catch (e) {
+        addDcLog(`❌ Delete failed: ${e.message}`);
+    }
+}
+
+async function renameWebhook() {
+    const url = document.getElementById('dcWebhookUrl').value.trim();
+    if (!url) { addDcLog('❌ Webhook URL empty'); return; }
+    const newName = prompt('New webhook username:', 'Aegis');
+    if (newName === null) return;
+    if (!newName.trim()) { addDcLog('❌ Name cannot be empty'); return; }
+
+    try {
+        addDcLog(`✎ Renaming webhook to "${newName.trim()}"...`);
+        const resp = await fetch(url, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: newName.trim() })
+        });
+        if (resp.status === 429) {
+            const data = await resp.json();
+            const retry = data.retry_after || 1;
+            addDcLog(`⏳ Rate limited, waiting ${retry.toFixed(1)}s`);
+            await new Promise(r => setTimeout(r, retry * 1000 + 50));
+            return renameWebhook();
+        }
+        if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+        addDcLog('✅ Webhook renamed.');
+    } catch (e) {
+        addDcLog(`❌ Rename failed: ${e.message}`);
+    }
+}
+
+async function toggleDcLoop() {
+    const btn = document.getElementById('dcStartStopBtn');
+    const urlInput = document.getElementById('dcWebhookUrl');
+    const msgInput = document.getElementById('dcMessage');
+    const countInput = document.getElementById('dcCount');
+
+    if (dcRunning) {
+        dcStopRequested = true;
+        btn.disabled = true;
+        btn.textContent = '⏳ Stopping...';
+        addDcLog('⏹️ Stop requested...');
+        return;
+    }
+
+    const url = urlInput.value.trim();
+    if (!url) { addDcLog('❌ Webhook URL required'); return; }
+    const content = msgInput.value.trim();
+    if (!content) { addDcLog('❌ Message content required'); return; }
+
+    const countRaw = countInput.value.trim();
+    let count;
+    let loopMode = false;
+    if (countRaw.toLowerCase() === 'loop') {
+        loopMode = true;
+        count = Infinity;
+    } else {
+        count = parseInt(countRaw, 10);
+        if (isNaN(count) || count < 1) {
+            addDcLog('❌ Count must be a positive integer or "Loop"');
+            return;
+        }
+    }
+
+    dcRunning = true;
+    dcStopRequested = false;
+    btn.textContent = '⏹️ Stop';
+    btn.disabled = false;
+    document.getElementById('dcStatus').textContent = '▶️ Running';
+
+    addDcLog(`🚀 Started (${loopMode ? 'Loop' : count} ×)`);
+
+    let sent = 0;
+    let errors = 0;
+
+    try {
+        while (dcRunning && !dcStopRequested && sent < count) {
+            try {
+                await sendDiscordMessage(url, content, null);
+                sent++;
+                const statusMsg = loopMode
+                    ? `🔄 Loop #${sent}`
+                    : `📤 Sent ${sent}/${count}`;
+                document.getElementById('dcStatus').textContent = statusMsg;
+                if (sent % 5 === 0) addDcLog(`✅ ${sent} sent`);
+
+                // small delay between messages to avoid hammering
+                if (dcRunning && !dcStopRequested && sent < count) {
+                    await new Promise(r => setTimeout(r, 200));
+                }
+            } catch (e) {
+                errors++;
+                addDcLog(`❌ Error: ${e.message}`);
+                if (errors >= 5) {
+                    addDcLog('⛔ Too many errors, stopping.');
+                    break;
+                }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+    } finally {
+        dcRunning = false;
+        dcStopRequested = false;
+        btn.textContent = '▶ Start';
+        btn.disabled = false;
+        const statusEl = document.getElementById('dcStatus');
+        if (sent > 0) {
+            statusEl.textContent = `✅ Done (${sent} sent, ${errors} errors)`;
+            addDcLog(`🏁 Finished (${sent} sent, ${errors} errors)`);
+        } else {
+            statusEl.textContent = '⏹️ Stopped';
+            addDcLog('⏹️ Stopped.');
+        }
+    }
+}
+
 </script>
 
 </body>
-</ht
+</html>
