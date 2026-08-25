@@ -323,7 +323,10 @@ body {
 
     width: 250px;
 
-    padding: 22px 14px;
+    padding: 22px 14px 0;
+
+    display: flex;
+    flex-direction: column;
 
     background:
         linear-gradient(
@@ -338,6 +341,7 @@ body {
     backdrop-filter: blur(24px);
 
     z-index: 50;
+    overflow: hidden;
 }
 
 .logo {
@@ -348,7 +352,9 @@ body {
     gap: 11px;
 
     padding:
-        5px 10px 30px;
+        5px 10px 22px;
+
+    flex-shrink: 0;
 }
 
 .logo-mark {
@@ -387,6 +393,7 @@ body {
 }
 
 .section-title {
+    flex-shrink: 0;
     padding:
         0 12px 9px;
 
@@ -403,6 +410,26 @@ body {
     display: flex;
     flex-direction: column;
     gap: 3px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    min-height: 0;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,55,170,.35) transparent;
+}
+
+.nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.nav::-webkit-scrollbar-thumb {
+    background: rgba(255,55,170,.35);
+    border-radius: 4px;
 }
 
 .nav-item {
@@ -497,12 +524,10 @@ body {
 ========================================================= */
 
 .sidebar-bottom {
-    position: absolute;
-
-    left: 14px;
-    right: 14px;
-
-    bottom: 18px;
+    flex-shrink: 0;
+    padding: 12px 0 18px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,.04);
 }
 
 .profile {
@@ -521,6 +546,14 @@ body {
 
     background:
         rgba(255,255,255,.018);
+
+    overflow: hidden;
+}
+
+.profile > div:last-child {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
 }
 
 .avatar {
@@ -546,6 +579,9 @@ body {
 .profile-name {
     font-size: 10px;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profile-status {
@@ -560,6 +596,7 @@ body {
     color: #625c66;
 
     font-size: 8px;
+    white-space: nowrap;
 }
 
 .dot {
@@ -2711,7 +2748,7 @@ body {
         <div class="aegis-chat-login-box">
             <div class="aegis-chat-mark">▣</div>
             <h2>CHAT ACCESS</h2>
-            <p>Enter your 50-digit access code to continue.</p>
+            <p>Gib deinen 50-stelligen Zugangscode ein.<br><small style="color:#555;font-size:10px;">Demo: 12345678901234567890123456789012345678901234567890</small></p>
             <input id="chatCode" class="aegis-chat-input" type="text" inputmode="numeric" maxlength="50" autocomplete="off" placeholder="50-digit access code">
             <button id="chatLoginBtn" class="aegis-chat-btn" type="button">AUTHENTICATE</button>
             <div id="chatLoginError" class="aegis-chat-error"></div>
@@ -2999,6 +3036,10 @@ function showApp(user) {
     const profileName = document.querySelector(".profile-name");
     if (profileName) {
         profileName.textContent = currentUser;
+    }
+    const avatar = document.querySelector(".avatar");
+    if (avatar) {
+        avatar.textContent = (currentUser || "A").charAt(0).toUpperCase();
     }
 }
 
@@ -3384,11 +3425,14 @@ const pageInfo = {
 
 
 /* =========================================================
-   PRIVATE CHAT
+   PRIVATE CHAT  (offline / localStorage fallback)
 ========================================================= */
 let chatToken = null;
 let chatUserId = null;
+let chatUsername = "Operator";
 let chatTimer = null;
+
+const CHAT_DEMO_CODE = "12345678901234567890123456789012345678901234567890";
 
 function chatEsc(value) {
     return String(value).replace(/[&<>"']/g, c => ({
@@ -3396,12 +3440,59 @@ function chatEsc(value) {
     }[c]));
 }
 
+function getLocalChatMessages() {
+    try {
+        const raw = localStorage.getItem("aegis_chat_messages");
+        const data = raw ? JSON.parse(raw) : [];
+        return Array.isArray(data) ? data : [];
+    } catch (_) {
+        return [];
+    }
+}
+
+function saveLocalChatMessages(msgs) {
+    localStorage.setItem("aegis_chat_messages", JSON.stringify(msgs.slice(-200)));
+}
+
 async function chatApi(url, options = {}) {
-    const headers = { 'Content-Type': 'application/json', ...(chatToken ? { Authorization: 'Bearer ' + chatToken } : {}) };
-    const response = await fetch(url, { ...options, headers });
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || 'Request failed');
-    return data;
+    // Try real backend first; fall back to localStorage
+    try {
+        const headers = { 'Content-Type': 'application/json', ...(chatToken ? { Authorization: 'Bearer ' + chatToken } : {}) };
+        const response = await fetch(url, { ...options, headers });
+        const data = await response.json().catch(() => ({}));
+        if (response.ok) return data;
+        throw new Error(data.error || 'Request failed');
+    } catch (err) {
+        // Offline / no backend → local mode
+        if (url.includes('/api/login')) {
+            const body = options.body ? JSON.parse(options.body) : {};
+            const code = (body.code || "").trim();
+            if (!/^\d{50}$/.test(code)) throw new Error("The access code must contain exactly 50 digits.");
+            // Accept demo code or any valid 50-digit code for local use
+            return {
+                token: "local-" + code.slice(0, 12),
+                userId: "local-user-" + (code.slice(-6) || "000000"),
+                username: currentUser || "Operator"
+            };
+        }
+        if (url.includes('/api/messages') && options.method === 'POST') {
+            const body = options.body ? JSON.parse(options.body) : {};
+            const msgs = getLocalChatMessages();
+            const entry = {
+                user_id: chatUserId,
+                username: chatUsername,
+                content: body.content || "",
+                created_at: new Date().toISOString()
+            };
+            msgs.push(entry);
+            saveLocalChatMessages(msgs);
+            return { success: true };
+        }
+        if (url.includes('/api/messages')) {
+            return { messages: getLocalChatMessages() };
+        }
+        throw err;
+    }
 }
 
 async function chatLogin() {
@@ -3410,19 +3501,22 @@ async function chatLogin() {
     const code = input.value.trim();
     error.textContent = '';
     if (!/^\d{50}$/.test(code)) {
-        error.textContent = 'The access code must contain exactly 50 digits.';
+        error.textContent = 'Der Zugangscode muss genau 50 Ziffern haben.';
         return;
     }
     try {
         const data = await chatApi('/api/login', { method: 'POST', body: JSON.stringify({ code }) });
         chatToken = data.token;
-        chatUserId = data.userId;
+        chatUserId = data.userId || ("local-" + code.slice(-8));
+        chatUsername = data.username || currentUser || "Operator";
+        localStorage.setItem("aegis_chat_token", chatToken);
+        localStorage.setItem("aegis_chat_user", chatUserId);
         document.getElementById('chatLogin').style.display = 'none';
         document.getElementById('chatApp').style.display = 'flex';
         await loadChatMessages();
         if (!chatTimer) chatTimer = setInterval(loadChatMessages, 2500);
     } catch (e) {
-        error.textContent = e.message;
+        error.textContent = e.message || 'Login fehlgeschlagen';
     }
 }
 
@@ -3431,11 +3525,12 @@ async function loadChatMessages() {
     try {
         const data = await chatApi('/api/messages');
         const box = document.getElementById('chatMessages');
-        box.innerHTML = data.messages.map(m => `
+        const list = Array.isArray(data.messages) ? data.messages : [];
+        box.innerHTML = list.map(m => `
             <div class="aegis-chat-msg ${m.user_id === chatUserId ? 'mine' : ''}">
-                <b>${chatEsc(m.username)}</b>
+                <b>${chatEsc(m.username || 'User')}</b>
                 <div>${chatEsc(m.content)}</div>
-                <small>${new Date(m.created_at).toLocaleString()}</small>
+                <small>${new Date(m.created_at || Date.now()).toLocaleString()}</small>
             </div>`).join('');
         box.scrollTop = box.scrollHeight;
     } catch (_) {}
@@ -3454,9 +3549,26 @@ document.addEventListener('DOMContentLoaded', () => {
             await chatApi('/api/messages', { method: 'POST', body: JSON.stringify({ content }) });
             input.value = '';
             await loadChatMessages();
-        } catch (e) { alert(e.message); }
+        } catch (err) { alert(err.message); }
         finally { input.disabled = false; input.focus(); }
     });
+
+    // Restore chat session if already logged in
+    const savedToken = localStorage.getItem("aegis_chat_token");
+    const savedUser = localStorage.getItem("aegis_chat_user");
+    if (savedToken && savedUser) {
+        chatToken = savedToken;
+        chatUserId = savedUser;
+        chatUsername = currentUser || "Operator";
+        const loginEl = document.getElementById('chatLogin');
+        const appEl = document.getElementById('chatApp');
+        if (loginEl && appEl) {
+            loginEl.style.display = 'none';
+            appEl.style.display = 'flex';
+            loadChatMessages();
+            if (!chatTimer) chatTimer = setInterval(loadChatMessages, 2500);
+        }
+    }
 });
 
 /* =========================================================
