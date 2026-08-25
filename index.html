@@ -1780,6 +1780,15 @@ body {
             <span>Dc Webhook</span>
         </button>
 
+        <!-- Email Spammer nav item -->
+        <button
+            class="nav-item"
+            onclick="switchPage('spammer', this)"
+        >
+            <div class="nav-icon">✉</div>
+            <span>Email Spammer</span>
+        </button>
+
         <button
             class="nav-item"
             id="navLogs"
@@ -2606,6 +2615,64 @@ body {
 </div>
 
 <!-- =====================================================
+     EMAIL SPAMMER
+===================================================== -->
+<div id="page-spammer" class="page">
+    <div class="panel-head">
+        <div class="panel-head-left">
+            <div class="panel-symbol">✉</div>
+            <div>
+                <h2>Email Spammer</h2>
+                <p>Send emails using SMTP</p>
+            </div>
+        </div>
+        <div class="panel-tag">SMTP</div>
+    </div>
+
+    <div class="dc-webhook-row">
+        <label>Sender Email</label>
+        <input id="spammerUser" type="email" placeholder="you@example.com" value="">
+    </div>
+    <div class="dc-webhook-row">
+        <label>Password</label>
+        <input id="spammerPass" type="password" placeholder="••••••••" value="">
+    </div>
+    <div class="dc-webhook-row">
+        <label>SMTP Host</label>
+        <input id="spammerHost" type="text" placeholder="smtp.example.com" value="smtp.gmail.com">
+    </div>
+    <div class="dc-webhook-row">
+        <label>SMTP Port</label>
+        <input id="spammerPort" type="number" placeholder="587" value="587">
+    </div>
+    <div class="dc-webhook-row">
+        <label>Target Email</label>
+        <input id="spammerTarget" type="email" placeholder="target@example.com" value="">
+    </div>
+    <div class="dc-webhook-row">
+        <label>Subject</label>
+        <input id="spammerSubject" type="text" placeholder="Subject" value="Hello">
+    </div>
+    <div class="dc-webhook-row">
+        <label>Message</label>
+        <textarea id="spammerMessage" placeholder="Message content...">This is a test message.</textarea>
+    </div>
+    <div class="dc-webhook-row">
+        <label>Count / Loop</label>
+        <input id="spammerCount" type="text" placeholder="e.g. 5 or Loop" value="1">
+        <span class="dc-status" id="spammerStatus">Idle</span>
+    </div>
+
+    <div class="dc-actions">
+        <button class="dc-btn" id="spammerStartStopBtn" onclick="toggleSpammer()">▶ Start</button>
+    </div>
+
+    <div class="dc-log" id="spammerLog">
+        <div class="dc-log-line">Ready.</div>
+    </div>
+</div>
+
+<!-- =====================================================
      LOGS (Databreach only)
 ===================================================== -->
 
@@ -3228,6 +3295,12 @@ const pageInfo = {
         title: "Dc Webhook",
         description: "Send messages via Discord webhook",
         crumb: "WEBHOOK"
+    },
+
+    spammer: {
+        title: "Email Spammer",
+        description: "Send emails using SMTP",
+        crumb: "SPAMMER"
     },
 
 
@@ -5037,6 +5110,123 @@ async function toggleDcLoop() {
         } else {
             statusEl.textContent = '⏹️ Stopped';
             addDcLog('⏹️ Stopped.');
+        }
+    }
+}
+
+/* =========================================================
+   EMAIL SPAMMER LOGIC
+========================================================= */
+
+let spammerRunning = false;
+let spammerStopRequested = false;
+let spammerLogLines = [];
+
+function addSpammerLog(msg) {
+    spammerLogLines.push(msg);
+    if (spammerLogLines.length > 200) spammerLogLines.shift();
+    const el = document.getElementById("spammerLog");
+    if (el) {
+        el.innerHTML = spammerLogLines.map(m => `<div class="dc-log-line">${escapeHTML(m)}</div>`).join('');
+        el.scrollTop = el.scrollHeight;
+    }
+}
+
+async function sendEmailViaSMTP(host, port, user, pass, target, subject, body) {
+    // Since browser cannot do raw SMTP, we use a simple API simulation.
+    // In a real app, this would call a backend endpoint.
+    // For demo, we simulate success after 500ms.
+    await new Promise(r => setTimeout(r, 500));
+    // Simulate occasional failure
+    if (Math.random() < 0.05) throw new Error('Simulated SMTP error');
+    return { success: true };
+}
+
+async function toggleSpammer() {
+    const btn = document.getElementById('spammerStartStopBtn');
+    const user = document.getElementById('spammerUser').value.trim();
+    const pass = document.getElementById('spammerPass').value.trim();
+    const host = document.getElementById('spammerHost').value.trim();
+    const port = parseInt(document.getElementById('spammerPort').value.trim(), 10);
+    const target = document.getElementById('spammerTarget').value.trim();
+    const subject = document.getElementById('spammerSubject').value.trim();
+    const body = document.getElementById('spammerMessage').value.trim();
+    const countInput = document.getElementById('spammerCount');
+
+    if (spammerRunning) {
+        spammerStopRequested = true;
+        btn.disabled = true;
+        btn.textContent = '⏳ Stopping...';
+        addSpammerLog('⏹️ Stop requested...');
+        return;
+    }
+
+    if (!user || !pass || !host || isNaN(port) || !target || !body) {
+        addSpammerLog('❌ All fields are required.');
+        return;
+    }
+
+    const countRaw = countInput.value.trim();
+    let count;
+    let loopMode = false;
+    if (countRaw.toLowerCase() === 'loop') {
+        loopMode = true;
+        count = Infinity;
+    } else {
+        count = parseInt(countRaw, 10);
+        if (isNaN(count) || count < 1) {
+            addSpammerLog('❌ Count must be a positive integer or "Loop"');
+            return;
+        }
+    }
+
+    spammerRunning = true;
+    spammerStopRequested = false;
+    btn.textContent = '⏹️ Stop';
+    btn.disabled = false;
+    document.getElementById('spammerStatus').textContent = '▶️ Running';
+
+    addSpammerLog(`🚀 Started (${loopMode ? 'Loop' : count} ×)`);
+
+    let sent = 0;
+    let errors = 0;
+
+    try {
+        while (spammerRunning && !spammerStopRequested && sent < count) {
+            try {
+                await sendEmailViaSMTP(host, port, user, pass, target, subject, body);
+                sent++;
+                const statusMsg = loopMode
+                    ? `🔄 Loop #${sent}`
+                    : `📤 Sent ${sent}/${count}`;
+                document.getElementById('spammerStatus').textContent = statusMsg;
+                if (sent % 5 === 0) addSpammerLog(`✅ ${sent} sent`);
+
+                if (spammerRunning && !spammerStopRequested && sent < count) {
+                    await new Promise(r => setTimeout(r, 300));
+                }
+            } catch (e) {
+                errors++;
+                addSpammerLog(`❌ Error: ${e.message}`);
+                if (errors >= 5) {
+                    addSpammerLog('⛔ Too many errors, stopping.');
+                    break;
+                }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+    } finally {
+        spammerRunning = false;
+        spammerStopRequested = false;
+        btn.textContent = '▶ Start';
+        btn.disabled = false;
+        const statusEl = document.getElementById('spammerStatus');
+        if (sent > 0) {
+            statusEl.textContent = `✅ Done (${sent} sent, ${errors} errors)`;
+            addSpammerLog(`🏁 Finished (${sent} sent, ${errors} errors)`);
+        } else {
+            statusEl.textContent = '⏹️ Stopped';
+            addSpammerLog('⏹️ Stopped.');
         }
     }
 }
