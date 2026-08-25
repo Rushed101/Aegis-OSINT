@@ -1561,6 +1561,21 @@ body {
 
 }
 
+
+/* =========================================================
+   PRIVATE CHAT UI
+========================================================= */
+.aegis-chat-login{min-height:430px;display:grid;place-items:center;padding:30px}
+.aegis-chat-login-box{width:min(430px,100%);padding:30px;border:1px solid rgba(255,255,255,.08);border-radius:16px;background:rgba(255,255,255,.025);text-align:center;box-shadow:0 25px 70px rgba(0,0,0,.35)}
+.aegis-chat-mark{font-size:28px;color:#ff37aa;margin-bottom:10px}.aegis-chat-login-box h2{margin:0 0 7px}.aegis-chat-login-box p{color:#8c8690;font-size:12px;margin:0 0 22px}
+.aegis-chat-input{width:100%;height:45px;padding:0 13px;border-radius:9px;border:1px solid rgba(255,255,255,.09);background:rgba(0,0,0,.25);color:#fff;outline:none;font-family:monospace;font-size:12px}
+.aegis-chat-input:focus{border-color:rgba(255,55,170,.5);box-shadow:0 0 0 3px rgba(255,55,170,.08)}
+.aegis-chat-btn{width:100%;height:45px;margin-top:10px;border:0;border-radius:9px;background:#ff37aa;color:#fff;font-weight:700;cursor:pointer}.aegis-chat-btn:hover{filter:brightness(1.08)}
+.aegis-chat-error{min-height:18px;margin-top:10px;color:#ff709d;font-size:11px}
+.aegis-chat-app{height:520px;min-height:420px;flex-direction:column;border:1px solid rgba(255,255,255,.07);border-radius:12px;background:rgba(0,0,0,.12);overflow:hidden}
+.aegis-chat-top{height:55px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid rgba(255,255,255,.06);font-size:12px}.aegis-chat-top span{font-size:9px;color:#55e7a0}
+.aegis-chat-messages{flex:1;overflow:auto;padding:15px;display:flex;flex-direction:column;gap:8px}.aegis-chat-msg{max-width:75%;padding:9px 11px;border:1px solid rgba(255,255,255,.06);border-radius:10px;background:rgba(255,255,255,.025)}.aegis-chat-msg.mine{align-self:flex-end;border-color:rgba(255,55,170,.18);background:rgba(255,55,170,.05)}.aegis-chat-msg b{font-size:10px;color:#ff72c2}.aegis-chat-msg div{font-size:12px;margin-top:4px;white-space:pre-wrap;word-break:break-word}.aegis-chat-msg small{display:block;color:#625d65;font-size:8px;margin-top:4px}
+.aegis-chat-composer{display:flex;gap:8px;padding:10px;border-top:1px solid rgba(255,255,255,.06)}.aegis-chat-composer input{flex:1;min-width:0;height:42px;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.25);color:#fff;outline:none}.aegis-chat-composer button{width:90px;border:0;border-radius:8px;background:#ff37aa;color:#fff;font-weight:700;cursor:pointer}
 </style>
 </head>
 
@@ -1787,6 +1802,14 @@ body {
         >
             <div class="nav-icon">✉</div>
             <span>Email Spammer</span>
+        </button>
+
+        <button
+            class="nav-item"
+            onclick="switchPage('chat', this)"
+        >
+            <div class="nav-icon">▣</div>
+            <span>Chat</span>
         </button>
 
         <button
@@ -2673,6 +2696,39 @@ body {
 </div>
 
 <!-- =====================================================
+     CHAT
+===================================================== -->
+<div id="page-chat" class="page">
+    <div class="panel-head">
+        <div class="panel-head-left">
+            <div class="panel-symbol">▣</div>
+            <div><h2>Private Chat</h2><p>Protected chat access</p></div>
+        </div>
+        <div class="panel-tag">SECURE</div>
+    </div>
+
+    <div id="chatLogin" class="aegis-chat-login">
+        <div class="aegis-chat-login-box">
+            <div class="aegis-chat-mark">▣</div>
+            <h2>CHAT ACCESS</h2>
+            <p>Enter your 50-digit access code to continue.</p>
+            <input id="chatCode" class="aegis-chat-input" type="text" inputmode="numeric" maxlength="50" autocomplete="off" placeholder="50-digit access code">
+            <button id="chatLoginBtn" class="aegis-chat-btn" type="button">AUTHENTICATE</button>
+            <div id="chatLoginError" class="aegis-chat-error"></div>
+        </div>
+    </div>
+
+    <div id="chatApp" class="aegis-chat-app" style="display:none;">
+        <div class="aegis-chat-top"><strong>General</strong><span>● SECURE SESSION</span></div>
+        <div id="chatMessages" class="aegis-chat-messages"></div>
+        <form id="chatComposer" class="aegis-chat-composer">
+            <input id="chatMessage" type="text" maxlength="2000" autocomplete="off" placeholder="Write a message…">
+            <button type="submit">SEND</button>
+        </form>
+    </div>
+</div>
+
+<!-- =====================================================
      LOGS (Databreach only)
 ===================================================== -->
 
@@ -3304,6 +3360,12 @@ const pageInfo = {
     },
 
 
+    chat: {
+        title: "Private Chat",
+        description: "Protected private chat access.",
+        crumb: "CHAT"
+    },
+
     logs: {
 
         title:
@@ -3320,6 +3382,82 @@ const pageInfo = {
 };
 
 
+
+/* =========================================================
+   PRIVATE CHAT
+========================================================= */
+let chatToken = null;
+let chatUserId = null;
+let chatTimer = null;
+
+function chatEsc(value) {
+    return String(value).replace(/[&<>"']/g, c => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+    }[c]));
+}
+
+async function chatApi(url, options = {}) {
+    const headers = { 'Content-Type': 'application/json', ...(chatToken ? { Authorization: 'Bearer ' + chatToken } : {}) };
+    const response = await fetch(url, { ...options, headers });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'Request failed');
+    return data;
+}
+
+async function chatLogin() {
+    const input = document.getElementById('chatCode');
+    const error = document.getElementById('chatLoginError');
+    const code = input.value.trim();
+    error.textContent = '';
+    if (!/^\d{50}$/.test(code)) {
+        error.textContent = 'The access code must contain exactly 50 digits.';
+        return;
+    }
+    try {
+        const data = await chatApi('/api/login', { method: 'POST', body: JSON.stringify({ code }) });
+        chatToken = data.token;
+        chatUserId = data.userId;
+        document.getElementById('chatLogin').style.display = 'none';
+        document.getElementById('chatApp').style.display = 'flex';
+        await loadChatMessages();
+        if (!chatTimer) chatTimer = setInterval(loadChatMessages, 2500);
+    } catch (e) {
+        error.textContent = e.message;
+    }
+}
+
+async function loadChatMessages() {
+    if (!chatToken) return;
+    try {
+        const data = await chatApi('/api/messages');
+        const box = document.getElementById('chatMessages');
+        box.innerHTML = data.messages.map(m => `
+            <div class="aegis-chat-msg ${m.user_id === chatUserId ? 'mine' : ''}">
+                <b>${chatEsc(m.username)}</b>
+                <div>${chatEsc(m.content)}</div>
+                <small>${new Date(m.created_at).toLocaleString()}</small>
+            </div>`).join('');
+        box.scrollTop = box.scrollHeight;
+    } catch (_) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('chatLoginBtn')?.addEventListener('click', chatLogin);
+    document.getElementById('chatCode')?.addEventListener('keydown', e => { if (e.key === 'Enter') chatLogin(); });
+    document.getElementById('chatComposer')?.addEventListener('submit', async e => {
+        e.preventDefault();
+        const input = document.getElementById('chatMessage');
+        const content = input.value.trim();
+        if (!content) return;
+        input.disabled = true;
+        try {
+            await chatApi('/api/messages', { method: 'POST', body: JSON.stringify({ content }) });
+            input.value = '';
+            await loadChatMessages();
+        } catch (e) { alert(e.message); }
+        finally { input.disabled = false; input.focus(); }
+    });
+});
 
 /* =========================================================
    PAGE SWITCH
